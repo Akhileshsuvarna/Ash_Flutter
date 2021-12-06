@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>9086195170-7f9r1vd9sftkq3tded5t6skl76bid6vk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.9086195170-7f9r1vd9sftkq3tded5t6skl76bid6vk</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBs_SQxk-gnweNZdVuRKDQfONqq92gaT7s</string>
+	<key>GCM_SENDER_ID</key>
+	<string>9086195170</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.livvinyl.fitness.app</string>
+	<key>PROJECT_ID</key>
+	<string>liv-fitness</string>
+	<key>STORAGE_BUCKET</key>
+	<string>liv-fitness.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:9086195170:ios:e97b35f6edf69df606d5bb</string>
+</dict>
+</plist>
