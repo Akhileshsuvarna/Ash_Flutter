@@ -1,10 +1,10 @@
 import 'dart:convert' show utf8, LineSplitter;
 
-import 'package:app/constants.dart';
-import 'package:app/util/pose_data.dart';
+import 'package:Health_Connector/constants.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 import '../log/logger.dart';
+import 'pose_data.dart';
 
 class Utils {
   const Utils._();
@@ -48,7 +48,7 @@ class Utils {
       : toNull(toUtf8 ? utf8.decode(bytes) : String.fromCharCodes(bytes));
 
   static List<String>? splitLines(String str) =>
-      isBlank(str) ? null : LineSplitter().convert(str.trim());
+      isBlank(str) ? null : const LineSplitter().convert(str.trim());
 
   static List<String>? split(String? str, String delimiters) =>
       isBlank(str) ? null : str!.trim().split(RegExp("[$delimiters]"));
@@ -106,6 +106,13 @@ class Utils {
       }
     }
     return false;
+  }
+
+// TODO-Sikander complete this later
+  static bool x = true;
+  static void isPoseGeneric(String conf, Pose pose) {
+    var poseData = PoseData.fromMap(pose.landmarks);
+    if (Utils.x && poseData.leftHip!.x > poseData.nose!.x) {}
   }
 
   static bool isCatPose(Pose pose) {

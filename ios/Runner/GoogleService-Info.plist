@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>9086195170-7f9r1vd9sftkq3tded5t6skl76bid6vk.apps.googleusercontent.com</string>
+	<string>335396837024-hspkpj53ogn1uvqvllqkc30v0mcmffps.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.9086195170-7f9r1vd9sftkq3tded5t6skl76bid6vk</string>
+	<string>com.googleusercontent.apps.335396837024-hspkpj53ogn1uvqvllqkc30v0mcmffps</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBs_SQxk-gnweNZdVuRKDQfONqq92gaT7s</string>
+	<string>AIzaSyAlqq6PZylLKD5C0sN0wRPvTpbHry1Yl4w</string>
 	<key>GCM_SENDER_ID</key>
-	<string>9086195170</string>
+	<string>335396837024</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.livvinyl.fitness.app</string>
+	<string>com.livvinyl.healthconnector.app</string>
 	<key>PROJECT_ID</key>
-	<string>liv-fitness</string>
+	<string>livvinyl-health-connector</string>
 	<key>STORAGE_BUCKET</key>
-	<string>liv-fitness.appspot.com</string>
+	<string>livvinyl-health-connector.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:9086195170:ios:e97b35f6edf69df606d5bb</string>
+	<string>1:335396837024:ios:0c0696df1d939def0c9bc5</string>
 </dict>
 </plist>

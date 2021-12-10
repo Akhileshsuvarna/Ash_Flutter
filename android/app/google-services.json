@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "9086195170",
-    "project_id": "liv-fitness",
-    "storage_bucket": "liv-fitness.appspot.com"
+    "project_number": "335396837024",
+    "project_id": "livvinyl-health-connector",
+    "storage_bucket": "livvinyl-health-connector.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:9086195170:android:76b6c7b7eb9bc5db06d5bb",
+        "mobilesdk_app_id": "1:335396837024:android:ee1ef1184ae484920c9bc5",
         "android_client_info": {
-          "package_name": "com.livvinyl.fitness.app"
+          "package_name": "com.livvinyl.healthconnector.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "9086195170-qpc4sf0q78bedql4qjl9g9g0gd9vgbii.apps.googleusercontent.com",
+          "client_id": "335396837024-bct02h3cmovf106lhfecrfqdflnmfch7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCXF605JQwdfeghgeI9upDToN2Mp8NAZmc"
+          "current_key": "AIzaSyD8CtMLbQa6VLVhZokj8aPZykyfkIEPd9E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "9086195170-qpc4sf0q78bedql4qjl9g9g0gd9vgbii.apps.googleusercontent.com",
+              "client_id": "335396837024-bct02h3cmovf106lhfecrfqdflnmfch7.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "9086195170-7f9r1vd9sftkq3tded5t6skl76bid6vk.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.livvinyl.fitness.app"
-              }
             }
           ]
         }

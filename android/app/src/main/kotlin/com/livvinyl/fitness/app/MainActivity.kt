@@ -1,4 +1,4 @@
-package com.livvinyl.fitness.app
+package com.livvinyl.healthconnector.app
 
 import io.flutter.embedding.android.FlutterActivity
 

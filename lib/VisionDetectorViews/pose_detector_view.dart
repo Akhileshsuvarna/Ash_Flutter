@@ -1,4 +1,4 @@
-import 'package:app/util/utils.dart';
+import 'package:Health_Connector/util/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -53,26 +53,28 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   Future<void> processImage(InputImage inputImage) async {
     if (isBusy) return;
     isBusy = true;
-    if (!_isMatched) {
-      final List<Pose> poses = await poseDetector.processImage(inputImage);
+    // if (!_isMatched) {
+    final List<Pose> poses = await poseDetector.processImage(inputImage);
+    // if (poses.length == 1) {
+    if (inputImage.inputImageData?.size != null &&
+        inputImage.inputImageData?.imageRotation != null) {
+      // TODO-Sikander
+      // compare pose here to check if Pose match with excersie pose
       if (poses.length == 1) {
-        if (inputImage.inputImageData?.size != null &&
-            inputImage.inputImageData?.imageRotation != null) {
-          // TODO-Sikander
-          // compare pose here to check if Pose match with excersie pose
-          _isMatched = Utils.isCatPose(poses[0]);
-          Color paintColor = _isMatched ? Colors.green : Colors.white;
-          final painter = PosePainter(poses, inputImage.inputImageData!.size,
-              inputImage.inputImageData!.imageRotation, paintColor);
-          customPaint = CustomPaint(painter: painter);
-          if (_isMatched) {
-            _speak('Congratulation cat cow position achieved');
-          }
-        } else {
-          customPaint = null;
-        }
+        _isMatched = Utils.isCatPose(poses[0]);
       }
+      Color paintColor = _isMatched ? Colors.green : Colors.white;
+      final painter = PosePainter(poses, inputImage.inputImageData!.size,
+          inputImage.inputImageData!.imageRotation, paintColor);
+      customPaint = CustomPaint(painter: painter);
+      // if (_isMatched) {
+      //   _speak('Congratulation cat cow position achieved');
+      // }
+    } else {
+      customPaint = null;
     }
+    // }
+    // }
     isBusy = false;
     if (mounted) {
       setState(() {});

@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../main.dart';
 
@@ -32,7 +31,6 @@ class _CameraViewState extends State<CameraView> {
   ScreenMode _mode = ScreenMode.liveFeed;
   CameraController? _controller;
   File? _image;
-  ImagePicker? _imagePicker;
   int _cameraIndex = 0;
   double zoomLevel = 0.0, minZoomLevel = 0.0, maxZoomLevel = 0.0;
 
@@ -40,7 +38,6 @@ class _CameraViewState extends State<CameraView> {
   void initState() {
     super.initState();
 
-    _imagePicker = ImagePicker();
     for (var i = 0; i < cameras.length; i++) {
       if (cameras[i].lensDirection == widget.initialDirection) {
         _cameraIndex = i;
@@ -62,7 +59,7 @@ class _CameraViewState extends State<CameraView> {
         title: Text(widget.title),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20.0),
+            padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: _switchScreenMode,
               child: Icon(
@@ -85,7 +82,7 @@ class _CameraViewState extends State<CameraView> {
   Widget? _floatingActionButton() {
     if (_mode == ScreenMode.gallery) return null;
     if (cameras.length == 1) return null;
-    return Container(
+    return SizedBox(
         height: 70.0,
         width: 70.0,
         child: FloatingActionButton(
@@ -185,14 +182,6 @@ class _CameraViewState extends State<CameraView> {
       _cameraIndex = 0;
     await _stopLiveFeed();
     await _startLiveFeed();
-  }
-
-  Future _processPickedFile(PickedFile pickedFile) async {
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-    final inputImage = InputImage.fromFilePath(pickedFile.path);
-    widget.onImage(inputImage);
   }
 
   Future _processCameraImage(CameraImage image) async {

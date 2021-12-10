@@ -1,18 +1,12 @@
 import 'dart:io';
 
-import 'package:app/camera_awesome_stream.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
-
-import 'VisionDetectorViews/barcode_scanner_view.dart';
-import 'VisionDetectorViews/digital_ink_recogniser_view.dart';
-import 'VisionDetectorViews/face_detector_view.dart';
 import 'VisionDetectorViews/pose_detector_view.dart';
-import 'VisionDetectorViews/text_detector_view.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -123,9 +117,9 @@ class CustomCard extends StatelessWidget {
         ),
         onTap: () {
           if (Platform.isIOS && !featureCompleted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: const Text(
-                    'This feature has not been implemented for iOS yet')));
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content:
+                    Text('This feature has not been implemented for iOS yet')));
           } else
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => _viewPage));
