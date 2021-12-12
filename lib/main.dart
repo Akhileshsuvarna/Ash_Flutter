@@ -6,6 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
+import 'package:health_connector/screens/exercises_screen.dart';
+import 'package:health_connector/screens/login_screen.dart';
 import 'VisionDetectorViews/pose_detector_view.dart';
 
 List<CameraDescription> cameras = [];
@@ -73,6 +75,16 @@ class Home extends StatelessWidget {
                   CustomCard(
                     'Exercise 1',
                     PoseDetectorView(),
+                    featureCompleted: true,
+                  ),
+                  const CustomCard(
+                    'Login Page',
+                    LoginPage(),
+                    featureCompleted: true,
+                  ),
+                  const CustomCard(
+                    'Exercise Page',
+                    ExercisePage(),
                     featureCompleted: true,
                   ),
 

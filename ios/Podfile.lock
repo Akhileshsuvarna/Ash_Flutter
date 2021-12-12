@@ -47,8 +47,6 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.6)
     - nanopb (~> 2.30908.0)
   - Flutter (1.0.0)
-  - flutter_beep (0.0.1):
-    - Flutter
   - flutter_tts (0.0.1):
     - Flutter
   - google_ml_kit (0.6.0):
@@ -133,10 +131,6 @@ PODS:
   - GoogleUtilitiesComponents (1.0.0):
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.7.0)
-  - image_gallery_saver (1.5.0):
-    - Flutter
-  - image_picker (0.0.1):
-    - Flutter
   - leveldb-library (1.22.1)
   - MLImage (1.0.0-beta1)
   - MLKitBarcodeScanning (1.3.0):
@@ -225,6 +219,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - path_provider_ios (0.0.1):
+    - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (2.0.0)
@@ -237,11 +233,9 @@ DEPENDENCIES:
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_beep (from `.symlinks/plugins/flutter_beep/ios`)
   - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
   - google_ml_kit (from `.symlinks/plugins/google_ml_kit/ios`)
-  - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
-  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
 SPEC REPOS:
@@ -295,16 +289,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_beep:
-    :path: ".symlinks/plugins/flutter_beep/ios"
   flutter_tts:
     :path: ".symlinks/plugins/flutter_tts/ios"
   google_ml_kit:
     :path: ".symlinks/plugins/google_ml_kit/ios"
-  image_gallery_saver:
-    :path: ".symlinks/plugins/image_gallery_saver/ios"
-  image_picker:
-    :path: ".symlinks/plugins/image_picker/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
 
@@ -320,7 +310,6 @@ SPEC CHECKSUMS:
   FirebaseInstallations: caa7c8e0d3e2345b8829d2fa9ca1b4dfbf2fcc85
   FirebaseMessaging: 82c4a48638f53f7b184f3cc9f6cd2cbe533ab316
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_beep: 54fb393b22dfa0f0e4573c81b1c74dd71c4e5af8
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   google_ml_kit: a85eefb9ea6156b27ee2fba2b71e461e7b26a4f6
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
@@ -329,8 +318,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
   GoogleUtilitiesComponents: a69c0b3b369ba443e988141e75ef49d9010b1c80
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
-  image_picker: 9aa50e1d8cdacdbed739e925b7eea16d014367e6
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   MLImage: 647f3d580c10b3c9a3f6154f5d7baead60c42a0c
   MLKitBarcodeScanning: 6b998bd1cfe471ae407a7f647d649494617787c0
@@ -353,6 +340,7 @@ SPEC CHECKSUMS:
   MLKitVisionKit: 226bac429eda1d84285409e31ce9da72606850fb
   MLKitXenoCommon: bf5b3528d77cabe0d04f3c13536ba1302346e31c
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471

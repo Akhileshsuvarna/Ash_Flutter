@@ -1,7 +1,7 @@
 import 'dart:convert' show utf8, LineSplitter;
 
-import 'package:Health_Connector/constants.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:health_connector/constants.dart';
 
 import '../log/logger.dart';
 import 'pose_data.dart';
