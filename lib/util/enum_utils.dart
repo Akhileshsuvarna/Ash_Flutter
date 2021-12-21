@@ -52,6 +52,5 @@ class EnumUtils {
     }
   }
 
-  static String? getName(dynamic value) =>
-      value == null ? null : value.toString().split(".").last;
+  static String? getName(dynamic value) => value?.toString().split(".").last;
 }

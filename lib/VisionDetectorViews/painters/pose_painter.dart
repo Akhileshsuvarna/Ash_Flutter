@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:health_connector/log/logger.dart';
 
 import 'coordinates_translator.dart';
 
@@ -34,7 +35,7 @@ class PosePainter extends CustomPainter {
       ..strokeWidth = 8.0
       ..color = paintColor;
 
-    poses.forEach((pose) {
+    for (var pose in poses) {
       pose.landmarks.forEach((_, landmark) {
         // if (landmark.likelihood > minLikelihood) {
         if (landmark.type == PoseLandmarkType.leftShoulder ||
@@ -109,14 +110,13 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.leftKnee, PoseLandmarkType.leftAnkle, leftPaint);
       paintLine(
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
-    });
+    }
 
-    print(data + '\nEnd');
+    Logger.debug('$data \nEnd');
   }
 
   @override
-  bool shouldRepaint(covariant PosePainter oldDelegate) {
-    return oldDelegate.absoluteImageSize != absoluteImageSize ||
-        oldDelegate.poses != poses;
-  }
+  bool shouldRepaint(covariant PosePainter oldDelegate) =>
+      oldDelegate.absoluteImageSize != absoluteImageSize ||
+      oldDelegate.poses != poses;
 }

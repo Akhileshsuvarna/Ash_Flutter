@@ -2,12 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:health_connector/enums/enums.dart';
+import 'package:health_connector/log/logger.dart';
+import 'package:health_connector/util/enum_utils.dart';
 import 'package:health_connector/util/utils.dart';
 
 import 'camera_view.dart';
 import 'painters/pose_painter.dart';
 
 class PoseDetectorView extends StatefulWidget {
+  const PoseDetectorView({Key? key, required this.exerciseType})
+      : super(key: key);
+  final ExerciseType exerciseType;
+
   @override
   State<StatefulWidget> createState() => _PoseDetectorViewState();
 }
@@ -25,12 +32,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   void initState() {
     super.initState();
 
-    _speak('Starting exercise');
-    _speak('cat cow ');
-    _speak('in');
-    _speak('3');
-    _speak('2');
-    _speak('1');
+    _startActivity();
   }
 
   @override
@@ -39,9 +41,18 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     await poseDetector.close();
   }
 
+  _startActivity() async {
+    await _speak('Starting exercise');
+    await _speak(EnumUtils.getName(widget.exerciseType)!);
+    await _speak('in');
+    await _speak('3');
+    await _speak('2');
+    await _speak('1');
+  }
+
   Future _speak(String text) async {
     var result = await flutterTts.speak(text);
-    print(result);
+    Logger.debug(result);
   }
 
   @override
@@ -53,27 +64,32 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   Future<void> processImage(InputImage inputImage) async {
     if (isBusy) return;
     isBusy = true;
-    // if (!_isMatched) {
-    final List<Pose> poses = await poseDetector.processImage(inputImage);
-    // if (poses.length == 1) {
-    if (inputImage.inputImageData?.size != null &&
-        inputImage.inputImageData?.imageRotation != null) {
-      // TODO-Sikander
-      // compare pose here to check if Pose match with excersie pose
-      if (poses.length == 1) {
-        _isMatched = Utils.isCatPose(poses[0]);
+    if (!_isMatched) {
+      final List<Pose> poses = await poseDetector.processImage(inputImage);
+      // if (poses.length == 1) {
+      if (inputImage.inputImageData?.size != null &&
+          inputImage.inputImageData?.imageRotation != null) {
+        // TODO-Sikander
+        // compare pose here to check if Pose match with excersie pose
+        if (poses.length == 1) {
+          _isMatched = Utils.isCatPose(poses[0]);
+        }
+        Color paintColor = _isMatched ? Colors.green : Colors.white;
+        final painter = PosePainter(poses, inputImage.inputImageData!.size,
+            inputImage.inputImageData!.imageRotation, paintColor);
+        customPaint = CustomPaint(painter: painter);
+        if (_isMatched) {
+          // TODO-sikander ask team to check do we want to save image of last frame when pose detected
+          _speak('Congratulation cat cow position achieved');
+          Future.delayed(const Duration(seconds: 3), () {
+            print('its happening');
+            Navigator.of(context).pop(true);
+          });
+        }
+      } else {
+        customPaint = null;
       }
-      Color paintColor = _isMatched ? Colors.green : Colors.white;
-      final painter = PosePainter(poses, inputImage.inputImageData!.size,
-          inputImage.inputImageData!.imageRotation, paintColor);
-      customPaint = CustomPaint(painter: painter);
-      // if (_isMatched) {
-      //   _speak('Congratulation cat cow position achieved');
-      // }
-    } else {
-      customPaint = null;
     }
-    // }
     // }
     isBusy = false;
     if (mounted) {

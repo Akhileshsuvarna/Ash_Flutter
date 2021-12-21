@@ -50,7 +50,7 @@ import 'utils.dart';
 ///         Time: 11:31:11
 
 class Base64 {
-  static const String CA =
+  static const String ca =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   static final List<int> ia = initIA();
   static final int eq = '='.runes.first;
@@ -216,7 +216,7 @@ class Base64 {
   /// @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
   ///         (including '=') isn't divideable by 4. (I.e. definitely corrupted).
   static List<int>? decode(String? str) {
-    str = str == null ? null : str.replaceAll("data:image.*base64,", "");
+    str = str?.replaceAll("data:image.*base64,", "");
 
     // Check special case
     int sLen = str != null ? str.length : 0;
@@ -285,8 +285,8 @@ class Base64 {
   static List<int> initIA() {
     List<int> ia = List.filled(256, -1, growable: false);
 
-    for (int i = 0, iS = CA.length; i < iS; i++) {
-      ia[CA.codeUnitAt(i)] = i;
+    for (int i = 0, iS = ca.length; i < iS; i++) {
+      ia[ca.codeUnitAt(i)] = i;
     }
     ia[eq] = 0;
     return ia;

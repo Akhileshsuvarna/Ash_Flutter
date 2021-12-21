@@ -13,9 +13,11 @@ class Logger {
   static void Function(Object o, {StackTrace? stackTrace}) error = consoleLog;
 
   static void consoleLog(Object o, {StackTrace? stackTrace}) {
+    // ignore: avoid_print
     print(o);
 
     if (stackTrace != null) {
+      // ignore: avoid_print
       print(stackTrace);
     }
   }

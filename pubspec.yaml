@@ -26,6 +26,9 @@ dependencies:
   permission_handler: ^8.3.0
   flutter_tts: ^3.2.2
   google_fonts: ^2.1.0
+  firebase_auth: ^3.3.3
+  connectivity: ^3.0.6
+  animated_button: ^0.2.0
 
 dev_dependencies:
   flutter_test:

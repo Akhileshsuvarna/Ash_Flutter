@@ -8,7 +8,7 @@ import 'package:health_connector/util/device_utils.dart';
 import '../main.dart';
 
 class CameraView extends StatefulWidget {
-  CameraView(
+  const CameraView(
       {Key? key,
       required this.title,
       required this.customPaint,

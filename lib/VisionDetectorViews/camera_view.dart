@@ -4,13 +4,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:health_connector/util/device_utils.dart';
 
 import '../main.dart';
 
-enum ScreenMode { liveFeed, gallery }
-
 class CameraView extends StatefulWidget {
-  CameraView(
+  const CameraView(
       {Key? key,
       required this.title,
       required this.customPaint,
@@ -28,11 +27,11 @@ class CameraView extends StatefulWidget {
 }
 
 class _CameraViewState extends State<CameraView> {
-  ScreenMode _mode = ScreenMode.liveFeed;
   CameraController? _controller;
-  File? _image;
-  int _cameraIndex = 0;
-  double zoomLevel = 0.0, minZoomLevel = 0.0, maxZoomLevel = 0.0;
+  int _cameraIndex = 0, mainPointers = 0;
+  Orientation? _lastOrientation;
+  double _currentScale = 1.0, _baseScale = 1.0, _cW = 0.0, _cH = 0.0;
+  List<double> _availableZoom = [1.0, 1.0]; // min, max
 
   @override
   void initState() {
@@ -54,115 +53,93 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
+    _lastOrientation = DeviceUtils.orientation(context);
+
+    final Size size = DeviceUtils.size(context);
+    final double width = size.width;
+    final double height = size.height;
+    final Widget body = _body(width, height);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: _switchScreenMode,
-              child: Icon(
-                _mode == ScreenMode.liveFeed
-                    ? Icons.photo_library_outlined
-                    : (Platform.isIOS
-                        ? Icons.camera_alt_outlined
-                        : Icons.camera),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: _body(),
-      floatingActionButton: _floatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+        appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
+        extendBodyBehindAppBar: true,
+        body: _body(width, height),
+        floatingActionButton: _floatingActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 
   Widget? _floatingActionButton() {
-    if (_mode == ScreenMode.gallery) return null;
     if (cameras.length == 1) return null;
     return SizedBox(
         height: 70.0,
         width: 70.0,
         child: FloatingActionButton(
-          child: Icon(
-            Platform.isIOS
-                ? Icons.flip_camera_ios_outlined
-                : Icons.flip_camera_android_outlined,
-            size: 40,
-          ),
-          onPressed: _switchLiveCamera,
-        ));
+            child: Icon(
+                Platform.isIOS
+                    ? Icons.flip_camera_ios_outlined
+                    : Icons.flip_camera_android_outlined,
+                size: 40),
+            onPressed: _switchLiveCamera));
   }
 
-  Widget _body() {
-    return _liveFeedBody();
-  }
+  // Widget _body() {
+  //   if (_controller?.value.isInitialized == false) {
+  //     return Container();
+  //   }
+  //   return Stack(fit: StackFit.expand, children: <Widget>[
+  //     CameraPreview(_controller!),
+  //     if (widget.customPaint != null) widget.customPaint!
+  //   ]);
+  // }
 
-  Widget _liveFeedBody() {
-    if (_controller?.value.isInitialized == false) {
-      return Container();
-    }
+  Widget _body(double width, double height) {
+    final double aspectRatio = _controller!.value.previewSize!.aspectRatio;
+    final double containerWidth =
+        _getContainerWidth(width, height, aspectRatio);
+    final double containerHeight =
+        _getContainerHeight(width, height, aspectRatio);
+    final double denominator = DeviceUtils.isSmallDevice(context)
+        ? 16.0
+        : (DeviceUtils.isNormalDevice(context) ? 18.0 : 48.0);
+
     return Container(
-      color: Colors.black,
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CameraPreview(_controller!),
-          if (widget.customPaint != null) widget.customPaint!,
-          Positioned(
-            bottom: 100,
-            left: 50,
-            right: 50,
-            child: Slider(
-              value: zoomLevel,
-              min: minZoomLevel,
-              max: maxZoomLevel,
-              onChanged: (newSliderValue) {
-                setState(() {
-                  zoomLevel = newSliderValue;
-                  _controller!.setZoomLevel(zoomLevel);
-                });
-              },
-              divisions: (maxZoomLevel - 1).toInt() < 1
-                  ? null
-                  : (maxZoomLevel - 1).toInt(),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _switchScreenMode() async {
-    if (_mode == ScreenMode.liveFeed) {
-      _mode = ScreenMode.gallery;
-      await _stopLiveFeed();
-    } else {
-      _mode = ScreenMode.liveFeed;
-      await _startLiveFeed();
-    }
-    setState(() {});
+        width: width,
+        height: height,
+        color: Colors.black,
+        child: Stack(children: [
+          Center(
+              child: Container(
+                  width: containerWidth,
+                  height: containerHeight,
+                  color: Colors.blue,
+                  child: Listener(
+                      onPointerDown: (_) => mainPointers++,
+                      onPointerUp: (_) => mainPointers--,
+                      child: CameraPreview(_controller!,
+                          child: LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onScaleStart: _onScaleStart,
+                                      onScaleUpdate: _onScaleUpdate,
+                                      onTapDown: (details) => _onViewFinderTap(
+                                          details, constraints))))))),
+          if (widget.customPaint != null) widget.customPaint!
+        ]));
   }
 
   Future _startLiveFeed() async {
     final camera = cameras[_cameraIndex];
-    _controller = CameraController(
-      camera,
-      ResolutionPreset.medium,
-      enableAudio: false,
-    );
+    _controller =
+        CameraController(camera, ResolutionPreset.medium, enableAudio: false);
     _controller?.initialize().then((_) {
       if (!mounted) {
         return;
       }
       _controller?.getMinZoomLevel().then((value) {
-        zoomLevel = value;
-        minZoomLevel = value;
+        _availableZoom[0] = value;
       });
       _controller?.getMaxZoomLevel().then((value) {
-        maxZoomLevel = value;
+        _availableZoom[1] = value;
       });
       _controller?.startImageStream(_processCameraImage);
       setState(() {});
@@ -176,12 +153,70 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _switchLiveCamera() async {
-    if (_cameraIndex == 0)
+    if (_cameraIndex == 0) {
       _cameraIndex = 1;
-    else
+    } else {
       _cameraIndex = 0;
+    }
     await _stopLiveFeed();
     await _startLiveFeed();
+  }
+
+  double _getContainerWidth(double width, double height, double aspectRatio) {
+    if (DeviceUtils.isLandscape(context)) {
+      if (_cW < 1.0 || !DeviceUtils.isOrientation(_lastOrientation!, context)) {
+        _cW = width;
+
+        while (_cW / aspectRatio > height) {
+          _cW -= 1.0;
+        }
+      }
+
+      return _cW;
+    }
+
+    return _getContainerHeightPortrait(width, height, aspectRatio) /
+        aspectRatio;
+  }
+
+  double _getContainerHeight(double width, double height, double aspectRatio) =>
+      DeviceUtils.isLandscape(context)
+          ? _getContainerWidth(width, height, aspectRatio) / aspectRatio
+          : _getContainerHeightPortrait(width, height, aspectRatio);
+
+  double _getContainerHeightPortrait(
+      double width, double height, double aspectRatio) {
+    if (_cH < 1.0 || !DeviceUtils.isOrientation(_lastOrientation!, context)) {
+      _cH = height;
+
+      while (_cH * (1 / aspectRatio) > width) {
+        _cH -= 1.0;
+      }
+    }
+
+    return _cH;
+  }
+
+  void _onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
+    if (_controller != null) {
+      final Offset offset = Offset(
+          details.localPosition.dx / constraints.maxWidth,
+          details.localPosition.dy / constraints.maxHeight);
+
+      _controller!.setExposurePoint(offset);
+      _controller!.setFocusPoint(offset);
+    }
+  }
+
+  void _onScaleStart(ScaleStartDetails details) => _baseScale = _currentScale;
+
+  Future<void> _onScaleUpdate(ScaleUpdateDetails details) async {
+    // When there are not exactly two fingers on screen don't scale
+    if (_controller != null && mainPointers == 2) {
+      _currentScale = (_baseScale * details.scale)
+          .clamp(_availableZoom[0], _availableZoom[1]);
+      await _controller!.setZoomLevel(_currentScale);
+    }
   }
 
   Future _processCameraImage(CameraImage image) async {

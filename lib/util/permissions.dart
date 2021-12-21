@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart' show BuildContext;
 import 'package:permission_handler/permission_handler.dart';
 
-import 'enum_utils.dart';
-
 // TODO Add missing permission(s) when required
 // TODO Support multiple permissions request at once?
 // E.g. Map<Permission, PermissionStatus> statuses = await [Permission.location, Permission.storage].request();

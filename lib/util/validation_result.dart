@@ -2,7 +2,7 @@ import 'utils.dart';
 
 class ValidationResult {
   ValidationResult(this.isValid, String message)
-      : this.message = isValid
+      : message = isValid
             ? Utils.toDefault(
                 message, 'Exercise Configuration validated successfully')!
             : 'Exercise Configuration validation failed';
