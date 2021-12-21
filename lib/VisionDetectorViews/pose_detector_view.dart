@@ -66,7 +66,8 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     isBusy = true;
     if (!_isMatched) {
       final List<Pose> poses = await poseDetector.processImage(inputImage);
-      // if (poses.length == 1) {
+      print('pose detecte ${poses.length}');
+      if (poses.length == 1) {
       if (inputImage.inputImageData?.size != null &&
           inputImage.inputImageData?.imageRotation != null) {
         // TODO-Sikander
@@ -79,7 +80,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
             inputImage.inputImageData!.imageRotation, paintColor);
         customPaint = CustomPaint(painter: painter);
         if (_isMatched) {
-          // TODO-sikander ask team to check do we want to save image of last frame when pose detected
+          // TODO-sikander ask team to check do we want to save image of last frame when pose detected (Team Says Good Idea (Save image))
           _speak('Congratulation cat cow position achieved');
           Future.delayed(const Duration(seconds: 3), () {
             print('its happening');
@@ -90,7 +91,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
         customPaint = null;
       }
     }
-    // }
+    }
     isBusy = false;
     if (mounted) {
       setState(() {});

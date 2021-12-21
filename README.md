@@ -41,15 +41,22 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 
 ## TODOs:
 
-- [ ] Make exercie widget for Exercise screen for reuse in list in exercises screen.
-- [ ] Make class to hold data for lost of exercises form json Map.
-- [ ] verify Login screen.
-- [ ] confirm login methods from team.
-- [ ] get videos from team for exercises and store tham in firebase storage.
-- [ ] Store exercises data in firebase rtdb.
-- [ ] make play video page.
-- [ ] make result page and use widget based model.
-- [ ] Share result of exercise.
-- [ ] Remove camera skewness.
-- [ ] Improve Skelton design.
+- [x] Make exercie widget for Exercise screen for reuse in list in exercises screen.
+- [x] Make class to hold data for list of exercises form json Map.
+- [ ] verify Login screen.(Anthony)
+- [ ] confirm login methods from team. (Ash)
+- [ ] get videos from team for exercises and store tham in firebase storage.(Anthony)
+- [ ] Store exercises data in firebase rtdb.(Sikander)
+- [ ] make play video page.(Sikander)
+- [ ] make result page and use widget based model.(Sikander)
+- [ ] Share result of exercise.(Sikander)
+- [ ] Remove camera skewness. (Team) -> Re-Test required.
+- [ ] Improve Skelton design. 
 - [ ] make generic function to detect pose from remote config. (find a solution)
+- [ ] Scoring How good is user doing exercise VS the refference.
+- [ ] Save results in Firebase (For reporting / history) purpose.
+- [ ] Fix Frot Camera (Sikander)
+- [ ] Make sketon paint smooth (jittery)
+- [ ] Start Timer on Initial pose Detection and stop timer when pose is not detected for 1 to 2 seconds(threshold should be configurable from backend remotely)
+- [ ] Make a function to capture exercise So Admin can capture exercise Poses and Add Aexercise.
+- [ ] Make a Generic function to detect if live pose is smilar / same pose from required exercise.

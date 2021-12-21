@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/util/device_utils.dart';
 
 import '../main.dart';
@@ -38,6 +39,8 @@ class _CameraViewState extends State<CameraView> {
     super.initState();
 
     for (var i = 0; i < cameras.length; i++) {
+        print('camera index = $i');
+
       if (cameras[i].lensDirection == widget.initialDirection) {
         _cameraIndex = i;
       }
@@ -58,11 +61,16 @@ class _CameraViewState extends State<CameraView> {
     final Size size = DeviceUtils.size(context);
     final double width = size.width;
     final double height = size.height;
-    final Widget body = _body(width, height);
+    Logger.debug('Device Width = $width');
+    Logger.debug('Device Height = $height');
+    Logger.debug('Frame Width = ${_controller?.value.previewSize?.width}');
+    Logger.debug('Frame Height = ${_controller?.value.previewSize?.height}');
+
+    // final Widget body = _body(width, height);
     return Scaffold(
         appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
         extendBodyBehindAppBar: true,
-        body: _body(width, height),
+        body: _body(),
         floatingActionButton: _floatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
@@ -81,56 +89,56 @@ class _CameraViewState extends State<CameraView> {
             onPressed: _switchLiveCamera));
   }
 
-  // Widget _body() {
-  //   if (_controller?.value.isInitialized == false) {
-  //     return Container();
-  //   }
-  //   return Stack(fit: StackFit.expand, children: <Widget>[
-  //     CameraPreview(_controller!),
-  //     if (widget.customPaint != null) widget.customPaint!
-  //   ]);
-  // }
-
-  Widget _body(double width, double height) {
-    final double aspectRatio = _controller!.value.previewSize!.aspectRatio;
-    final double containerWidth =
-        _getContainerWidth(width, height, aspectRatio);
-    final double containerHeight =
-        _getContainerHeight(width, height, aspectRatio);
-    final double denominator = DeviceUtils.isSmallDevice(context)
-        ? 16.0
-        : (DeviceUtils.isNormalDevice(context) ? 18.0 : 48.0);
-
-    return Container(
-        width: width,
-        height: height,
-        color: Colors.black,
-        child: Stack(children: [
-          Center(
-              child: Container(
-                  width: containerWidth,
-                  height: containerHeight,
-                  color: Colors.blue,
-                  child: Listener(
-                      onPointerDown: (_) => mainPointers++,
-                      onPointerUp: (_) => mainPointers--,
-                      child: CameraPreview(_controller!,
-                          child: LayoutBuilder(
-                              builder: (context, constraints) =>
-                                  GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onScaleStart: _onScaleStart,
-                                      onScaleUpdate: _onScaleUpdate,
-                                      onTapDown: (details) => _onViewFinderTap(
-                                          details, constraints))))))),
-          if (widget.customPaint != null) widget.customPaint!
-        ]));
+  Widget _body() {
+    if (_controller?.value.isInitialized == false) {
+      return Container();
+    }
+    return Stack(fit: StackFit.expand, children: <Widget>[
+      CameraPreview(_controller!),
+      if (widget.customPaint != null) widget.customPaint!
+    ]);
   }
 
+  // Widget _body(double width, double height) {
+  //   final double aspectRatio = _controller!.value.previewSize!.aspectRatio;
+  //   final double containerWidth =
+  //       _getContainerWidth(width, height, aspectRatio);
+  //   final double containerHeight =
+  //       _getContainerHeight(width, height, aspectRatio);
+  //   final double denominator = DeviceUtils.isSmallDevice(context)
+  //       ? 16.0
+  //       : (DeviceUtils.isNormalDevice(context) ? 18.0 : 48.0);
+
+  //   return Container(
+  //       width: width,
+  //       height: height,
+  //       color: Colors.black,
+  //       child: Stack(children: [
+  //         Center(
+  //             child: Container(
+  //                 width: containerWidth,
+  //                 height: containerHeight,
+  //                 color: Colors.blue,
+  //                 child: Listener(
+  //                     onPointerDown: (_) => mainPointers++,
+  //                     onPointerUp: (_) => mainPointers--,
+  //                     child: CameraPreview(_controller!,
+  //                         child: LayoutBuilder(
+  //                             builder: (context, constraints) =>
+  //                                 GestureDetector(
+  //                                     behavior: HitTestBehavior.opaque,
+  //                                     onScaleStart: _onScaleStart,
+  //                                     onScaleUpdate: _onScaleUpdate,
+  //                                     onTapDown: (details) => _onViewFinderTap(
+  //                                         details, constraints))))))),
+  //         if (widget.customPaint != null) widget.customPaint!
+  //       ]));
+  // }
+
   Future _startLiveFeed() async {
-    final camera = cameras[_cameraIndex];
+    final camera = cameras[0];
     _controller =
-        CameraController(camera, ResolutionPreset.medium, enableAudio: false);
+        CameraController(camera, Platform.isAndroid ?  ResolutionPreset.max : ResolutionPreset.medium, enableAudio: false);
     _controller?.initialize().then((_) {
       if (!mounted) {
         return;
