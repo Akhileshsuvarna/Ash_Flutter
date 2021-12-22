@@ -49,8 +49,8 @@ class PosePainter extends CustomPainter {
             landmark.type == PoseLandmarkType.leftKnee ||
             landmark.type == PoseLandmarkType.rightKnee ||
             landmark.type == PoseLandmarkType.leftAnkle ||
-            landmark.type == PoseLandmarkType.rightAnkle ||
-            true) {
+            landmark.type == PoseLandmarkType.rightAnkle
+            ) {
           canvas.drawCircle(
               Offset(
                 translateX(landmark.x, rotation, size, absoluteImageSize),
@@ -110,6 +110,12 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.leftKnee, PoseLandmarkType.leftAnkle, leftPaint);
       paintLine(
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
+
+      //Draw Chest /body
+      paintLine(
+          PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder, leftPaint);
+      paintLine(
+          PoseLandmarkType.leftHip, PoseLandmarkType.rightHip, leftPaint);
     }
 
     Logger.debug('$data \nEnd');

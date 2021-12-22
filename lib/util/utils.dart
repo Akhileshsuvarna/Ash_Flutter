@@ -111,6 +111,16 @@ class Utils {
 // TODO-Sikander complete this later
   static bool x = true;
   static void isPoseGeneric(String conf, Pose pose) {
+    // if(isUserLefty(pose))
+    // {
+    //   //Comapre all left side landmarks
+    // }
+    // else if(isUserRight(pose)){
+    //   //compare all right side marks
+    // }
+    // else{
+    //   // Unknown Side Compare All Worst case scnerio
+    // }
     var poseData = PoseData.fromMap(pose.landmarks);
     if (Utils.x && poseData.leftHip!.x > poseData.nose!.x) {}
   }
