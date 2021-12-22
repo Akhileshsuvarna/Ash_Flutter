@@ -15,11 +15,11 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 
 # TODO-Sikander Test code and report below
 ## Tested Devices:
-Model               OS              Screen Size     Tested by       Tested on
-=====               ==              ===========     =========       =========
-Samsung A750        Android 10      Medium          Skandar         21/12/2021
-iPad 10             IOS 14.8        Large           Skandar         21/12/2021
-TODO(Ash)           Android 12      Medium           Ash             21/12/2021
+    Model               OS              Screen Size     Tested by       Tested on
+    =====               ==              ===========     =========       =========
+    Samsung A750        Android 10      Medium          Skandar         21/12/2021
+    iPad 10             IOS 14.8        Large           Skandar         21/12/2021
+    TODO(Ash)           Android 12      Medium           Ash            21/12/2021
 
 # TODO-Sikander verify percentage based coordinate system
 ## Percent Based Coordinate System:
