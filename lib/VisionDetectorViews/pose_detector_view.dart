@@ -42,12 +42,16 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   }
 
   _startActivity() async {
-    await _speak('Starting exercise');
-    await _speak(EnumUtils.getName(widget.exerciseType)!);
-    await _speak('in');
-    await _speak('3');
-    await _speak('2');
-    await _speak('1');
+    if (widget.exerciseType == ExerciseType.add) {
+      await _speak('Please press capture button when exercise pose acheived');
+    } else {
+      await _speak('Starting exercise');
+      await _speak(EnumUtils.getName(widget.exerciseType)!);
+      await _speak('in');
+      await _speak('3');
+      await _speak('2');
+      await _speak('1');
+    }
   }
 
   Future _speak(String text) async {
@@ -66,31 +70,31 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     isBusy = true;
     if (!_isMatched) {
       final List<Pose> poses = await poseDetector.processImage(inputImage);
-      // if (poses.length == 1) {
-      if (inputImage.inputImageData?.size != null &&
-          inputImage.inputImageData?.imageRotation != null) {
-        // TODO-Sikander
-        // compare pose here to check if Pose match with excersie pose
-        if (poses.length == 1) {
-          _isMatched = Utils.isCatPose(poses[0]);
+      if (poses.length == 1) {
+        if (inputImage.inputImageData?.size != null &&
+            inputImage.inputImageData?.imageRotation != null) {
+          // TODO-Sikander
+          // compare pose here to check if Pose match with excersie pose
+          if (poses.length == 1) {
+            _isMatched = Utils.isCatPose(poses[0]);
+          }
+          Color paintColor = _isMatched ? Colors.green : Colors.white;
+          final painter = PosePainter(poses, inputImage.inputImageData!.size,
+              inputImage.inputImageData!.imageRotation, paintColor);
+          customPaint = CustomPaint(painter: painter);
+          if (_isMatched) {
+            // TODO-sikander ask team to check do we want to save image of last frame when pose detected
+            _speak('Congratulation cat cow position achieved');
+            Future.delayed(const Duration(seconds: 3), () {
+              print('its happening');
+              // Navigator.of(context).pop(true);
+            });
+          }
+        } else {
+          customPaint = null;
         }
-        Color paintColor = _isMatched ? Colors.green : Colors.white;
-        final painter = PosePainter(poses, inputImage.inputImageData!.size,
-            inputImage.inputImageData!.imageRotation, paintColor);
-        customPaint = CustomPaint(painter: painter);
-        if (_isMatched) {
-          // TODO-sikander ask team to check do we want to save image of last frame when pose detected
-          _speak('Congratulation cat cow position achieved');
-          Future.delayed(const Duration(seconds: 3), () {
-            print('its happening');
-            Navigator.of(context).pop(true);
-          });
-        }
-      } else {
-        customPaint = null;
       }
     }
-    // }
     isBusy = false;
     if (mounted) {
       setState(() {});

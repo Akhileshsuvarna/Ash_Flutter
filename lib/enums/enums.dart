@@ -1,1 +1,1 @@
-enum ExerciseType { catcow, sphinx, plank }
+enum ExerciseType { catcow, sphinx, plank, add }

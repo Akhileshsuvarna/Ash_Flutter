@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:health_connector/util/device_utils.dart';
-
 import '../main.dart';
 
 class CameraView extends StatefulWidget {
@@ -92,7 +91,8 @@ class _CameraViewState extends State<CameraView> {
   // }
 
   Widget _body(double width, double height) {
-    final double aspectRatio = _controller!.value.previewSize!.aspectRatio;
+    final double aspectRatio =
+        _controller?.value.previewSize?.aspectRatio ?? 0.0;
     final double containerWidth =
         _getContainerWidth(width, height, aspectRatio);
     final double containerHeight =
