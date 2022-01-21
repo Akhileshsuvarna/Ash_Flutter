@@ -1,16 +1,19 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/login_screen.dart';
 
-import 'VisionDetectorViews/pose_detector_view.dart';
 import 'screens/internet_error.dart';
 
 class Constants {
   const Constants._();
 
+// From Anthony
+// #662D91 purple
+// #262262 dark purple
+// #25AAE1
   static const double accuracy = 10.0;
   static const String loading = 'Loading ...';
   static const Color appBackgroundColor = Color(0xffffffff);
@@ -35,7 +38,7 @@ class Constants {
   static const String pwReset = 'pwreset';
   static const String splashScreen = 'splashscreen';
   static const String internetError = 'internetscreen';
-  static const String homeScreen = 'home';
+  static const String exerciseScreen = 'exercise_screen';
   static const String poseDetectorScreen = 'posedetectorscreen';
   static const String signUpWithApple = 'signup_with_apple';
   static const String signUpWithGoogle = 'signup_with_gmail';
@@ -44,21 +47,38 @@ class Constants {
   static Map<String, WidgetBuilder> myroutes = <String, WidgetBuilder>{
     signIn: (BuildContext context) => const LoginPage(),
     // PW_RESET: (BuildContext context) => ResetPasswordScreen(),
-    homeScreen: (BuildContext context) => const ExercisePage(),
+    exerciseScreen: (BuildContext context) => const ExercisePage(),
     // STORY_SCREEN: (BuildContext context) => StoryScreen(),
     // VIP_SCREEN: (BuildContext context) => VipInfo(),
     internetError: (BuildContext context) => const InternetError(),
   };
 
+  static showMessage(BuildContext context, String message) =>
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+
+  static FirebaseOptions firebaseOptions() => FirebaseOptions(
+      appId: Constants.firebaseAPIKey,
+      apiKey: Constants.firebaseAppID,
+      projectId: Constants.firebaseProjectId,
+      storageBucket: Constants.firebaseStorageBucket,
+      messagingSenderId: Constants.measurementId,
+      measurementId: Constants.measurementId,
+      databaseURL: Constants.firebaseDatabaseUrl);
+
   static const String firebaseProjectId = 'livvinyl-health-connector';
   static const String firebaseDatabaseUrl =
-      'https://livvinyl-health-connector-default-rtdb.firebaseio.com/healthconnector';
+      'https://livvinyl-health-connector-default-rtdb.firebaseio.com';
 
-  static String getFirebaseAPIKey() => Platform.isIOS
-      ? 'AIzaSyAlqq6PZylLKD5C0sN0wRPvTpbHry1Yl4w'
-      : 'AIzaSyD8CtMLbQa6VLVhZokj8aPZykyfkIEPd9E';
+  static String firebaseAPIKey = 'AIzaSyDQIByqxJQERYTYrPet9SNZ2lH1WogQrAk';
 
-  static String getFirebaseAppId() => Platform.isIOS
-      ? '1:335396837024:ios:0c0696df1d939def0c9bc5'
-      : '1:335396837024:android:ee1ef1184ae484920c9bc5';
+  static String firebaseAppID = '1:335396837024:web:87afe595e8f716210c9bc5';
+
+  static String firebaseStorageBucket = 'livvinyl-health-connector.appspot.com';
+
+  static const String dbRoot = 'healthconnector';
+
+  static const String messagingSenderId = '335396837024';
+
+  static const String measurementId = 'G-XJVZYTYMVZ';
 }

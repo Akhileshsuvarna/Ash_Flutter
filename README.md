@@ -2,7 +2,6 @@
 
 Health connector.ai is health and fitness app powered by Livvinyl progressive media marketing.
 
-# TODO-Sikander Find out the sizes and enter below (Android + iOS)
 ### App Size
 #### Android:
     FAT APK                             ???? MB
@@ -13,7 +12,6 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 #### IOS:
     ???? MB (Final Size will be determined by AppStore)
 
-# TODO-Sikander Test code and report below
 ## Tested Devices:
     Model               OS              Screen Size     Tested by       Tested on
     =====               ==              ===========     =========       =========
@@ -44,6 +42,7 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 
 - [x] Make exercie widget for Exercise screen for reuse in list in exercises screen.
 - [x] Make class to hold data for list of exercises form json Map.
+- [ ] Save last frame of detected pose in user Gallery with Overlay. (When done capture frame and goto temporay screen and perform pose detection on static image instead of frame from stream and do custom paint on it. Now it won't be a paltformview at this stage screenshot can be taken using screenshot plugin) -> https://pub.dev/packages/screenshot
 - [ ] verify Login screen.(Anthony)
 - [ ] confirm login methods from team. (Ash)
 - [ ] get videos from team for exercises and store tham in firebase storage.(Anthony)

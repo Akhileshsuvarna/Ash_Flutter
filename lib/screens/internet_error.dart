@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:animated_button/animated_button.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/globals.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class InternetError extends StatefulWidget {
   const InternetError({Key? key}) : super(key: key);

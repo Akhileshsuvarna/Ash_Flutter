@@ -20,10 +20,15 @@ class PosePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     String data = 'Start : \n';
 
-    final paint = Paint()
+    final jointPaintLeft = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0
-      ..color = paintColor;
+      ..color = const Color(0xFF7E57C2);
+
+    final jointPaintRight = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 14.0
+      ..color = Colors.blue;
 
     final leftPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -36,34 +41,6 @@ class PosePainter extends CustomPainter {
       ..color = paintColor;
 
     for (var pose in poses) {
-      pose.landmarks.forEach((_, landmark) {
-        // if (landmark.likelihood > minLikelihood) {
-        if (landmark.type == PoseLandmarkType.leftShoulder ||
-            landmark.type == PoseLandmarkType.rightShoulder ||
-            landmark.type == PoseLandmarkType.leftElbow ||
-            landmark.type == PoseLandmarkType.rightElbow ||
-            landmark.type == PoseLandmarkType.leftWrist ||
-            landmark.type == PoseLandmarkType.rightWrist ||
-            landmark.type == PoseLandmarkType.leftHip ||
-            landmark.type == PoseLandmarkType.rightHip ||
-            landmark.type == PoseLandmarkType.leftKnee ||
-            landmark.type == PoseLandmarkType.rightKnee ||
-            landmark.type == PoseLandmarkType.leftAnkle ||
-            landmark.type == PoseLandmarkType.rightAnkle
-            ) {
-          canvas.drawCircle(
-              Offset(
-                translateX(landmark.x, rotation, size, absoluteImageSize),
-                translateY(landmark.y, rotation, size, absoluteImageSize),
-              ),
-              1,
-              paint);
-          data = data +
-              'Type = ${landmark.type} || X = ${landmark.x} || Y = ${landmark.y} || Z = ${landmark.z}\n';
-        }
-        // }
-      });
-
       void paintLine(
           PoseLandmarkType type1, PoseLandmarkType type2, Paint paintType) {
         PoseLandmark joint1 = pose.landmarks[type1]!;
@@ -112,13 +89,48 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
 
       //Draw Chest /body
-      paintLine(
-          PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder, leftPaint);
-      paintLine(
-          PoseLandmarkType.leftHip, PoseLandmarkType.rightHip, leftPaint);
+      paintLine(PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder,
+          leftPaint);
+      paintLine(PoseLandmarkType.leftHip, PoseLandmarkType.rightHip, leftPaint);
+
+      pose.landmarks.forEach((_, landmark) {
+        // if (landmark.likelihood > minLikelihood) {
+        if (landmark.type == PoseLandmarkType.leftShoulder ||
+            landmark.type == PoseLandmarkType.leftElbow ||
+            landmark.type == PoseLandmarkType.leftWrist ||
+            landmark.type == PoseLandmarkType.leftHip ||
+            landmark.type == PoseLandmarkType.leftKnee ||
+            landmark.type == PoseLandmarkType.leftAnkle) {
+          canvas.drawCircle(
+              Offset(
+                translateX(landmark.x, rotation, size, absoluteImageSize),
+                translateY(landmark.y, rotation, size, absoluteImageSize),
+              ),
+              1,
+              jointPaintLeft);
+          data = data +
+              'Type = ${landmark.type} || X = ${landmark.x} || Y = ${landmark.y} || Z = ${landmark.z}\n';
+        } else if (landmark.type == PoseLandmarkType.rightShoulder ||
+            landmark.type == PoseLandmarkType.rightElbow ||
+            landmark.type == PoseLandmarkType.rightWrist ||
+            landmark.type == PoseLandmarkType.rightHip ||
+            landmark.type == PoseLandmarkType.rightKnee ||
+            landmark.type == PoseLandmarkType.rightAnkle) {
+          canvas.drawCircle(
+              Offset(
+                translateX(landmark.x, rotation, size, absoluteImageSize),
+                translateY(landmark.y, rotation, size, absoluteImageSize),
+              ),
+              1,
+              jointPaintRight);
+          data = data +
+              'Type = ${landmark.type} || X = ${landmark.x} || Y = ${landmark.y} || Z = ${landmark.z}\n';
+        }
+        // }
+      });
     }
 
-    Logger.debug('$data \nEnd');
+    // Logger.debug('$data \nEnd');
   }
 
   @override

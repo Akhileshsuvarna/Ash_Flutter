@@ -11,13 +11,11 @@ import '../main.dart';
 class CameraView extends StatefulWidget {
   const CameraView(
       {Key? key,
-      required this.title,
       required this.customPaint,
       required this.onImage,
       this.initialDirection = CameraLensDirection.back})
       : super(key: key);
 
-  final String title;
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
   final CameraLensDirection initialDirection;
@@ -27,7 +25,6 @@ class CameraView extends StatefulWidget {
 }
 
 class _CameraViewState extends State<CameraView> {
-  CameraController? _controller;
   int _cameraIndex = 0, mainPointers = 0;
   Orientation? _lastOrientation;
   double _currentScale = 1.0, _baseScale = 1.0, _cW = 0.0, _cH = 0.0;
@@ -41,7 +38,7 @@ class _CameraViewState extends State<CameraView> {
       print('camera index = $i');
 
       if (cameras[i].lensDirection == widget.initialDirection) {
-        _cameraIndex = i;
+        _cameraIndex = 0;
       }
     }
     _startLiveFeed();
@@ -57,13 +54,14 @@ class _CameraViewState extends State<CameraView> {
   Widget build(BuildContext context) {
     _lastOrientation = DeviceUtils.orientation(context);
 
-    final Size size = DeviceUtils.size(context);
-    final double width = size.width;
-    final double height = size.height;
-    Logger.debug('Device Width = $width');
-    Logger.debug('Device Height = $height');
-    Logger.debug('Frame Width = ${_controller?.value.previewSize?.width}');
-    Logger.debug('Frame Height = ${_controller?.value.previewSize?.height}');
+    // final Size size = DeviceUtils.size(context);
+    // final double width = size.width;
+    // final double height = size.height;
+    // Logger.debug('Device Width = $width');
+    // Logger.debug('Device Height = $height');
+    // Logger.debug('Frame Width = ${cameraController?.value.previewSize?.width}');
+    // Logger.debug(
+    //     'Frame Height = ${cameraController?.value.previewSize?.height}');
 
     // final Widget body = _body(width, height);
     return Scaffold(
@@ -80,6 +78,7 @@ class _CameraViewState extends State<CameraView> {
         height: 70.0,
         width: 70.0,
         child: FloatingActionButton(
+            heroTag: 'flipCamera',
             child: Icon(
                 Platform.isIOS
                     ? Icons.flip_camera_ios_outlined
@@ -89,11 +88,11 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _body() {
-    if (_controller?.value.isInitialized == false) {
+    if (cameraController?.value.isInitialized == false) {
       return Container();
     }
     return Stack(fit: StackFit.expand, children: <Widget>[
-      CameraPreview(_controller!),
+      CameraPreview(cameraController!),
       if (widget.customPaint != null) widget.customPaint!
     ]);
   }
@@ -135,29 +134,29 @@ class _CameraViewState extends State<CameraView> {
   // }
 
   Future _startLiveFeed() async {
-    final camera = cameras[0];
-    _controller = CameraController(camera,
+    final camera = cameras[_cameraIndex];
+    cameraController = CameraController(camera,
         Platform.isAndroid ? ResolutionPreset.max : ResolutionPreset.medium,
         enableAudio: false);
-    _controller?.initialize().then((_) {
+    cameraController?.initialize().then((_) {
       if (!mounted) {
         return;
       }
-      _controller?.getMinZoomLevel().then((value) {
+      cameraController?.getMinZoomLevel().then((value) {
         _availableZoom[0] = value;
       });
-      _controller?.getMaxZoomLevel().then((value) {
+      cameraController?.getMaxZoomLevel().then((value) {
         _availableZoom[1] = value;
       });
-      _controller?.startImageStream(_processCameraImage);
+      cameraController?.startImageStream(_processCameraImage);
       setState(() {});
     });
   }
 
   Future _stopLiveFeed() async {
-    await _controller?.stopImageStream();
-    await _controller?.dispose();
-    _controller = null;
+    await cameraController?.stopImageStream();
+    await cameraController?.dispose();
+    cameraController = null;
   }
 
   Future _switchLiveCamera() async {
@@ -206,13 +205,13 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
-    if (_controller != null) {
+    if (cameraController != null) {
       final Offset offset = Offset(
           details.localPosition.dx / constraints.maxWidth,
           details.localPosition.dy / constraints.maxHeight);
 
-      _controller!.setExposurePoint(offset);
-      _controller!.setFocusPoint(offset);
+      cameraController!.setExposurePoint(offset);
+      cameraController!.setFocusPoint(offset);
     }
   }
 
@@ -220,10 +219,10 @@ class _CameraViewState extends State<CameraView> {
 
   Future<void> _onScaleUpdate(ScaleUpdateDetails details) async {
     // When there are not exactly two fingers on screen don't scale
-    if (_controller != null && mainPointers == 2) {
+    if (cameraController != null && mainPointers == 2) {
       _currentScale = (_baseScale * details.scale)
           .clamp(_availableZoom[0], _availableZoom[1]);
-      await _controller!.setZoomLevel(_currentScale);
+      await cameraController!.setZoomLevel(_currentScale);
     }
   }
 

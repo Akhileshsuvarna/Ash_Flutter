@@ -18,9 +18,13 @@ class FirebaseRtdbServices {
   }
 
   static Future<Map> getDataAtNode(DatabaseReference dbRef) async =>
-      await dbRef.once().then((DataSnapshot snapshot) {
-        return snapshot.value;
+      await dbRef.once().then((value) {
+        return value.snapshot.value as Map;
       });
+
+  // then((DataSnapshot snapshot) {
+  //   return snapshot.value;
+  // });
 
   static iterateMap(Map map) => map.forEach((key, value) {
         if (value is Map) {

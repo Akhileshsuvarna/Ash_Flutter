@@ -1,25 +1,26 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'globals.dart';
 import 'log/logger.dart';
+import 'models/UserProfile.dart';
 
 List<CameraDescription> cameras = [];
-
+CameraController? cameraController;
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 late FirebaseDatabase firebaseDatabase;
 late FirebaseApp firebaseApp;
 bool isFirebaseRTDInitialized = false;
-
+late SharedPreferences prefs;
+late UserProfile userProfile;
 String initialRoute = Constants.signIn;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
   Logger.debug("Handling a background message: ${message.messageId}");
@@ -28,18 +29,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Globals.lookupInternet().then((value) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isAdmin', true);
     if (value) {
       firebaseApp = await Firebase.initializeApp();
 
-      // firebaseApp = await Firebase.initializeApp(
-      //   options: FirebaseOptions(
-      //     appId: Constants.getFirebaseAppId(),
-      //     apiKey: Constants.getFirebaseAPIKey(),
-      //     projectId: Constants.firebaseProjectId,
-      //     messagingSenderId: '',
-      //     databaseURL: Constants.firebaseDatabaseUrl,
-      //   ),
-      // );
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
 
@@ -57,7 +51,7 @@ Future<void> main() async {
               provisional: false,
               sound: true);
       await initFirebaseDatabase();
-      print('User granted permission: ${settings.authorizationStatus}');
+      Logger.info('User granted permission: ${settings.authorizationStatus}');
 
       var fcmtoken = await _firebaseMessaging.getToken();
       Logger.info(fcmtoken ?? 'No firebase token received');

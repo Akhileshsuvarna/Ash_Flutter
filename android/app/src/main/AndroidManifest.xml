@@ -2,7 +2,7 @@
     package="com.livvinyl.healthconnector.app">
 <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="app"
+        android:label="Health Connector"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
