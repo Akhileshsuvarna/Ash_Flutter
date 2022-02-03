@@ -37,7 +37,14 @@ class _ExercisePageState extends State<ExercisePage> {
     _size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Constants.appBarColor,
-        appBar: AppBar(backgroundColor: Constants.appBarColor, elevation: 0),
+        appBar: AppBar(backgroundColor: Constants.appBarColor, elevation: 0,actions:[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(onPressed: (){
+              Navigator.of(context).pushReplacementNamed(Constants.userProfileScreen);
+            }, icon: const Icon(Icons.account_circle_sharp,size: 40,)),
+          )
+        ]),
         body: Scaffold(
             key: scaffoldKey,
             appBar: AppBar(
@@ -55,7 +62,8 @@ class _ExercisePageState extends State<ExercisePage> {
                 elevation: 0,
                 actions: _appBarActions()),
             backgroundColor: Constants.appBackgroundColor,
-            body: _body()));
+            body:
+            _body()));
   }
 
   List<Widget> _appBarActions() => [
@@ -65,20 +73,23 @@ class _ExercisePageState extends State<ExercisePage> {
             : Container()
       ];
   _addExercise() => openPoseDetector(context, addNew: true);
-  _body() => FutureBuilder(
-      future: _getExercisesMeta(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return _progressIndicator();
-          case ConnectionState.none:
-            return _progressIndicator();
-          case ConnectionState.active:
-            return _progressIndicator();
-          case ConnectionState.done:
-            return _exercises(snapshot.data as List<ExerciseMeta>);
-        }
-      });
+  _body() => Container(
+    padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight ),
+    child: FutureBuilder(
+        future: _getExercisesMeta(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return _progressIndicator();
+            case ConnectionState.none:
+              return _progressIndicator();
+            case ConnectionState.active:
+              return _progressIndicator();
+            case ConnectionState.done:
+              return _exercises(snapshot.data as List<ExerciseMeta>);
+          }
+        }),
+  );
 
   _progressIndicator() => const Center(child: CircularProgressIndicator());
 
@@ -88,7 +99,8 @@ class _ExercisePageState extends State<ExercisePage> {
           padding: EdgeInsets.only(
               left: _size.width / 16,
               right: _size.width / 16,
-              top: _size.height / 48),
+              top: _size.height / 48,
+          bottom:  _size.height / 48),
           child: exerciseWidget(
               size: _size,
               coverImageUrl: metaData[index].coverImageUrl!,

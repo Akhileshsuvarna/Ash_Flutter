@@ -224,7 +224,7 @@ class Utils {
       Logger.error(e, stackTrace: stackTrace);
       return false;
     }
-    return false;
+
   }
 
   static bool _catRight(PoseData poseData) {

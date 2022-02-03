@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -59,17 +58,21 @@ Future<void> main() async {
       initialRoute = Constants.internetError;
     }
     cameras = await availableCameras();
-    runApp(HealthConnectorApp());
+    runApp(const HealthConnectorApp());
   });
 }
 
 class HealthConnectorApp extends StatelessWidget {
+  const HealthConnectorApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) =>
-      MaterialApp(debugShowCheckedModeBanner: false, home: Home());
+      const MaterialApp(debugShowCheckedModeBanner: false, home: Home());
 }
 
 class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
       debugShowCheckedModeBanner: false,
