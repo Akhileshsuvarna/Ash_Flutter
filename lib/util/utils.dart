@@ -1,5 +1,7 @@
 import 'dart:convert' show utf8, LineSplitter;
-
+import 'dart:io';
+import 'package:image/image.dart' as img;
+import 'package:blurhash_dart/blurhash_dart.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:health_connector/constants.dart';
 
@@ -268,5 +270,11 @@ class Utils {
       Logger.error(e, stackTrace: stackTrace);
       return false;
     }
+  }
+
+  static String getBlurHash(String imagePath) {
+    final data = File(imagePath).readAsBytesSync();
+    final image = img.decodeImage(data.toList());
+    return BlurHash.encode(image!, numCompX: 4, numCompY: 3).hash;
   }
 }

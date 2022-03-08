@@ -1,5 +1,3 @@
-import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -15,9 +13,9 @@ import 'painters/pose_painter.dart';
 
 class PoseDetectorView extends StatefulWidget {
   const PoseDetectorView(
-      {Key? key, required this.exerciseType, this.addNew = false})
+      {Key? key, required this.exerciseName, this.addNew = false})
       : super(key: key);
-  final ExerciseType? exerciseType;
+  final String? exerciseName;
   final bool addNew;
 
   @override
@@ -50,7 +48,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
       await _speak('Please press capture button when exercise pose acheived');
     } else {
       await _speak(
-          'Starting exercise ${EnumUtils.getName(widget.exerciseType)}');
+          'Starting exercise ${EnumUtils.getName(widget.exerciseName)}');
     }
   }
 
@@ -98,7 +96,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
 
           if (_isMatched && !widget.addNew) {
             _speak(
-                'Congratulation ${EnumUtils.getName(widget.exerciseType)!} position achieved');
+                'Congratulation ${EnumUtils.getName(widget.exerciseName)!} position achieved');
             Future.delayed(const Duration(seconds: 3),
                 () => Navigator.of(context).pop(true));
           }
@@ -119,21 +117,12 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   }
 
   bool _isPoseMatched(Pose pose, InputImage inputImage) {
-    if (widget.exerciseType == ExerciseType.catcow) {
-      return Utils.isCatPose(pose);
-    } else if (widget.exerciseType == ExerciseType.sphinx) {
-      // TODO(Sikander) Implement Sphinc Exercise
-      return false;
-    } else if (widget.exerciseType == ExerciseType.plank) {
-      // TODO(Sikander) Implement Sphinc Exercise
-      return false;
-    } else {
-      return false;
-    }
+    // TODO(Skandar): Match pose here
+    return false;
   }
 
-  void _savePose() async {
-    await cameraController!.takePicture().then((value) {
+  void _savePose() {
+    cameraController!.takePicture().then((value) {
       setState(() {
         _path = value.path;
       });
@@ -141,9 +130,6 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   }
 
   void _addExercise(Pose pose, CustomPaint customPaint, String path) =>
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AddExercise(
-                  pose: pose, imagePath: path, customPaint: customPaint)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const AddExercise()));
 }

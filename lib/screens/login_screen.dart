@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
-import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/UserProfile.dart';
 import 'package:health_connector/services/socialSignIn.dart';
@@ -50,37 +49,42 @@ class _LoginPageState extends State<LoginPage> {
                         left: _size.width / 16,
                         right: _size.width / 16),
                     child: RoundedButton(
-                        color: Colors.white,
-                        prefix: Image.asset("assets/social/google-logo.png"),
-                        text: "Sign in with Google",
-                        textColor: Colors.black,
-                        onPressed: _signUpwithGoogle))
+                      color: Colors.white,
+                      prefix: Image.asset("assets/social/google-logo.png"),
+                      text: "Sign in with Google",
+                      textColor: Colors.black,
+                      onPressed: _signUpwithGoogle,
+                    ),
+                  )
                 : const SizedBox(height: 0),
             // Continue with Apple
             Platform.isIOS
                 ? Padding(
                     padding: EdgeInsets.only(
-                        top: _size.height / 128,
-                        left: _size.width / 16,
-                        right: _size.width / 16),
+                      top: _size.height / 128,
+                      left: _size.width / 16,
+                      right: _size.width / 16,
+                    ),
                     child: RoundedButton(
-                        color: Colors.white,
-                        prefix: Image.asset("assets/social/apple-logo.png"),
-                        text: "Sign in with Apple",
-                        textColor: Colors.black,
-                        onPressed: _signUpwithApple))
+                      color: Colors.white,
+                      prefix: Image.asset("assets/social/apple-logo.png"),
+                      text: "Sign in with Apple",
+                      textColor: Colors.black,
+                      onPressed: _signUpwithApple,
+                    ),
+                  )
                 : const SizedBox(height: 0),
 
             const Padding(padding: EdgeInsets.only(bottom: 50)),
+            // Padding(
+            //   padding: EdgeInsets.only(
+            //       left: DeviceUtils.width(context) / 8,
+            //       right: DeviceUtils.width(context) / 8,
+            //       top: DeviceUtils.height(context) / 8),
+            //   child: _logInButton(),
+            // ),
+            // TODO-Sikander make this padding dynamic so that bottom padding will always remain responsive for all screen sizes.
             Padding(
-              padding: EdgeInsets.only(
-                  left: DeviceUtils.width(context) / 8,
-                  right: DeviceUtils.width(context) / 8,
-                  top: DeviceUtils.height(context) / 8),
-              child: _logInButton(),
-            ),
-            Padding(
-              //TODO-Sikander make this padding dynamic so that bottom padding will always remain responsive for all screen sizes.
               padding:
                   EdgeInsets.only(bottom: DeviceUtils.height(context) / 32),
               child: const Text(
@@ -95,11 +99,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _logInButton() => RoundedButton(
-      text: "Login",
-      prefix: Image.asset('assets/images/logo.png'),
-      color: Constants.primaryColor,
-      onPressed: () => _onLoginButtonPressed,
-      textColor: Constants.primaryTextColor);
+        text: "Login",
+        prefix: Image.asset('assets/images/logo.png'),
+        color: Constants.primaryColor,
+        onPressed: () => _onLoginButtonPressed,
+        textColor: Constants.primaryTextColor,
+      );
 
   void _onLoginButtonPressed() =>
       Navigator.of(context).pushReplacementNamed(Constants.exerciseScreen);
@@ -140,14 +145,14 @@ class _LoginPageState extends State<LoginPage> {
             dateOfBirth: '',
             gender: '',
             address: '',
-            firebaseToken: prefs.getString('_fcmToken') ?? '',
+            firebaseToken: prefs.getString('fcmToken') ?? '',
             uuid: credential.user!.uid));
 
     await firebaseDatabase
         .ref()
         .child(Constants.dbRoot)
         .child('users')
-        .child(userProfile.data.uuid)
+        .child(userProfile.data!.uuid)
         .get()
         .then((snapshot) async {
       if (snapshot.exists) {
@@ -155,17 +160,17 @@ class _LoginPageState extends State<LoginPage> {
             .ref()
             .child(Constants.dbRoot)
             .child('users')
-            .child(userProfile.data.uuid)
+            .child(userProfile.data!.uuid)
             .remove();
       }
     });
 
-    firebaseDatabase
+    await firebaseDatabase
         .ref()
         .child(Constants.dbRoot)
         .child('users')
-        .child(userProfile.data.uuid)
-        .set(userProfile.data.toJson());
+        .child(userProfile.data!.uuid)
+        .set(userProfile.data!.toJson());
 
     prefs.setString("userProfile", jsonEncode(userProfile.toJson()));
     prefs.setBool('_isLoggedIn', true);

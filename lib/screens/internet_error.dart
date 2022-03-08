@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:health_connector/globals.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
+import '../constants.dart';
+import '../main.dart';
+
 class InternetError extends StatefulWidget {
   const InternetError({Key? key}) : super(key: key);
   @override
@@ -125,9 +128,9 @@ class _InternetErrorState extends State<InternetError> {
     Globals.lookupInternet().then((value) {
       if (value) {
         // TODO-Sikander fix me
-        // navigationPage();
+        Navigator.of(context).pushReplacementNamed(Constants.logIn);
       } else {
-        snackBar(message: "No Internet Found");
+        snackBar(message: "No internet connection");
       }
     });
   }

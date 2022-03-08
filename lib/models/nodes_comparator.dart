@@ -7,35 +7,36 @@ class NCParams {
   const NCParams._();
   static const String firstlandmark = 'firstlandmark';
   static const String secondLandmark = 'secondLandmark';
-  static const String greaterLandmark = 'greaterLandmark';
+  static const String isFirstGreater = 'isFirstGreater';
   static const String axis = 'axis';
 }
 
 class NodesComparator {
-  late PoseLandmarkType firstlandmark;
-  late PoseLandmarkType secondLandmark;
-  late PoseLandmarkType greaterLandmark;
-  late Axis axis;
+  late PoseLandmarkType? firstlandmark;
+  late PoseLandmarkType? secondLandmark;
+  late bool? isFirstGreater;
+  late Axis? axis;
 
   NodesComparator(
-      this.firstlandmark, this.secondLandmark, this.greaterLandmark, this.axis);
+      {this.firstlandmark,
+      this.secondLandmark,
+      this.isFirstGreater,
+      this.axis});
 
   Map<String, dynamic> toJson() => {
         NCParams.firstlandmark:
-            Utils.splitListBySeperatorAsList([firstlandmark], '.').first,
+            Utils.splitListBySeperatorAsList([firstlandmark], '.').last,
         NCParams.secondLandmark:
-            Utils.splitListBySeperatorAsList([secondLandmark], '.').first,
-        NCParams.greaterLandmark:
-            Utils.splitListBySeperatorAsList([greaterLandmark], '.').first,
-        NCParams.axis: Utils.splitListBySeperatorAsList([axis], '.').first
+            Utils.splitListBySeperatorAsList([secondLandmark], '.').last,
+        NCParams.isFirstGreater: isFirstGreater,
+        NCParams.axis: Utils.splitListBySeperatorAsList([axis], '.').last
       };
   NodesComparator.fromJson(Map<String, dynamic> json) {
     firstlandmark = EnumUtils.toEnum(
         json[NCParams.firstlandmark], PoseLandmarkType.values, true)!;
     secondLandmark = EnumUtils.toEnum(
         json[NCParams.secondLandmark], PoseLandmarkType.values, true)!;
-    greaterLandmark = EnumUtils.toEnum(
-        json[NCParams.greaterLandmark], PoseLandmarkType.values, true)!;
+    isFirstGreater = json[NCParams.isFirstGreater];
     axis = EnumUtils.toEnum(json[NCParams.axis], Axis.values, true)!;
   }
 }

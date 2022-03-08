@@ -60,3 +60,19 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 - [ ] Start Timer on Initial pose Detection and stop timer when pose is not detected for 1 to 2 seconds(threshold should be configurable from backend remotely)
 - [ ] Make a function to capture exercise So Admin can capture exercise Poses and Add Aexercise.
 - [ ] Make a Generic function to detect if live pose is smilar / same pose from required exercise.
+
+
+
+## use below code to generate Blurhash for image
+
+import 'package:blurhash_dart/blurhash_dart.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
+
+String uri = "image url goes here";
+  http.get(Uri.parse(uri)).then((value) {
+    final data = value.bodyBytes;
+    final image = img.decodeImage(data);
+    final hash = BlurHash.encode(image!);
+    print(hash);
+  });

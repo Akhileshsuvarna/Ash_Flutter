@@ -1,9 +1,9 @@
 import 'package:health_connector/main.dart';
 
 class UserProfile {
-  Data data = Data();
+  Data? data = Data();
 
-  UserProfile({required this.data});
+  UserProfile({this.data});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     data = json['data'] != null ? Data.fromJson(json['data']) : Data();
@@ -12,7 +12,7 @@ class UserProfile {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
 
-    data['data'] = this.data.toJson();
+    data['data'] = this.data!.toJson();
 
     return data;
   }
@@ -50,7 +50,7 @@ class Data {
       this.address = ""});
 
   Data.fromJson(Map<String, dynamic> json) {
-    firebaseToken = json['firebaseToken'] ?? prefs.get('_fcmToken');
+    firebaseToken = json['firebaseToken'] ?? prefs.get('fcmToken');
     email = json['email'] ?? 'wrap';
     firstName = json['first_name'] ?? '';
     lastName = json['last_name'] ?? '';

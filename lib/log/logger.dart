@@ -1,3 +1,7 @@
+// ignore_for_file: avoid_print
+
+import '../constants.dart';
+
 /// The external [log] functions to map.
 ///
 /// Can be overwritten by any kind of function.
@@ -13,12 +17,14 @@ class Logger {
   static void Function(Object o, {StackTrace? stackTrace}) error = consoleLog;
 
   static void consoleLog(Object o, {StackTrace? stackTrace}) {
-    // ignore: avoid_print
-    print(o);
+    if (Constants.isDebug) {
+      print(o);
+    }
 
     if (stackTrace != null) {
-      // ignore: avoid_print
-      print(stackTrace);
+      if (Constants.isDebug) {
+        print(stackTrace);
+      }
     }
   }
 }

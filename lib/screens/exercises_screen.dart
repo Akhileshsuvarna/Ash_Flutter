@@ -4,9 +4,11 @@ import 'package:health_connector/constants.dart';
 import 'package:health_connector/enums/enums.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
+import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/screens/pose_detector_view.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
 import 'package:health_connector/util/enum_utils.dart';
+import 'package:octo_image/octo_image.dart';
 
 import 'components/exercise_widget.dart';
 
@@ -30,7 +32,7 @@ class _ExercisePageState extends State<ExercisePage> {
   Future<List<ExerciseMeta>>? _getExercisesMeta() async =>
       ExerciseMeta.listFromMap(await FirebaseRtdbServices.getDataAtNode(
           FirebaseRtdbServices.getDatabaseReferenceRecursively(
-              rootNode: 'healthconnector', nodes: ['exercises'])));
+              rootNode: Constants.dbRoot, nodes: ['exercises'])));
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,8 @@ class _ExercisePageState extends State<ExercisePage> {
                 onPressed: _addExercise, icon: const Icon(Icons.add, size: 32))
             : Container()
       ];
-  _addExercise() => openPoseDetector(context, addNew: true);
+  _addExercise() => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => const AddExercise()));
   _body() => FutureBuilder(
       future: _getExercisesMeta(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -91,18 +94,18 @@ class _ExercisePageState extends State<ExercisePage> {
               top: _size.height / 48),
           child: exerciseWidget(
               size: _size,
-              coverImageUrl: metaData[index].coverImageUrl!,
+              coverImageUrl: metaData[index].coverImageUrl,
+              blurHash: metaData[index].blurHash,
               context: context,
               title: metaData[index].title,
-              description: metaData[index].description,
-              exerciseType: metaData[index].exerciseType)));
+              description: metaData[index].description)));
 
   void onFloatPressed() async {
-    var dbRef = FirebaseRtdbServices.getDatabaseReferenceRecursively(
-        rootNode: 'healthconnector', nodes: ['exercises']);
+    // var dbRef = FirebaseRtdbServices.getDatabaseReferenceRecursively(
+    //     rootNode: 'healthconnector', nodes: ['exercises']);
 
-    var map = await FirebaseRtdbServices.getDataAtNode(dbRef);
+    // var map = await FirebaseRtdbServices.getDataAtNode(dbRef);
 
-    var list = ExerciseMeta.listFromMap(map);
+    // var list = ExerciseMeta.listFromMap(map);
   }
 }

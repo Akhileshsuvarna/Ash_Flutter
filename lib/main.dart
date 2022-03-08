@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,58 +13,64 @@ import 'models/UserProfile.dart';
 
 List<CameraDescription> cameras = [];
 CameraController? cameraController;
-FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 late FirebaseDatabase firebaseDatabase;
 late FirebaseApp firebaseApp;
 bool isFirebaseRTDInitialized = false;
 late SharedPreferences prefs;
-late UserProfile userProfile;
-String initialRoute = Constants.signIn;
+UserProfile userProfile = UserProfile();
+String initialRoute = Constants.logIn;
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
   Logger.debug("Handling a background message: ${message.messageId}");
 }
 
-Future<void> main() async {
+main() {
   WidgetsFlutterBinding.ensureInitialized();
+  _initMain();
+}
+
+_initMain() {
   Globals.lookupInternet().then((value) async {
     prefs = await SharedPreferences.getInstance();
+    prefs.clear();
     prefs.setBool('isAdmin', true);
     if (value) {
-      firebaseApp = await Firebase.initializeApp();
+      await Globals.initFirebase();
 
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
-
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-              alert: true, badge: true, sound: true);
-
-      NotificationSettings settings =
-          await _firebaseMessaging.requestPermission(
-              alert: true,
-              announcement: true,
-              badge: true,
-              carPlay: false,
-              criticalAlert: true,
-              provisional: false,
-              sound: true);
-      await initFirebaseDatabase();
-      Logger.info('User granted permission: ${settings.authorizationStatus}');
-
-      var fcmtoken = await _firebaseMessaging.getToken();
+      var fcmtoken = await firebaseMessaging.getToken();
       Logger.info(fcmtoken ?? 'No firebase token received');
+      if (fcmtoken != null) {
+        prefs.setString('fcmToken', fcmtoken);
+      }
+      if (prefs.getString("userProfile") != null) {
+        Logger.info("User Settings Found");
+
+        if (prefs.getString("userProfile") != null &&
+            (prefs.getBool("_isLoggedIn") ?? false)) {
+          initialRoute = Constants.exerciseScreen;
+          userProfile = UserProfile.fromJson(
+              json.decode(prefs.getString("userProfile")!));
+          await Globals.getProfileRemote();
+          if (userProfile.data!.firebaseToken != prefs.getString('fcmToken')) {
+            await Globals.updateFirebaseToken();
+            userProfile.data!.firebaseToken = prefs.getString('fcmToken') ?? '';
+          }
+        }
+      }
     } else {
       initialRoute = Constants.internetError;
     }
     cameras = await availableCameras();
-    runApp(HealthConnectorApp());
+    runApp(const HealthConnectorApp());
   });
 }
 
 class HealthConnectorApp extends StatelessWidget {
+  const HealthConnectorApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) =>
       MaterialApp(debugShowCheckedModeBanner: false, home: Home());
@@ -72,20 +79,9 @@ class HealthConnectorApp extends StatelessWidget {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: Constants.appTheme,
-      routes: Constants.myroutes,
-      initialRoute: initialRoute);
-}
-
-initFirebaseDatabase() async {
-  try {
-    firebaseDatabase = FirebaseDatabase(app: firebaseApp);
-
-    isFirebaseRTDInitialized = true;
-    Logger.info('Firebase RTDB successfully initialized');
-  } catch (ex) {
-    Logger.error(
-        'Error Occured while Initializing Firebase Database = ${ex.toString()}');
-  }
+        debugShowCheckedModeBanner: false,
+        theme: Constants.appTheme,
+        routes: Constants.myroutes,
+        initialRoute: initialRoute,
+      );
 }

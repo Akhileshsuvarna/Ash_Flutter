@@ -10,6 +10,8 @@ import 'screens/internet_error.dart';
 class Constants {
   const Constants._();
 
+  static const bool isDebug = true;
+
 // From Anthony
 // #662D91 purple
 // #262262 dark purple
@@ -23,6 +25,21 @@ class Constants {
   static const Color primaryColor = Color(0xFF7E57C2);
   static const Color secondaryColor = Colors.white;
 
+  static Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return primaryColor;
+    }
+    if (states.any((element) => element.name == "selected")) {
+      return primaryColor;
+    }
+    return Colors.grey;
+  }
+
   static ThemeData appTheme = ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
@@ -33,7 +50,7 @@ class Constants {
           headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind')));
 
-  static const String signIn = 'signin';
+  static const String logIn = 'logIn';
   static const String signUp = 'signup';
   static const String pwReset = 'pwreset';
   static const String splashScreen = 'splashscreen';
@@ -45,7 +62,7 @@ class Constants {
   static const String storyScreen = "stories_screen";
   static const String pinCodeScreen = "pincode_screen";
   static Map<String, WidgetBuilder> myroutes = <String, WidgetBuilder>{
-    signIn: (BuildContext context) => const LoginPage(),
+    logIn: (BuildContext context) => const LoginPage(),
     // PW_RESET: (BuildContext context) => ResetPasswordScreen(),
     exerciseScreen: (BuildContext context) => const ExercisePage(),
     // STORY_SCREEN: (BuildContext context) => StoryScreen(),
@@ -77,6 +94,8 @@ class Constants {
   static String firebaseStorageBucket = 'livvinyl-health-connector.appspot.com';
 
   static const String dbRoot = 'healthconnector';
+
+  static const String exercises = 'exercises';
 
   static const String messagingSenderId = '335396837024';
 
