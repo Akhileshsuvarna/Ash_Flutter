@@ -28,6 +28,12 @@ jobs:
       - name: Decoding android/neumodore_key.jks
         run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/key.jks
       - run: flutter build apk --release
+      - name: upload apk to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release-apk
+          path: 'build/app/outputs/flutter-apk/app-release.apk'
+          if-no-files-found: echo "app-release.apk not found"
       - name: Build iOS App
         run: |
           flutter build ios --no-codesign
@@ -37,12 +43,12 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
-      - name: upload apk & ipa to artifacts
+      - name: upload ipa to artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: app-release
-          path: 'build/app/outputs/flutter-apk/app-release.apk,build/ios/iphoneos/app.ipa'
-          if-no-files-found: echo "app-production-release.aab not found"
+          name: app-release-ipa
+          path: 'build/ios/iphoneos/app.ipa'
+          if-no-files-found: echo "app.ipa not found"
   testlab:
     name: Run UI tests with Firebase Test Lab
     needs: build
@@ -53,7 +59,7 @@ jobs:
       - name: Download app APK
         uses: actions/download-artifact@v1
         with:
-          name: app-release
+          name: app-release-apk
       
       - name: 'Auth Google CLI'
         uses: 'google-github-actions/auth@v0'
@@ -67,7 +73,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_FIREBASE_CEREDENTIALS }}
 
       - name: Run Robo Tests in Firebase Test Lab
-        run: gcloud firebase test android run --type robo --app app-release/app-release.apk
+        run: gcloud firebase test android run --type robo --app app-release-apk/app-release.apk
   release:
     name: release
     needs: testlab
@@ -75,13 +81,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Download apk & ipa from artifacts
+      - name: Download apk from artifacts
         uses: actions/download-artifact@v1
         with:
-          name: app-release
+          name: app-release-apk
+      - name: Download ipa from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-ipa
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "app-release/app-release.apk,app-release/app.ipa" #TODO(skandar) Add IOS release when ready.
+          artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa" #TODO(skandar) Add IOS release when ready.
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
