@@ -43,7 +43,7 @@ jobs:
           name: app-release
           path: 'build/app/outputs/flutter-apk/app-release.apk,build/ios/iphoneos/app.ipa'
           if-no-files-found: echo "app-production-release.aab not found"
-  firebase:
+  testlab:
     name: Run UI tests with Firebase Test Lab
     needs: build
     runs-on: macos-latest
@@ -70,7 +70,7 @@ jobs:
         run: gcloud firebase test android run --type robo --app app-release/app-release.apk
   release:
     name: release
-    needs: test
+    needs: testlab
     runs-on: ubuntu-latest
 
     steps:
