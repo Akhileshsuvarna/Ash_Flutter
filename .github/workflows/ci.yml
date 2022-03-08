@@ -2,10 +2,10 @@ name: "Test, Build, TestLab & Release"
 on:
   pull_request:
     branches:
-      - main
+      - master
   push:
     branches:
-      - main
+      - master
 jobs:
   build:
     name: Test, Build & upload
