@@ -120,3 +120,5 @@ jobs:
           uses: rtCamp/action-slack-notify@v2
           env:
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_COLOR: ${{ job.status }}
+            SLACK_ICON: https://firebasestorage.googleapis.com/v0/b/livvinyl-health-connector.appspot.com/o/logo.png?alt=media&token=370f338d-c0da-48a4-8a47-2dd1c5aac75d
