@@ -110,3 +110,13 @@ jobs:
           artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+  slackNotification:
+        name: Slack Notification
+        # needs: release
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Slack Notification
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
