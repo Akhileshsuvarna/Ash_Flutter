@@ -7,9 +7,9 @@ on:
     branches:
       - master
 jobs:
-  build:
-    name: Test, Build & upload
-    runs-on: macos-latest
+  build-android:
+    name: Test, Build & upload apk
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
@@ -34,6 +34,21 @@ jobs:
           name: app-release-apk
           path: 'build/app/outputs/flutter-apk/app-release.apk'
           if-no-files-found: echo "app-release.apk not found"
+  build-ios:
+    name: Test, Build & upload ipa
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.1'
+          channel: 'stable'
+      - run: flutter --version
+      - run: flutter pub get
       - name: Build iOS App
         run: |
           flutter build ios --no-codesign
@@ -51,8 +66,8 @@ jobs:
           if-no-files-found: echo "app.ipa not found"
   testlab:
     name: Run UI tests with Firebase Test Lab
-    needs: build
-    runs-on: macos-latest
+    needs: build-android
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -76,7 +91,7 @@ jobs:
         run: gcloud firebase test android run --type robo --app app-release-apk/app-release.apk
   release:
     name: release
-    needs: testlab
+    needs: [testlab, build-ios]
     runs-on: ubuntu-latest
 
     steps:
@@ -92,6 +107,6 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa" #TODO(skandar) Add IOS release when ready.
+          artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
