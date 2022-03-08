@@ -112,11 +112,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
   slackNotification:
         name: Slack Notification
-        # needs: release
+        needs: release
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2
         - name: Slack Notification
           uses: rtCamp/action-slack-notify@v2
           env:
-            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_WEBHOOK: https://hooks.slack.com/services/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 #${{ secrets.SLACK_WEBHOOK }}
