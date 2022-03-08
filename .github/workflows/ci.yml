@@ -107,7 +107,7 @@ jobs:
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
   release:
     name: release
-    needs: [testlab, build-ios]
+    needs: deploy-TestFlight
     runs-on: ubuntu-latest
 
     steps:
