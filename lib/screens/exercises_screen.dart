@@ -1,14 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
-import 'package:health_connector/enums/enums.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
-import 'package:health_connector/screens/pose_detector_view.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
-import 'package:health_connector/util/enum_utils.dart';
-import 'package:octo_image/octo_image.dart';
 
 import 'components/exercise_widget.dart';
 
@@ -29,10 +24,16 @@ class _ExercisePageState extends State<ExercisePage> {
   // TODO-Sikander get Exercise(s) Meta information.
   // Check if Firebase is connected.
   // Check app is logged in.
-  Future<List<ExerciseMeta>>? _getExercisesMeta() async =>
-      ExerciseMeta.listFromMap(await FirebaseRtdbServices.getDataAtNode(
-          FirebaseRtdbServices.getDatabaseReferenceRecursively(
-              rootNode: Constants.dbRoot, nodes: ['exercises'])));
+  Future<List<ExerciseMeta>?> _getExercisesMeta() async {
+    var data = await FirebaseRtdbServices.getDataAtNode(
+        FirebaseRtdbServices.getDatabaseReferenceRecursively(
+            rootNode: Constants.dbRoot, nodes: ['exercises']));
+    return _validateExerciseMeta(data) ? ExerciseMeta.listFromMap(data) : null;
+  }
+
+  bool _validateExerciseMeta(dynamic data) {
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,26 +80,31 @@ class _ExercisePageState extends State<ExercisePage> {
           case ConnectionState.active:
             return _progressIndicator();
           case ConnectionState.done:
-            return _exercises(snapshot.data as List<ExerciseMeta>);
+            return snapshot.data != null
+                ? _exercises(snapshot.data as List<ExerciseMeta>)
+                : const Center(
+                    child: Text(
+                        'We are sorry for the inconvenience, our team is working on getting the right services for you'));
         }
       });
 
   _progressIndicator() => const Center(child: CircularProgressIndicator());
 
   _exercises(List<ExerciseMeta> metaData) => ListView.builder(
-      itemCount: metaData.length,
-      itemBuilder: (context, index) => Padding(
+        itemCount: metaData.length,
+        itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.only(
-              left: _size.width / 16,
-              right: _size.width / 16,
-              top: _size.height / 48),
+            left: _size.width / 16,
+            right: _size.width / 16,
+            top: _size.height / 48,
+          ),
           child: exerciseWidget(
-              size: _size,
-              coverImageUrl: metaData[index].coverImageUrl,
-              blurHash: metaData[index].blurHash,
-              context: context,
-              title: metaData[index].title,
-              description: metaData[index].description)));
+            size: _size,
+            context: context,
+            meta: metaData[index],
+          ),
+        ),
+      );
 
   void onFloatPressed() async {
     // var dbRef = FirebaseRtdbServices.getDatabaseReferenceRecursively(

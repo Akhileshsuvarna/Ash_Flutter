@@ -9,6 +9,7 @@ import 'package:health_connector/screens/components/rounded_input_field.dart';
 import 'package:health_connector/util/enum_utils.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:health_connector/util/utils.dart';
+import 'package:health_connector/util/view_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import '../constants.dart';
 import '../services/firebase/upload_meta.dart';
@@ -23,15 +24,18 @@ class AddExercise extends StatefulWidget {
 class _AddExerciseState extends State<AddExercise> {
   XFile? exerciseImage;
   late Size _size;
-  List<NodesComparator> _nodesComparator = [];
+  final List<NodesComparator> _nodesComparator = [];
   final ImagePicker _picker = ImagePicker();
   late final ScrollController _scrollController = ScrollController();
 
   final TextEditingController _exerciseTitleController =
       TextEditingController();
 
-  final TextEditingController _exerciseDescriptionController =
+  final TextEditingController _exerciseDurationController =
       TextEditingController();
+
+  String? _selectedIntensity = '';
+  String? _selectedLocation = '';
 
   bool isRightPose = false;
   bool isLeftPose = false;
@@ -114,9 +118,34 @@ class _AddExerciseState extends State<AddExercise> {
               Padding(
                 padding: EdgeInsets.only(top: _size.height / 32),
                 child: RoundedInputField(
-                  textEditingController: _exerciseDescriptionController,
+                  textEditingController: _exerciseDurationController,
+                  keyboardType: TextInputType.number,
                   onTap: _onTap,
-                  labelText: 'Exercise Description',
+                  labelText: 'Exercise duration',
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: _size.height / 32),
+                child: DropdownSearch<String>(
+                  mode: Mode.BOTTOM_SHEET,
+                  showSelectedItems: true,
+                  selectedItem: _selectedIntensity,
+                  items: const ['Low', 'Medium', 'High'],
+                  label: "Intensity",
+                  onChanged: (value) =>
+                      setState(() => _selectedIntensity = value),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: _size.height / 32),
+                child: DropdownSearch<String>(
+                  mode: Mode.BOTTOM_SHEET,
+                  showSelectedItems: true,
+                  selectedItem: _selectedLocation,
+                  items: const ['Indoor', 'Outdoor', 'Indoor/Outdoor'],
+                  label: "Location",
+                  onChanged: (value) =>
+                      setState(() => _selectedLocation = value),
                 ),
               ),
               CheckboxListTile(
@@ -157,31 +186,7 @@ class _AddExerciseState extends State<AddExercise> {
                     _nodeComaprison(_nodesComparator[index], index),
               ),
               GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (_nodesComparator.isEmpty) {
-                        _nodesComparator.add(NodesComparator());
-                      }
-                      // ignore: prefer_is_empty
-                      else if (_nodesComparator
-                              .where((element) =>
-                                  element.firstlandmark == null ||
-                                  element.isFirstGreater == null ||
-                                  element.secondLandmark == null ||
-                                  element.axis == null)
-                              .length >
-                          0) {
-                        Constants.showMessage(
-                            context, 'Please complete previous node');
-                      } else {
-                        _nodesComparator.add(NodesComparator());
-                      }
-                    });
-                    // _scrollController.animateTo(
-                    //     _scrollController.position.maxScrollExtent,
-                    //     duration: const Duration(milliseconds: 100),
-                    //     curve: Curves.easeIn);
-                  },
+                  onTap: _onAddComparisonNode,
                   child: const Icon(Icons.add_circle,
                       color: Colors.green, size: 48)),
               SizedBox(height: _size.height / 16),
@@ -194,6 +199,27 @@ class _AddExerciseState extends State<AddExercise> {
   _addImage() => _picker
       .pickImage(source: ImageSource.gallery)
       .then((value) => setState((() => exerciseImage = value)));
+
+  _onAddComparisonNode() {
+    setState(() {
+      if (_nodesComparator.isEmpty) {
+        _nodesComparator.add(NodesComparator());
+      } else if (_nodesComparator
+          .where((element) =>
+              element.greaterLandmark == null ||
+              element.smallerLandmark == null ||
+              element.axis == null)
+          .isNotEmpty) {
+        Constants.showMessage(context, 'Please complete previous node');
+      } else {
+        _nodesComparator.add(NodesComparator());
+      }
+    });
+    // _scrollController.animateTo(
+    //     _scrollController.position.maxScrollExtent,
+    //     duration: const Duration(milliseconds: 100),
+    //     curve: Curves.easeIn);
+  }
 
   _dropImage() => setState(() => exerciseImage = null);
 
@@ -212,16 +238,21 @@ class _AddExerciseState extends State<AddExercise> {
       // print(poseData);
 
       ExerciseMeta metaData = ExerciseMeta(
-        _exerciseTitleController.text,
-        _exerciseDescriptionController.text,
-        exerciseImage!.path,
-        Utils.getBlurHash(exerciseImage!.path),
-        true, // "TODO",
-        _isVideoAvailable ?? false,
-        poseData,
-      );
+          _exerciseTitleController.text,
+          int.parse(_exerciseDurationController.text),
+          _selectedIntensity!,
+          _selectedLocation!,
+          exerciseImage!.path,
+          Utils.getBlurHash(exerciseImage!.path),
+          true, // "TODO",
+          _isVideoAvailable ?? false,
+          [poseData],
+          0);
 
       Logger.info(metaData.toMap());
+
+      ViewUtils.popup(const Center(child: CircularProgressIndicator()),
+          const Center(child: Text("Uploading exercise")), context);
 
       UploadMeta.upload(metaData).then((isUploaded) {
         if (isUploaded) {
@@ -231,6 +262,7 @@ class _AddExerciseState extends State<AddExercise> {
           Constants.showMessage(
               context, "Uploading exercise ${metaData.title} failed");
         }
+        ViewUtils.pop(context);
       });
     }
   }
@@ -245,8 +277,16 @@ class _AddExerciseState extends State<AddExercise> {
         Constants.showMessage(context, "Please add title for exercise");
         return false;
       }
-      if (_exerciseDescriptionController.text.isEmpty) {
-        Constants.showMessage(context, "Please add description for exercise");
+      if (_exerciseDurationController.text.isEmpty) {
+        Constants.showMessage(context, "Please add duration for exercise");
+        return false;
+      }
+      if (_selectedIntensity == null || _selectedIntensity!.isEmpty) {
+        Constants.showMessage(context, "Please add intensity for exercise");
+        return false;
+      }
+      if (_selectedLocation == null || _selectedLocation!.isEmpty) {
+        Constants.showMessage(context, "Please add location for exercise");
         return false;
       }
       if (isRightPose == false && isLeftPose == false) {
@@ -259,9 +299,8 @@ class _AddExerciseState extends State<AddExercise> {
       }
       for (var node in _nodesComparator) {
         if (node.axis == null ||
-            node.firstlandmark == null ||
-            node.isFirstGreater == null ||
-            node.secondLandmark == null) {
+            node.greaterLandmark == null ||
+            node.smallerLandmark == null) {
           Constants.showMessage(context, "Please fill all fields of last node");
           return false;
         }
@@ -279,11 +318,11 @@ class _AddExerciseState extends State<AddExercise> {
           children: [
             Flexible(
               child: DropdownSearch<String>(
-                mode: Mode.MENU,
+                mode: Mode.BOTTOM_SHEET,
                 showSelectedItems: true,
                 selectedItem: node.axis != null
                     ? Utils.splitListBySeperatorAsList([node.axis], '.')[0]
-                    : 'select axis',
+                    : '',
                 items: Utils.splitListBySeperatorAsList(enums.Axis.values, '.'),
                 label: "Axis",
                 onChanged: (value) => _onAxisSelect(value!, index),
@@ -292,47 +331,33 @@ class _AddExerciseState extends State<AddExercise> {
             Flexible(
               child: DropdownSearch<String>(
                 showSearchBox: true,
-                mode: Mode.MENU,
+                mode: Mode.BOTTOM_SHEET,
                 showSelectedItems: true,
-                selectedItem: node.firstlandmark != null
+                selectedItem: node.greaterLandmark != null
                     ? Utils.splitListBySeperatorAsList(
-                        [node.firstlandmark], '.')[0]
-                    : 'select landmark',
-                items: node.axis != null
-                    ? Utils.splitListBySeperatorAsList(
-                        PoseLandmarkType.values, '.')
-                    : ['Please select Axis'],
-                label: "1st landmark",
+                        [node.greaterLandmark], '.')[0]
+                    : '',
+                items: Utils.splitListBySeperatorAsList(
+                    PoseLandmarkType.values, '.'),
+                label: "Greater",
                 onChanged: (value) => _onLandmarkSelect(value!, true, index),
               ),
             ),
-            Flexible(
-              child: DropdownSearch<String>(
-                showSearchBox: true,
-                mode: Mode.MENU,
-                showSelectedItems: true,
-                selectedItem: node.isFirstGreater != null
-                    ? node.isFirstGreater!
-                        ? '>'
-                        : '<'
-                    : 'select greater node',
-                items: const ['>', '<'],
-                label: "comparison",
-                onChanged: (value) => _onCompare(value ?? '?', index),
-              ),
+            const Flexible(
+              child: Text('>'),
             ),
             Flexible(
               child: DropdownSearch<String>(
                 mode: Mode.MENU,
                 showSearchBox: true,
                 showSelectedItems: true,
-                selectedItem: node.secondLandmark != null
+                selectedItem: node.smallerLandmark != null
                     ? Utils.splitListBySeperatorAsList(
-                        [node.secondLandmark], '.')[0]
-                    : 'select landmark',
+                        [node.smallerLandmark], '.')[0]
+                    : '',
                 items: Utils.splitListBySeperatorAsList(
                     PoseLandmarkType.values, '.'),
-                label: "2nd landmark",
+                label: "Smaller",
                 onChanged: (value) => _onLandmarkSelect(value!, false, index),
               ),
             ),
@@ -344,33 +369,17 @@ class _AddExerciseState extends State<AddExercise> {
         ),
       );
 
-  _onCompare(String symbol, int index) {
-    if (symbol == '>') {
-      _nodesComparator[index].isFirstGreater = true;
-    } else if (symbol == '<') {
-      _nodesComparator[index].isFirstGreater = false;
-    } else {
-      _nodesComparator[index].isFirstGreater = null;
-    }
-  }
-
   _onLandmarkSelect(String landmark, bool isFirst, int index) {
-    if (_nodesComparator[index].firstlandmark != null &&
-        _nodesComparator[index].secondLandmark != null &&
-        _nodesComparator[index].axis != null) {}
-    setState(() {
-      isFirst
-          ? _nodesComparator[index].firstlandmark =
-              EnumUtils.toEnum(landmark, PoseLandmarkType.values, true)!
-          : _nodesComparator[index].secondLandmark =
-              EnumUtils.toEnum(landmark, PoseLandmarkType.values, true)!;
-    });
+    isFirst
+        ? _nodesComparator[index].greaterLandmark =
+            EnumUtils.toEnum(landmark, PoseLandmarkType.values, true)!
+        : _nodesComparator[index].smallerLandmark =
+            EnumUtils.toEnum(landmark, PoseLandmarkType.values, true)!;
+    setState(() {});
   }
 
   _onAxisSelect(String axis, int index) {
-    if (Constants.isDebug) {
-      print('axis = $axis ');
-    }
+    Logger.info('axis = $axis ');
     setState(() {
       _nodesComparator[index].axis =
           EnumUtils.toEnum(axis, enums.Axis.values, true)!;

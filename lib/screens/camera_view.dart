@@ -160,12 +160,12 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _switchLiveCamera() async {
+    // await _stopLiveFeed();
     if (_cameraIndex == 0) {
       _cameraIndex = 1;
     } else {
       _cameraIndex = 0;
     }
-    await _stopLiveFeed();
     await _startLiveFeed();
   }
 

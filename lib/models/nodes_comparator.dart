@@ -5,38 +5,30 @@ import 'package:health_connector/util/utils.dart';
 
 class NCParams {
   const NCParams._();
-  static const String firstlandmark = 'firstlandmark';
-  static const String secondLandmark = 'secondLandmark';
-  static const String isFirstGreater = 'isFirstGreater';
+  static const String greaterLandmark = 'greaterLandmark';
+  static const String smallerLandmark = 'smallerLandmark';
   static const String axis = 'axis';
 }
 
 class NodesComparator {
-  late PoseLandmarkType? firstlandmark;
-  late PoseLandmarkType? secondLandmark;
-  late bool? isFirstGreater;
+  late PoseLandmarkType? greaterLandmark;
+  late PoseLandmarkType? smallerLandmark;
   late Axis? axis;
 
-  NodesComparator(
-      {this.firstlandmark,
-      this.secondLandmark,
-      this.isFirstGreater,
-      this.axis});
+  NodesComparator({this.greaterLandmark, this.smallerLandmark, this.axis});
 
   Map<String, dynamic> toJson() => {
-        NCParams.firstlandmark:
-            Utils.splitListBySeperatorAsList([firstlandmark], '.').last,
-        NCParams.secondLandmark:
-            Utils.splitListBySeperatorAsList([secondLandmark], '.').last,
-        NCParams.isFirstGreater: isFirstGreater,
+        NCParams.greaterLandmark:
+            Utils.splitListBySeperatorAsList([greaterLandmark], '.').last,
+        NCParams.smallerLandmark:
+            Utils.splitListBySeperatorAsList([smallerLandmark], '.').last,
         NCParams.axis: Utils.splitListBySeperatorAsList([axis], '.').last
       };
   NodesComparator.fromJson(Map<String, dynamic> json) {
-    firstlandmark = EnumUtils.toEnum(
-        json[NCParams.firstlandmark], PoseLandmarkType.values, true)!;
-    secondLandmark = EnumUtils.toEnum(
-        json[NCParams.secondLandmark], PoseLandmarkType.values, true)!;
-    isFirstGreater = json[NCParams.isFirstGreater];
+    greaterLandmark = EnumUtils.toEnum(
+        json[NCParams.greaterLandmark], PoseLandmarkType.values, true)!;
+    smallerLandmark = EnumUtils.toEnum(
+        json[NCParams.smallerLandmark], PoseLandmarkType.values, true)!;
     axis = EnumUtils.toEnum(json[NCParams.axis], Axis.values, true)!;
   }
 }

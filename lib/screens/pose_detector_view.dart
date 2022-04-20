@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:health_connector/enums/enums.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
+import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/util/enum_utils.dart';
-import 'package:health_connector/util/utils.dart';
 
+import '../util/utils.dart';
 import 'camera_view.dart';
 import 'painters/pose_painter.dart';
 
 class PoseDetectorView extends StatefulWidget {
-  const PoseDetectorView(
-      {Key? key, required this.exerciseName, this.addNew = false})
+  const PoseDetectorView({Key? key, required this.meta, this.addNew = false})
       : super(key: key);
-  final String? exerciseName;
+  final ExerciseMeta meta;
   final bool addNew;
 
   @override
@@ -47,8 +46,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     if (widget.addNew) {
       await _speak('Please press capture button when exercise pose acheived');
     } else {
-      await _speak(
-          'Starting exercise ${EnumUtils.getName(widget.exerciseName)}');
+      await _speak('Starting exercise ${EnumUtils.getName(widget.meta.title)}');
     }
   }
 
@@ -96,7 +94,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
 
           if (_isMatched && !widget.addNew) {
             _speak(
-                'Congratulation ${EnumUtils.getName(widget.exerciseName)!} position achieved');
+                'Congratulation ${EnumUtils.getName(widget.meta.title)!} position achieved');
             Future.delayed(const Duration(seconds: 3),
                 () => Navigator.of(context).pop(true));
           }
@@ -118,15 +116,28 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
 
   bool _isPoseMatched(Pose pose, InputImage inputImage) {
     // TODO(Skandar): Match pose here
-    return false;
+    // pose.landmarks.entries.forEach((element) {
+    //   // element.value.type.
+    // });
+    // return false;
+    print(pose.landmarks);
+    if (widget.meta.title.toLowerCase().contains("cat")) {
+      return Utils.isCatPose(pose);
+    } else if (widget.meta.title.toLowerCase().contains("sphinx")) {
+      return Utils.isSphinxPose(pose);
+    } else if (widget.meta.title.toLowerCase().contains("plank")) {
+      return Utils.isPlankPose(pose);
+    } else {
+      return false;
+    }
   }
 
   void _savePose() {
-    cameraController!.takePicture().then((value) {
-      setState(() {
-        _path = value.path;
-      });
-    });
+    // cameraController!.takePicture().then((value) {
+    //   setState(() {
+    //     _path = value.path;
+    //   });
+    // });
   }
 
   void _addExercise(Pose pose, CustomPaint customPaint, String path) =>

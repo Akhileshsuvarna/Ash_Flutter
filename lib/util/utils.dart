@@ -226,7 +226,6 @@ class Utils {
       Logger.error(e, stackTrace: stackTrace);
       return false;
     }
-    return false;
   }
 
   static bool _catRight(PoseData poseData) {
@@ -262,6 +261,133 @@ class Utils {
           poseData.rightWrist.y > poseData.rightShoulder.y &&
           poseData.rightWrist.y > poseData.rightHip.y &&
           poseData.rightWrist.y > poseData.rightElbow.y) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  static bool isSphinxPose(Pose pose) {
+    var poseData = PoseData.fromMap(pose.landmarks);
+    if (poseData.leftShoulder.x < poseData.leftAnkle.x) {
+      return _sphinxLeft(poseData);
+    } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {
+      return _sphinxRight(poseData);
+    } else {
+      return false;
+    }
+  }
+
+  static bool _sphinxLeft(PoseData poseData) {
+    try {
+      if (poseData.leftWrist.x < poseData.leftElbow.x &&
+          poseData.leftWrist.x < poseData.leftHip.x &&
+          poseData.leftWrist.x < poseData.leftKnee.x &&
+          poseData.leftWrist.x < poseData.leftAnkle.x &&
+          poseData.leftElbow.x < poseData.leftHip.x &&
+          poseData.leftKnee.x < poseData.leftAnkle.x &&
+          poseData.leftHip.x < poseData.leftAnkle.x &&
+          poseData.nose.y < poseData.leftShoulder.y &&
+          poseData.leftShoulder.y < poseData.leftElbow.y) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  static bool _sphinxRight(PoseData poseData) {
+    try {
+      if (poseData.rightAnkle.x < poseData.rightKnee.x &&
+          poseData.rightAnkle.x < poseData.rightHip.x &&
+          poseData.rightAnkle.x < poseData.rightShoulder.x &&
+          poseData.rightAnkle.x < poseData.nose.x &&
+          poseData.rightAnkle.x < poseData.rightWrist.x &&
+          poseData.rightKnee.x < poseData.rightHip.x &&
+          poseData.rightKnee.x < poseData.rightShoulder.x &&
+          poseData.rightKnee.x < poseData.nose.x &&
+          poseData.rightKnee.x < poseData.rightWrist.x &&
+          poseData.rightHip.x < poseData.rightShoulder.x &&
+          poseData.rightHip.x < poseData.nose.x &&
+          poseData.rightHip.x < poseData.rightWrist.x &&
+          poseData.rightShoulder.x < poseData.nose.x &&
+          poseData.rightHip.x < poseData.rightWrist.x &&
+          poseData.nose.x < poseData.rightWrist.x &&
+          poseData.nose.y < poseData.rightShoulder.y &&
+          poseData.nose.y < poseData.rightElbow.y &&
+          poseData.rightShoulder.y < poseData.rightElbow.y) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  static bool isPlankPose(Pose pose) {
+    var poseData = PoseData.fromMap(pose.landmarks);
+    if (poseData.leftShoulder.x < poseData.leftAnkle.x) {
+      return _plankLeft(poseData);
+    } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {
+      return _plankRight(poseData);
+    } else {
+      return false;
+    }
+  }
+
+  static bool _plankLeft(PoseData poseData) {
+    try {
+      if (poseData.leftWrist.x < poseData.leftElbow.x &&
+          poseData.leftWrist.x < poseData.leftHip.x &&
+          poseData.leftWrist.x < poseData.leftKnee.x &&
+          poseData.leftWrist.x < poseData.leftAnkle.x &&
+          poseData.leftElbow.x < poseData.leftHip.x &&
+          poseData.leftElbow.x < poseData.leftKnee.x &&
+          poseData.leftElbow.x < poseData.leftAnkle.x &&
+          poseData.leftHip.x < poseData.leftKnee.x &&
+          poseData.leftHip.x < poseData.leftAnkle.x &&
+          poseData.leftKnee.x < poseData.leftAnkle.x &&
+          poseData.nose.y < poseData.leftWrist.y &&
+          poseData.nose.y < poseData.leftElbow.y &&
+          poseData.leftShoulder.y < poseData.leftWrist.y &&
+          poseData.leftShoulder.y < poseData.leftElbow.y &&
+          poseData.leftHip.y < poseData.leftWrist.y &&
+          poseData.leftHip.y < poseData.leftElbow.y) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  static bool _plankRight(PoseData poseData) {
+    try {
+      if (poseData.rightAnkle.x < poseData.rightKnee.x &&
+          poseData.rightAnkle.x < poseData.rightHip.x &&
+          poseData.rightAnkle.x < poseData.rightElbow.x &&
+          poseData.rightAnkle.x < poseData.rightShoulder.x &&
+          poseData.rightAnkle.x < poseData.rightWrist.x &&
+          poseData.rightKnee.x < poseData.rightHip.x &&
+          poseData.rightKnee.x < poseData.rightShoulder.x &&
+          poseData.rightKnee.x < poseData.rightWrist.x &&
+          poseData.rightHip.x < poseData.rightShoulder.x &&
+          poseData.rightHip.x < poseData.rightWrist.x &&
+          poseData.rightShoulder.x < poseData.leftWrist.x &&
+          poseData.nose.y < poseData.rightElbow.y &&
+          poseData.rightHip.y < poseData.rightElbow.y &&
+          poseData.rightShoulder.y < poseData.rightElbow.y) {
         return true;
       } else {
         return false;
