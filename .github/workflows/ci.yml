@@ -38,111 +38,111 @@ jobs:
         uses: adrey/slack-file-upload-action@master
         with:
           token: ${{ secrets.SLACK_WEBHOOK }}
-          path: 'build/app/outputs/apk/release/*.apk'
-          channel: random
-  # build-ios:
-  #   name: Test, Build & upload ipa
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-java@v2
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '8'
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         flutter-version: '2.10.1'
-  #         channel: 'stable'
-  #     - run: flutter --version
-  #     - run: flutter pub get
-  #     - name: Build iOS App
-  #       run: |
-  #         flutter build ios --no-codesign
-  #         cd build/ios/iphoneos
-  #         mkdir Payload
-  #         cd Payload
-  #         ln -s ../Runner.app
-  #         cd ..
-  #         zip -r app.ipa Payload
-  #     - name: upload ipa to artifacts
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: app-release-ipa
-  #         path: 'build/ios/iphoneos/app.ipa'
-  #         if-no-files-found: echo "app.ipa not found"
-  # testlab:
-  #   name: Run UI tests with Firebase Test Lab
-  #   needs: build-android
-  #   runs-on: ubuntu-latest
+          path: 'build/app/outputs/flutter-apk/app-release.apk'
+          channel: healthconnector
+  build-ios:
+    name: Test, Build & upload ipa
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.1'
+          channel: 'stable'
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Build iOS App
+        run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+      - name: upload ipa to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release-ipa
+          path: 'build/ios/iphoneos/app.ipa'
+          if-no-files-found: echo "app.ipa not found"
+  testlab:
+    name: Run UI tests with Firebase Test Lab
+    needs: build-android
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Download app APK
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: app-release-apk
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download app APK
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-apk
       
-  #     - name: 'Auth Google CLI'
-  #       uses: 'google-github-actions/auth@v0'
-  #       with:
-  #         credentials_json: '${{ secrets.GCP_FIREBASE_CEREDENTIALS }}'
+      - name: 'Auth Google CLI'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_FIREBASE_CEREDENTIALS }}'
 
-  #     - name: Login to Google Cloud
-  #       uses: google-github-actions/setup-gcloud@v0
-  #       with:
-  #         version: '270.0.0'
-  #         service_account_key: ${{ secrets.GCP_FIREBASE_CEREDENTIALS }}
+      - name: Login to Google Cloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          version: '270.0.0'
+          service_account_key: ${{ secrets.GCP_FIREBASE_CEREDENTIALS }}
 
-  #     - name: Run Robo Tests in Firebase Test Lab
-  #       run: gcloud firebase test android run --type robo --app app-release-apk/app-release.apk
-  # deploy-TestFlight:
-  #   name: 'Upload app to TestFlight'
-  #   needs: [testlab, build-ios]
-  #   runs-on: macos-latest
+      - name: Run Robo Tests in Firebase Test Lab
+        run: gcloud firebase test android run --type robo --app app-release-apk/app-release.apk
+  deploy-TestFlight:
+    name: 'Upload app to TestFlight'
+    needs: [testlab, build-ios]
+    runs-on: macos-latest
 
-  #   steps:
-  #     - name: Download ipa from artifacts
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: app-release-ipa
-  #     - uses: apple-actions/upload-testflight-build@v1
-  #       with: 
-  #         app-path: 'app-release-ipa/app.ipa' 
-  #         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-  #         api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-  #         api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
-  # release:
-  #   name: release
-  #   needs: deploy-TestFlight
-  #   runs-on: ubuntu-latest
+    steps:
+      - name: Download ipa from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-ipa
+      - uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: 'app-release-ipa/app.ipa' 
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+  release:
+    name: release
+    needs: deploy-TestFlight
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Download apk from artifacts
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: app-release-apk
-  #     - name: Download ipa from artifacts
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: app-release-ipa
-  #     - name: Push to Releases
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa"
-  #         tag: v1.0.${{ github.run_number }}
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  # slackNotification:
-  #       name: Slack Notification
-  #       needs: release
-  #       runs-on: ubuntu-latest
-  #       steps:
-  #       - uses: actions/checkout@v2
-  #       - name: Slack Notification
-  #         uses: rtCamp/action-slack-notify@v2
-  #         env:
-  #           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  #           SLACK_USERNAME: Production release
-  #           SLACK_COLOR: ${{ job.status }}
-  #           SLACK_ICON: https://firebasestorage.googleapis.com/v0/b/livvinyl-health-connector.appspot.com/o/logo.png?alt=media&token=370f338d-c0da-48a4-8a47-2dd1c5aac75d
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download apk from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-apk
+      - name: Download ipa from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-ipa
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "app-release-apk/app-release.apk,app-release-ipa/app.ipa"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+  slackNotification:
+        name: Slack Notification
+        needs: release
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Slack Notification
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: Production release
+            SLACK_COLOR: ${{ job.status }}
+            SLACK_ICON: https://firebasestorage.googleapis.com/v0/b/livvinyl-health-connector.appspot.com/o/logo.png?alt=media&token=370f338d-c0da-48a4-8a47-2dd1c5aac75d
             
