@@ -123,6 +123,12 @@ class Utils {
 
   static bool isCatPose(Pose pose) {
     var poseData = PoseData.fromMap(pose.landmarks);
+    Logger.debug("""Y-Axis: leftShoulder ${poseData.leftShoulder.y} 
+        | leftHip ${poseData.leftHip.y} 
+        | leftElbow ${poseData.leftElbow.y} 
+        | leftKnee ${poseData.leftKnee.y} 
+        | leftAnkle ${poseData.leftAnkle.y} 
+        | leftWrist ${poseData.leftWrist.y}""");
     if (poseData.leftAnkle.x > poseData.leftShoulder.x) {
       return _catLeft(poseData);
     } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {
@@ -134,141 +140,85 @@ class Utils {
 
   static bool _catLeft(PoseData poseData) {
     try {
-      if (poseData.nose.x < poseData.leftShoulder.x &&
-          poseData.nose.x < poseData.rightShoulder.x &&
-          poseData.nose.x < poseData.leftHip.x &&
-          poseData.nose.x < poseData.rightHip.x &&
-          poseData.nose.x < poseData.leftKnee.x &&
-          poseData.nose.x < poseData.rightKnee.x &&
-          poseData.nose.x < poseData.leftAnkle.x &&
-          poseData.nose.x < poseData.rightAnkle.x &&
+      if (
+          // poseData.nose.x < poseData.leftShoulder.x &&
+          // poseData.nose.x < poseData.leftHip.x &&
+          // poseData.nose.x < poseData.leftKnee.x &&
+          // poseData.nose.x < poseData.leftAnkle.x &&
           poseData.leftElbow.x < poseData.leftHip.x &&
-          poseData.leftElbow.x < poseData.rightHip.x &&
-          poseData.leftElbow.x < poseData.leftKnee.x &&
-          poseData.leftElbow.x < poseData.rightKnee.x &&
-          poseData.leftElbow.x < poseData.leftAnkle.x &&
-          poseData.leftElbow.x < poseData.rightAnkle.x &&
-          poseData.rightElbow.x < poseData.leftHip.x &&
-          poseData.rightElbow.x < poseData.rightHip.x &&
-          poseData.rightElbow.x < poseData.leftKnee.x &&
-          poseData.rightElbow.x < poseData.rightKnee.x &&
-          poseData.rightElbow.x < poseData.leftAnkle.x &&
-          poseData.rightElbow.x < poseData.rightAnkle.x &&
-          poseData.leftWrist.x < poseData.leftHip.x &&
-          poseData.leftWrist.x < poseData.rightHip.x &&
-          poseData.leftWrist.x < poseData.leftKnee.x &&
-          poseData.leftWrist.x < poseData.rightKnee.x &&
-          poseData.leftWrist.x < poseData.leftAnkle.x &&
-          poseData.leftWrist.x < poseData.rightAnkle.x &&
-          poseData.rightWrist.x < poseData.leftHip.x &&
-          poseData.rightWrist.x < poseData.rightHip.x &&
-          poseData.rightWrist.x < poseData.leftKnee.x &&
-          poseData.rightWrist.x < poseData.rightKnee.x &&
-          poseData.rightWrist.x < poseData.leftAnkle.x &&
-          poseData.rightWrist.x < poseData.rightAnkle.x &&
-          poseData.leftShoulder.x < poseData.leftHip.x &&
-          poseData.leftShoulder.x < poseData.rightHip.x &&
-          poseData.leftShoulder.x < poseData.leftKnee.x &&
-          poseData.leftShoulder.x < poseData.rightKnee.x &&
-          poseData.leftShoulder.x < poseData.leftAnkle.x &&
-          poseData.leftShoulder.x < poseData.rightAnkle.x &&
-          poseData.rightShoulder.x < poseData.leftHip.x &&
-          poseData.rightShoulder.x < poseData.rightHip.x &&
-          poseData.rightShoulder.x < poseData.leftKnee.x &&
-          poseData.rightShoulder.x < poseData.rightKnee.x &&
-          poseData.rightShoulder.x < poseData.leftAnkle.x &&
-          poseData.rightShoulder.x < poseData.rightAnkle.x &&
-          poseData.leftHip.x < poseData.leftAnkle.x &&
-          poseData.leftHip.x < poseData.rightAnkle.x &&
-          poseData.rightHip.x < poseData.leftAnkle.x &&
-          poseData.rightHip.x < poseData.rightAnkle.x &&
-          poseData.leftKnee.x < poseData.leftAnkle.x &&
-          poseData.leftKnee.x < poseData.rightAnkle.x &&
-          poseData.rightKnee.x < poseData.leftAnkle.x &&
-          poseData.rightKnee.x < poseData.rightAnkle.x &&
-          poseData.nose.y < poseData.leftElbow.y &&
-          poseData.nose.y < poseData.rightElbow.y &&
-          poseData.nose.y < poseData.leftWrist.y &&
-          poseData.nose.y < poseData.rightWrist.y &&
-          poseData.nose.y < poseData.leftShoulder.y &&
-          poseData.nose.y < poseData.rightShoulder.y &&
-          poseData.nose.y < poseData.leftHip.y &&
-          poseData.nose.y < poseData.rightHip.y &&
-          poseData.nose.y < poseData.leftKnee.y &&
-          poseData.nose.y < poseData.rightKnee.y &&
-          poseData.nose.y < poseData.leftAnkle.y &&
-          poseData.nose.y < poseData.rightAnkle.y &&
-          poseData.leftElbow.y > poseData.leftShoulder.y &&
-          poseData.leftElbow.y > poseData.rightShoulder.y &&
-          poseData.leftElbow.y > poseData.leftHip.y &&
-          poseData.leftElbow.y > poseData.rightHip.y &&
-          poseData.rightElbow.y > poseData.leftShoulder.y &&
-          poseData.rightElbow.y > poseData.rightShoulder.y &&
-          poseData.rightElbow.y > poseData.leftHip.y &&
-          poseData.rightElbow.y > poseData.rightHip.y &&
-          poseData.leftWrist.y > poseData.leftShoulder.y &&
-          poseData.leftWrist.y > poseData.rightShoulder.y &&
-          poseData.leftWrist.y > poseData.leftHip.y &&
-          poseData.leftWrist.y > poseData.rightHip.y &&
-          poseData.rightWrist.y > poseData.leftShoulder.y &&
-          poseData.rightWrist.y > poseData.rightShoulder.y &&
-          poseData.rightWrist.y > poseData.leftHip.y &&
-          poseData.rightWrist.y > poseData.rightHip.y &&
-          poseData.leftWrist.y > poseData.leftElbow.y &&
-          poseData.leftWrist.y > poseData.rightElbow.y &&
-          poseData.rightWrist.y > poseData.leftElbow.y &&
-          poseData.rightWrist.y > poseData.rightElbow.y) {
-        return true;
-      } else {
-        return false;
+              poseData.leftElbow.x < poseData.leftKnee.x &&
+              poseData.leftElbow.x < poseData.leftAnkle.x &&
+              poseData.leftWrist.x < poseData.leftHip.x &&
+              poseData.leftWrist.x < poseData.leftKnee.x &&
+              poseData.leftWrist.x < poseData.leftAnkle.x &&
+              poseData.leftShoulder.x < poseData.leftHip.x &&
+              poseData.leftShoulder.x < poseData.leftKnee.x &&
+              poseData.leftShoulder.x < poseData.leftAnkle.x &&
+              poseData.leftHip.x < poseData.leftAnkle.x &&
+              poseData.leftKnee.x < poseData.leftAnkle.x &&
+              // poseData.nose.y < poseData.leftElbow.y &&
+              // poseData.nose.y < poseData.leftWrist.y &&
+              // // poseData.nose.y < poseData.leftShoulder.y && // For Cat
+              // // poseData.nose.y > poseData.leftShoulder.y && // For Cow
+              // poseData.nose.y < poseData.leftHip.y && // For Cat
+              // poseData.nose.y < poseData.leftKnee.y &&
+              // poseData.nose.y < poseData.leftAnkle.y &&
+              poseData.leftShoulder.y < poseData.leftHip.y &&
+              poseData.leftShoulder.y < poseData.leftElbow.y &&
+              poseData.leftShoulder.y < poseData.leftKnee.y &&
+              poseData.leftShoulder.y < poseData.leftWrist.y &&
+              poseData.leftShoulder.y < poseData.leftAnkle.y &&
+              poseData.leftHip.y < poseData.leftElbow.y &&
+              poseData.leftHip.y < poseData.leftKnee.y &&
+              poseData.leftHip.y < poseData.leftWrist.y &&
+              poseData.leftHip.y < poseData.leftAnkle.y &&
+              poseData.leftElbow.y < poseData.leftWrist.y &&
+              poseData.leftElbow.y < poseData.leftKnee.y &&
+              poseData.leftElbow.y < poseData.leftAnkle.y) {
+        if (poseData.leftKnee.y - poseData.leftHip.y >
+            poseData.leftElbow.y - poseData.leftShoulder.y) {
+          return true;
+        }
       }
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
-      return false;
     }
+    return false;
   }
 
   static bool _catRight(PoseData poseData) {
     try {
-      if (poseData.nose.x > poseData.rightShoulder.x &&
-          poseData.nose.x > poseData.rightHip.x &&
-          poseData.nose.x > poseData.rightKnee.x &&
-          poseData.nose.x > poseData.rightAnkle.x &&
-          poseData.leftElbow.x > poseData.rightHip.x &&
-          poseData.leftElbow.x > poseData.rightKnee.x &&
-          poseData.leftElbow.x > poseData.rightAnkle.x &&
-          poseData.rightElbow.x > poseData.rightHip.x &&
-          poseData.rightElbow.x > poseData.rightKnee.x &&
-          poseData.rightElbow.x > poseData.rightAnkle.x &&
-          poseData.leftWrist.x > poseData.rightHip.x &&
-          poseData.leftWrist.x > poseData.rightKnee.x &&
-          poseData.leftWrist.x > poseData.rightAnkle.x &&
-          poseData.rightWrist.x > poseData.rightHip.x &&
-          poseData.rightWrist.x > poseData.rightKnee.x &&
-          poseData.rightWrist.x > poseData.rightAnkle.x &&
-          poseData.leftShoulder.x > poseData.rightHip.x &&
-          poseData.leftShoulder.x > poseData.rightKnee.x &&
-          poseData.leftShoulder.x > poseData.rightAnkle.x &&
-          poseData.rightShoulder.x > poseData.rightHip.x &&
-          poseData.rightShoulder.x > poseData.rightKnee.x &&
-          poseData.rightShoulder.x > poseData.rightAnkle.x &&
-          poseData.rightHip.x > poseData.rightAnkle.x &&
-          poseData.rightKnee.x > poseData.rightAnkle.x &&
-          poseData.nose.y < poseData.rightElbow.y &&
-          poseData.nose.y < poseData.rightWrist.y &&
-          poseData.nose.y < poseData.rightKnee.y &&
-          poseData.nose.y < poseData.rightAnkle.y &&
-          poseData.rightWrist.y > poseData.rightShoulder.y &&
-          poseData.rightWrist.y > poseData.rightHip.y &&
-          poseData.rightWrist.y > poseData.rightElbow.y) {
-        return true;
-      } else {
-        return false;
+      if (poseData.rightAnkle.x < poseData.rightKnee.x &&
+          poseData.rightAnkle.x < poseData.rightHip.x &&
+          poseData.rightAnkle.x < poseData.rightShoulder.x &&
+          poseData.rightAnkle.x < poseData.rightEar.x &&
+          poseData.rightHip.x < poseData.rightShoulder.x &&
+          poseData.rightHip.x < poseData.rightEar.x &&
+          poseData.rightShoulder.x < poseData.rightEar.x &&
+
+          // poseData.rightShoulder.y < poseData.nose.y && // Cow
+          // poseData.rightShoulder.y > poseData.nose.y &&  // Cat
+          poseData.rightShoulder.y < poseData.rightHip.y &&
+          poseData.rightShoulder.y < poseData.rightElbow.y &&
+          poseData.rightShoulder.y < poseData.rightKnee.y &&
+          poseData.rightShoulder.y < poseData.rightWrist.y &&
+          poseData.rightShoulder.y < poseData.rightAnkle.y &&
+          poseData.rightHip.y < poseData.rightElbow.y &&
+          poseData.rightHip.y < poseData.rightKnee.y &&
+          poseData.rightHip.y < poseData.rightWrist.y &&
+          poseData.rightHip.y < poseData.rightAnkle.y &&
+          poseData.rightElbow.y < poseData.rightKnee.y &&
+          poseData.rightElbow.y < poseData.rightWrist.y &&
+          poseData.rightElbow.y < poseData.rightAnkle.y) {
+        if (poseData.rightKnee.y - poseData.rightHip.y >
+            poseData.rightElbow.y - poseData.rightShoulder.y) {
+          return true;
+        }
       }
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
-      return false;
     }
+    return false;
   }
 
   static bool isSphinxPose(Pose pose) {
@@ -289,18 +239,37 @@ class Utils {
           poseData.leftWrist.x < poseData.leftKnee.x &&
           poseData.leftWrist.x < poseData.leftAnkle.x &&
           poseData.leftElbow.x < poseData.leftHip.x &&
-          poseData.leftKnee.x < poseData.leftAnkle.x &&
+          poseData.leftElbow.x < poseData.leftKnee.x &&
+          poseData.leftElbow.x < poseData.leftAnkle.x &&
+          poseData.leftHip.x < poseData.leftKnee.x &&
           poseData.leftHip.x < poseData.leftAnkle.x &&
+          poseData.leftKnee.x < poseData.leftAnkle.x &&
+          poseData.leftEar.y < poseData.leftShoulder.y &&
+          poseData.leftEar.y < poseData.leftElbow.y &&
+          poseData.leftEar.y < poseData.leftWrist.y &&
+          poseData.leftEar.y < poseData.leftHip.y &&
+          poseData.leftEar.y < poseData.leftKnee.y &&
+          poseData.leftEar.y < poseData.leftAnkle.y &&
           poseData.nose.y < poseData.leftShoulder.y &&
-          poseData.leftShoulder.y < poseData.leftElbow.y) {
-        return true;
-      } else {
-        return false;
+          poseData.nose.y < poseData.leftElbow.y &&
+          poseData.nose.y < poseData.leftHip.y &&
+          poseData.nose.y < poseData.leftWrist.y &&
+          poseData.nose.y < poseData.leftKnee.y &&
+          poseData.nose.y < poseData.leftAnkle.y &&
+          poseData.leftShoulder.y < poseData.leftElbow.y &&
+          poseData.leftShoulder.y < poseData.leftWrist.y &&
+          poseData.leftShoulder.y < poseData.leftHip.y &&
+          poseData.leftShoulder.y < poseData.leftKnee.y &&
+          poseData.leftShoulder.y < poseData.leftAnkle.y) {
+        if (poseData.leftHip.y.abs() - poseData.leftShoulder.y.abs() >
+            poseData.leftElbow.y.abs() - poseData.leftHip.y.abs()) {
+          return true;
+        }
       }
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
-      return false;
     }
+    return false;
   }
 
   static bool _sphinxRight(PoseData poseData) {
@@ -309,6 +278,7 @@ class Utils {
           poseData.rightAnkle.x < poseData.rightHip.x &&
           poseData.rightAnkle.x < poseData.rightShoulder.x &&
           poseData.rightAnkle.x < poseData.nose.x &&
+          poseData.rightAnkle.x < poseData.rightElbow.x &&
           poseData.rightAnkle.x < poseData.rightWrist.x &&
           poseData.rightKnee.x < poseData.rightHip.x &&
           poseData.rightKnee.x < poseData.rightShoulder.x &&
@@ -316,21 +286,31 @@ class Utils {
           poseData.rightKnee.x < poseData.rightWrist.x &&
           poseData.rightHip.x < poseData.rightShoulder.x &&
           poseData.rightHip.x < poseData.nose.x &&
+          poseData.rightHip.x < poseData.rightElbow.x &&
           poseData.rightHip.x < poseData.rightWrist.x &&
           poseData.rightShoulder.x < poseData.nose.x &&
-          poseData.rightHip.x < poseData.rightWrist.x &&
+          poseData.rightShoulder.x < poseData.rightWrist.x &&
           poseData.nose.x < poseData.rightWrist.x &&
           poseData.nose.y < poseData.rightShoulder.y &&
+          poseData.nose.y < poseData.rightAnkle.y &&
+          poseData.nose.y < poseData.rightKnee.y &&
+          poseData.nose.y < poseData.rightHip.y &&
           poseData.nose.y < poseData.rightElbow.y &&
-          poseData.rightShoulder.y < poseData.rightElbow.y) {
-        return true;
-      } else {
-        return false;
+          poseData.nose.y < poseData.leftWrist.y &&
+          poseData.rightShoulder.y < poseData.rightAnkle.y &&
+          poseData.rightShoulder.y < poseData.rightKnee.y &&
+          poseData.rightShoulder.y < poseData.rightHip.y &&
+          poseData.rightShoulder.y < poseData.rightElbow.y &&
+          poseData.rightShoulder.y < poseData.leftWrist.y) {
+        if (poseData.rightHip.y.abs() - poseData.rightShoulder.y.abs() >
+            poseData.rightElbow.y.abs() - poseData.rightHip.y.abs()) {
+          return true;
+        }
       }
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
-      return false;
     }
+    return false;
   }
 
   static bool isPlankPose(Pose pose) {
@@ -361,15 +341,15 @@ class Utils {
           poseData.leftShoulder.y < poseData.leftWrist.y &&
           poseData.leftShoulder.y < poseData.leftElbow.y &&
           poseData.leftHip.y < poseData.leftWrist.y &&
-          poseData.leftHip.y < poseData.leftElbow.y) {
+          poseData.leftHip.y < poseData.leftElbow.y &&
+          poseData.leftKnee.y < poseData.leftElbow.y &&
+          poseData.leftKnee.y < poseData.leftWrist.y) {
         return true;
-      } else {
-        return false;
       }
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
-      return false;
     }
+    return false;
   }
 
   static bool _plankRight(PoseData poseData) {
@@ -387,7 +367,9 @@ class Utils {
           poseData.rightShoulder.x < poseData.leftWrist.x &&
           poseData.nose.y < poseData.rightElbow.y &&
           poseData.rightHip.y < poseData.rightElbow.y &&
-          poseData.rightShoulder.y < poseData.rightElbow.y) {
+          poseData.rightShoulder.y < poseData.rightElbow.y &&
+          poseData.rightKnee.y < poseData.rightElbow.y &&
+          poseData.rightKnee.y < poseData.rightWrist.y) {
         return true;
       } else {
         return false;

@@ -1,4 +1,4 @@
-import 'package:health_connector/main.dart';
+import '/main.dart';
 
 class UserProfile {
   Data? data = Data();

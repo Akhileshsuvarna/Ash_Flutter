@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -73,10 +72,12 @@ class HealthConnectorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      MaterialApp(debugShowCheckedModeBanner: false, home: Home());
+      const MaterialApp(debugShowCheckedModeBanner: false, home: Home());
 }
 
 class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,

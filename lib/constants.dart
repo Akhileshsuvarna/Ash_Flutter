@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/login_screen.dart';
 
 import 'screens/internet_error.dart';
+import 'screens/result_screen.dart';
 
 class Constants {
   const Constants._();
@@ -57,6 +56,7 @@ class Constants {
   static const String internetError = 'internetscreen';
   static const String exerciseScreen = 'exercise_screen';
   static const String poseDetectorScreen = 'posedetectorscreen';
+  static const String exerciseResultScreen = 'exerciseresultscreen';
   static const String signUpWithApple = 'signup_with_apple';
   static const String signUpWithGoogle = 'signup_with_gmail';
   static const String storyScreen = "stories_screen";

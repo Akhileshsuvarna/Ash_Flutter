@@ -4,8 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/util/device_utils.dart';
+import '../log/logger.dart';
 import '../main.dart';
 
 class CameraView extends StatefulWidget {
@@ -28,14 +28,14 @@ class _CameraViewState extends State<CameraView> {
   int _cameraIndex = 0, mainPointers = 0;
   Orientation? _lastOrientation;
   double _currentScale = 1.0, _baseScale = 1.0, _cW = 0.0, _cH = 0.0;
-  List<double> _availableZoom = [1.0, 1.0]; // min, max
+  final List<double> _availableZoom = [1.0, 1.0]; // min, max
 
   @override
   void initState() {
     super.initState();
 
     for (var i = 0; i < cameras.length; i++) {
-      print('camera index = $i');
+      Logger.info('camera index = $i');
 
       if (cameras[i].lensDirection == widget.initialDirection) {
         _cameraIndex = 0;
