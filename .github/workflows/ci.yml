@@ -61,7 +61,7 @@ jobs:
         run: flutter pub get
       - name: Build iOS App
         run: |
-          flutter build ios --no-codesign
+          flutter build ios --no-codesign --no-sound-null-safety
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
