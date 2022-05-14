@@ -125,8 +125,8 @@ jobs:
       - name: Upload Abb Bundle
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: service_account.json
-          packageName: com.example.MyApp
+          serviceAccountJsonPlainText: service_account.json
+          packageName: com.livvinyl.healthconnector.app
           releaseFile: app-release-aab/app-release.aab
           track: alpha
           inAppUpdatePriority: 5
