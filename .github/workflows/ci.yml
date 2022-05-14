@@ -125,7 +125,7 @@ jobs:
       - name: Upload Abb Bundle
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          serviceAccountJson: service_account.json
           packageName: com.example.MyApp
           releaseFile: app-release-aab/app-release.aab
           track: alpha
