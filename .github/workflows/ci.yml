@@ -36,6 +36,11 @@ jobs:
         with:
           name: app-release-aab
           path: 'build/app/outputs/bundle/release/app-release.aab'
+      - name: upload mapping file to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: android-mapping
+          path: 'build/app/outputs/mapping/release/mapping.txt'
       # - name: Upload to slack step
       #   uses: adrey/slack-file-upload-action@master
       #   with:
@@ -109,6 +114,10 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: app-release-aab
+      - name: Download android mapping from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: android-mapping
       # - name: Add whatsnew message CA
       #   run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-CA
       # - name: Add whatsnew message US
@@ -123,7 +132,7 @@ jobs:
           inAppUpdatePriority: 5
           userFraction: 0.33
           # whatsNewDirectory: whatsNewDirectory/whatsnew
-          mappingFile: build/app/outputs/mapping/release/mapping.txt
+          mappingFile: android-mapping/mapping.txt
   deploy-TestFlight:
     name: 'Upload app to TestFlight'
     needs: [build-ios]
