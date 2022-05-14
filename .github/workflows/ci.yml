@@ -110,9 +110,9 @@ jobs:
         with:
           name: app-release-aab
       - name: Add whatsnew message CA
-        run: echo ${{ github.event.head_commit.message }} >> whatsNewDirectory/whatsnew-en-CA
+        run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-CA
       - name: Add whatsnew message US
-        run: echo ${{ github.event.head_commit.message }} >> whatsNewDirectory/whatsnew-en-US
+        run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-US
       - name: Upload Abb Bundle
         uses: r0adkll/upload-google-play@v1
         with:
