@@ -122,7 +122,7 @@ jobs:
           track: alpha
           inAppUpdatePriority: 5
           userFraction: 0.33
-          whatsNewDirectory: distribution/whatsnew
+          whatsNewDirectory: whatsNewDirectory/whatsnew
           mappingFile: build/app/outputs/mapping/release/mapping.txt
   deploy-TestFlight:
     name: 'Upload app to TestFlight'
