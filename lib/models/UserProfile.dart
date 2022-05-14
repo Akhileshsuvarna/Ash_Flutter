@@ -1,4 +1,4 @@
-import '/main.dart';
+import '../main.dart';
 
 class UserProfile {
   Data? data = Data();
@@ -32,7 +32,7 @@ class Data {
   String photoURL = "";
   String uuid = "";
   String address = "";
-  bool isVIP = false;
+  bool isAdmin = false;
 
   Data(
       {this.firebaseToken = "",
@@ -63,7 +63,7 @@ class Data {
     photoURL = json['photoURL'] ?? '';
     uuid = json['uuid'] ?? '';
     address = json['address'] ?? '';
-    isVIP = json['isVIP'] ?? false;
+    isAdmin = json['isAdmin'] ?? false;
   }
 
   Map<String, dynamic> toJson() => {

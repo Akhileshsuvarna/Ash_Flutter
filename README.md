@@ -61,6 +61,10 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 - [ ] Make a function to capture exercise So Admin can capture exercise Poses and Add Aexercise.
 - [ ] Make a Generic function to detect if live pose is smilar / same pose from required exercise.
 
+## Bugs
+- [ ] When user standing it counts it like Plank sometimte.
+- [ ] when user standing with hands up the pose switches left with right and right wth left.
+
 
 
 ## use below code to generate Blurhash for image

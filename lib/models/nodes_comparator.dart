@@ -1,4 +1,4 @@
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:health_connector/enums/enums.dart';
 import 'package:health_connector/util/enum_utils.dart';
 import 'package:health_connector/util/utils.dart';

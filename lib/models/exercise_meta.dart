@@ -3,17 +3,17 @@ import 'package:health_connector/exercise_params.dart';
 //  This class contains meta information of Exercises
 class ExerciseMeta {
   ExerciseMeta(
-    this.title,
-    this.exerciseDuration,
-    this.exerciseIntensity,
-    this.exerciseLocation,
-    this.coverImageUrl,
-    this.blurHash,
-    this.isARAvailable,
-    this.isVideoAvailable,
-    this.poseData,
-    this.orderId,
-  );
+      this.title,
+      this.exerciseDuration,
+      this.exerciseIntensity,
+      this.exerciseLocation,
+      this.coverImageUrl,
+      this.blurHash,
+      this.isARAvailable,
+      this.isVideoAvailable,
+      this.poseData,
+      this.orderId,
+      this.modelUrl);
   String title;
   int exerciseDuration;
   String exerciseLocation;
@@ -24,6 +24,7 @@ class ExerciseMeta {
   String blurHash;
   int orderId;
   List<dynamic> poseData;
+  String modelUrl;
 
   static listFromMap(Map map) {
     List<ExerciseMeta> result = [];
@@ -39,7 +40,8 @@ class ExerciseMeta {
             value[ExerciseParams.isARAvailable] ?? false,
             value[ExerciseParams.isVideoAvailable] ?? false,
             value[ExerciseParams.poseData],
-            value[ExerciseParams.orderId]),
+            value[ExerciseParams.orderId],
+            value[ExerciseParams.modelUrl]),
       );
     });
     result.sort((a, b) => a.orderId.compareTo(b.orderId));
@@ -56,6 +58,7 @@ class ExerciseMeta {
     isARAvailable = map[ExerciseParams.isARAvailable];
     isVideoAvailable = map[ExerciseParams.isVideoAvailable];
     poseData = map[ExerciseParams.poseData];
+    modelUrl = map[ExerciseParams.modelUrl];
   }
 
   toMap() => {
@@ -67,6 +70,7 @@ class ExerciseMeta {
         ExerciseParams.blurHash: blurHash,
         ExerciseParams.isARAvailable: isARAvailable,
         ExerciseParams.isVideoAvailable: isVideoAvailable,
-        ExerciseParams.poseData: poseData
+        ExerciseParams.poseData: poseData,
+        ExerciseParams.modelUrl: modelUrl
       };
 }

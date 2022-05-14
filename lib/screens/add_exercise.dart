@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:health_connector/enums/enums.dart' as enums;
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/models/nodes_comparator.dart';
@@ -240,16 +240,18 @@ class _AddExerciseState extends State<AddExercise> {
       // print(poseData);
 
       ExerciseMeta metaData = ExerciseMeta(
-          _exerciseTitleController.text,
-          int.parse(_exerciseDurationController.text),
-          _selectedIntensity!,
-          _selectedLocation!,
-          exerciseImage!.path,
-          Utils.getBlurHash(exerciseImage!.path),
-          true, // "TODO",
-          _isVideoAvailable ?? false,
-          [poseData],
-          0);
+        _exerciseTitleController.text,
+        int.parse(_exerciseDurationController.text),
+        _selectedIntensity!,
+        _selectedLocation!,
+        exerciseImage!.path,
+        Utils.getBlurHash(exerciseImage!.path),
+        true, // "TODO",
+        _isVideoAvailable ?? false,
+        [poseData],
+        0,
+        '',
+      );
 
       Logger.info(metaData.toMap());
 

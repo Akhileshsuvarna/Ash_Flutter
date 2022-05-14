@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../constants.dart';
 import '../../models/exercise_meta.dart';
+import '../exercise_model_viewer.dart';
 import '../pose_detector_view.dart';
 
 Widget exerciseWidget(
@@ -92,13 +94,17 @@ _exerciseActions(BuildContext context, ExerciseMeta meta) => Row(
               ? iconButton(
                   text: 'Video',
                   backgroundColor: Constants.appBarColor,
-                  onPressed: () => _onVideoPressed(context),
+                  onPressed: () => _onVideoPressed(context, meta),
                   icon: const Icon(Icons.ondemand_video, color: Colors.white))
               : Container()
         ]);
 
 _onArPressed(BuildContext context, ExerciseMeta meta) {
-  openPoseDetector(context, meta);
+  _openPoseDetector(context, meta);
+}
+
+_onVideoPressed(BuildContext context, ExerciseMeta meta) {
+  _openModelViewer(context, meta);
 }
 
 iconButton(
@@ -114,15 +120,25 @@ iconButton(
         label: Text(text,
             style: const TextStyle(color: Constants.secondaryColor)));
 
-openPoseDetector(BuildContext context, ExerciseMeta meta,
-        {bool addNew = false}) =>
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                PoseDetectorView(addNew: addNew, meta: meta)));
+_openPoseDetector(BuildContext context, ExerciseMeta meta,
+    {bool addNew = false}) {
+  // Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //         builder: (context) => PoseDetectorView(addNew: addNew, meta: meta)));
+  pushNewScreen(
+    context,
+    screen: PoseDetectorView(addNew: addNew, meta: meta),
+    withNavBar: false,
+    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+  );
+}
 
-_onVideoPressed(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Team Please provide videos for exercises')));
+_openModelViewer(BuildContext context, ExerciseMeta meta) {
+  pushNewScreen(
+    context,
+    screen: ExerciseModelViewer(meta: meta),
+    withNavBar: false,
+    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+  );
 }

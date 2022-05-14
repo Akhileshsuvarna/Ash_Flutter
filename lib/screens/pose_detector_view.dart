@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/models/exercise_score.dart';
@@ -27,10 +27,9 @@ class PoseDetectorView extends StatefulWidget {
 }
 
 class _PoseDetectorViewState extends State<PoseDetectorView> {
-  PoseDetector poseDetector = GoogleMlKit.vision.poseDetector();
+  PoseDetector poseDetector = PoseDetector(options: PoseDetectorOptions());
   bool isBusy = false, _isMatched = false;
   CustomPaint? customPaint;
-  FlutterTts flutterTts = FlutterTts();
   String? _path;
   final ExerciseScore _eScore = ExerciseScore();
   late Timer _exerciseTime;
@@ -56,19 +55,16 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
 
   _startActivity() async {
     if (widget.addNew) {
-      await _speak('Please press capture button when exercise pose acheived');
+      await Utils.speak(
+          'Please press capture button when exercise pose acheived');
     } else {
-      await _speak('Starting exercise ${EnumUtils.getName(widget.meta.title)}');
+      await Utils.speak(
+          'Starting exercise ${EnumUtils.getName(widget.meta.title)}');
       _exerciseTime = Timer(Duration(minutes: widget.meta.exerciseDuration),
           _exerciseTimeElapsed);
       _eScore.exerciseTimeAllotted = widget.meta.exerciseDuration;
     }
     _controller.start();
-  }
-
-  Future _speak(String text) async {
-    var result = await flutterTts.speak(text);
-    Logger.debug(result);
   }
 
   _exerciseTimeElapsed() {

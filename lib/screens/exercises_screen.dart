@@ -3,6 +3,7 @@ import 'package:health_connector/constants.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
+import 'package:health_connector/screens/home_screen.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
 
 import 'components/exercise_widget.dart';
@@ -39,34 +40,49 @@ class _ExercisePageState extends State<ExercisePage> {
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Constants.appBarColor,
-        appBar: AppBar(backgroundColor: Constants.appBarColor, elevation: 0),
-        body: Scaffold(
-            key: scaffoldKey,
-            appBar: AppBar(
-                backgroundColor: Constants.appBarColor,
-                automaticallyImplyLeading: false,
-                title: const Text('Exercises',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontStyle: FontStyle.normal,
-                        fontFamily: 'Lexend Deca',
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold)),
-                centerTitle: false,
-                elevation: 0,
-                actions: _appBarActions()),
-            backgroundColor: Constants.appBackgroundColor,
-            body: _body()));
+        key: scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Constants.appBarColor,
+          automaticallyImplyLeading: false,
+          title: const Text('Exercises',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontFamily: 'Lexend Deca',
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold)),
+          centerTitle: false,
+          elevation: 0,
+          // actions: _appBarActions(),
+        ),
+        backgroundColor: Constants.appBackgroundColor,
+        body: _body());
   }
 
+  // List<Widget> _appBarActions() => [
+  //       prefs.getBool('isAdmin') != null && prefs.getBool('isAdmin') != false
+  //           ? IconButton(
+  //               onPressed: _addExercise, icon: const Icon(Icons.add, size: 32))
+  //           : Container()
+  //     ];
+
   List<Widget> _appBarActions() => [
-        prefs.getBool('isAdmin') != null && prefs.getBool('isAdmin') != false
-            ? IconButton(
-                onPressed: _addExercise, icon: const Icon(Icons.add, size: 32))
-            : Container()
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(Constants.userProfileScreen);
+            },
+            icon: const Icon(
+              Icons.account_circle_sharp,
+              size: 40,
+            ),
+          ),
+        )
       ];
+
   _addExercise() => Navigator.push(
       context, MaterialPageRoute(builder: (context) => const AddExercise()));
   _body() => FutureBuilder(

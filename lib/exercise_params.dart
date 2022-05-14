@@ -12,4 +12,5 @@ class ExerciseParams {
   static const String exerciseType = 'exerciseType';
   static const String poseData = 'poseData';
   static const String orderId = 'orderId';
+  static const String modelUrl = 'modelUrl';
 }
