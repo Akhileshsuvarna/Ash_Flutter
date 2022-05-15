@@ -125,11 +125,11 @@ jobs:
       - name: print
         run:  ls
       - name: Upload Abb Bundle
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.15
         with:
-          serviceAccountJsonPlainText: service_account.json
+          serviceAccountJson: service_account.json
           packageName: com.livvinyl.healthconnector.app
-          releaseFile: ./build/app/outputs/bundle/release/app-release.aab #app-release-aab/app-release.aab
+          releaseFiles: ./build/app/outputs/bundle/release/*.aab #app-release-aab/app-release.aab
           track: alpha
           inAppUpdatePriority: 5
           userFraction: 0.33
