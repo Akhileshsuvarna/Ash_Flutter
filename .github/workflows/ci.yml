@@ -133,7 +133,7 @@ jobs:
           releaseFiles: ./build/app/outputs/bundle/release/*.aab #app-release-aab/app-release.aab
           track: internal
           inAppUpdatePriority: 5
-          userFraction: 1.0
+          # userFraction: 1.0
           # whatsNewDirectory: whatsNewDirectory/whatsnew
           mappingFile:  build/app/outputs/mapping/release/mapping.txt #android-mapping/mapping.txt
   # deploy-TestFlight:
