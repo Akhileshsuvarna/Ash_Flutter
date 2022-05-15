@@ -122,12 +122,14 @@ jobs:
       #   run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-CA
       # - name: Add whatsnew message US
       #   run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-US
+      - name: print
+        run:  ls
       - name: Upload Abb Bundle
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: service_account.json
           packageName: com.livvinyl.healthconnector.app
-          releaseFile: build/app/outputs/bundle/release/app-release.aab #app-release-aab/app-release.aab
+          releaseFile: ./build/app/outputs/bundle/release/app-release.aab #app-release-aab/app-release.aab
           track: alpha
           inAppUpdatePriority: 5
           userFraction: 0.33
