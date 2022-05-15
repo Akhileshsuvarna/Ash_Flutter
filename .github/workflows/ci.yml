@@ -131,7 +131,7 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.livvinyl.healthconnector.app
           releaseFiles: ./build/app/outputs/bundle/release/*.aab #app-release-aab/app-release.aab
-          track: alpha
+          track: internal
           inAppUpdatePriority: 5
           userFraction: 0.33
           # whatsNewDirectory: whatsNewDirectory/whatsnew
