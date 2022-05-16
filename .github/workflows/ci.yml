@@ -7,78 +7,78 @@ on:
     branches:
       - master
 jobs:
-  # build-android:
-  #   name: Test, Build & upload aab
-  #   runs-on: ubuntu-latest
-  #   steps:
-      # - uses: actions/checkout@v2
-  #     - uses: actions/setup-java@v2
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '8'
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         flutter-version: '2.10.1'
-  #         channel: 'stable'
-  #     - name: Increment Build number
-  #       run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.(${{github.run_number}})/e' pubspec.yaml
-  #     - name: Get Flutter Pub
-  #       run: flutter pub get
-  #     - run: flutter pub get
-  #     # - run: flutter test 
-  #     - name: Decoding android/key.properties
-  #       run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
-  #     - name: Decoding android/neumodore_key.jks
-  #       run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/key.jks
-  #     - run: flutter build appbundle --release --no-sound-null-safety
-  #     - name: upload aab to artifacts
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: app-release-aab
-  #         path: 'build/app/outputs/bundle/release/app-release.aab'
-  #     - name: upload mapping file to artifacts
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: android-mapping
-  #         path: 'build/app/outputs/mapping/release/mapping.txt'
-  #     # - name: Upload to slack step
-  #     #   uses: adrey/slack-file-upload-action@master
-  #     #   with:
-  #     #     token: ${{ secrets.SLACK_WEBHOOK }}
-  #     #     path: 'build/app/outputs/bundle/app-release.aab'
-  #     #     channel: healthconnector
-  # build-ios:
-  #   name: Test, Build & upload ipa
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-java@v2
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '8'
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         flutter-version: '2.10.1'
-  #         channel: 'stable'
-  #     - name: Increment Build number
-  #       run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.(${{github.run_number}})/e' pubspec.yaml
-  #     - name: Get Flutter Pub
-  #       run: flutter pub get
-  #     - name: Build iOS App
-  #       run: |
-  #         flutter build ios --no-codesign --no-sound-null-safety
-  #         cd build/ios/iphoneos
-  #         mkdir Payload
-  #         cd Payload
-  #         ln -s ../Runner.app
-  #         cd ..
-  #         zip -r app.ipa Payload
-  #     - name: upload ipa to artifacts
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: app-release-ipa
-  #         path: 'build/ios/iphoneos/app.ipa'
-  #         if-no-files-found: echo "app.ipa not found"
+  build-android:
+    name: Test, Build & upload aab
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.1'
+          channel: 'stable'
+      - name: Increment Build number
+        run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.(${{github.run_number}})/e' pubspec.yaml
+      - name: Get Flutter Pub
+        run: flutter pub get
+      - run: flutter pub get
+      # - run: flutter test 
+      - name: Decoding android/key.properties
+        run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
+      - name: Decoding android/neumodore_key.jks
+        run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/key.jks
+      - run: flutter build appbundle --release --no-sound-null-safety
+      - name: upload aab to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release-aab
+          path: 'build/app/outputs/bundle/release/app-release.aab'
+      - name: upload mapping file to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: android-mapping
+          path: 'build/app/outputs/mapping/release/mapping.txt'
+      # - name: Upload to slack step
+      #   uses: adrey/slack-file-upload-action@master
+      #   with:
+      #     token: ${{ secrets.SLACK_WEBHOOK }}
+      #     path: 'build/app/outputs/bundle/app-release.aab'
+      #     channel: healthconnector
+  build-ios:
+    name: Test, Build & upload ipa
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.1'
+          channel: 'stable'
+      - name: Increment Build number
+        run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.(${{github.run_number}})/e' pubspec.yaml
+      - name: Get Flutter Pub
+        run: flutter pub get
+      - name: Build iOS App
+        run: |
+          flutter build ios --no-codesign --no-sound-null-safety
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+      - name: upload ipa to artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release-ipa
+          path: 'build/ios/iphoneos/app.ipa'
+          if-no-files-found: echo "app.ipa not found"
   # testlab:
   #   name: Run UI tests with Firebase Test Lab
   #   needs: build-android
@@ -106,52 +106,50 @@ jobs:
   #       run: gcloud firebase test android run --type robo --app app-release-apk/app-release.apk
   deploy-playstore:
     name: 'Upload Android build to PlayStore console'
-    # needs: [build-android]
+    needs: [build-android]
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      # - name: Download app bundle from artifacts
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: app-release-aab
-      # - name: Download android mapping from artifacts
-      #   uses: actions/download-artifact@v1
-      #   with:
-      #     name: android-mapping
+      - name: Download app bundle from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-aab
+      - name: Download android mapping from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: android-mapping
       # - name: Add whatsnew message CA
       #   run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-CA
       # - name: Add whatsnew message US
       #   run: echo ${{ github.event.head_commit.message }} >> ./whatsNewDirectory/whatsnew-en-US
-      - name: print
-        run:  ls -a
       - name: Upload Abb Bundle
         uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJson: service_account.json
           packageName: com.livvinyl.healthconnector.app
-          releaseFiles: ./build/app/outputs/bundle/release/*.aab #app-release-aab/app-release.aab
+          releaseFiles: app-release-aab/*.aab
           track: internal
           inAppUpdatePriority: 5
           # userFraction: 1.0
           # whatsNewDirectory: whatsNewDirectory/whatsnew
-          mappingFile:  build/app/outputs/mapping/release/mapping.txt #android-mapping/mapping.txt
-  # deploy-TestFlight:
-  #   name: 'Upload app to TestFlight'
-  #   needs: [build-ios]
-  #   runs-on: macos-latest
+          mappingFile:  android-mapping/mapping.txt
+  deploy-TestFlight:
+    name: 'Upload app to TestFlight'
+    needs: [build-ios]
+    runs-on: macos-latest
 
-  #   steps:
-  #     - name: Download ipa from artifacts
-  #       uses: actions/download-artifact@v1
-  #       with:
-  #         name: app-release-ipa
-  #     - uses: apple-actions/upload-testflight-build@v1
-  #       with: 
-  #         app-path: 'app-release-ipa/app.ipa' 
-  #         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-  #         api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-  #         api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+    steps:
+      - name: Download ipa from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: app-release-ipa
+      - uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: 'app-release-ipa/app.ipa' 
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
   # release:
   #   name: release
   #   needs: [deploy-playstore, deploy-TestFlight]
@@ -173,17 +171,19 @@ jobs:
   #         artifacts: "app-release-aab/app-release.aab, app-release-ipa/app.ipa"
   #         tag: v1.0.${{ github.run_number }}
   #         token: ${{ secrets.GITHUB_TOKEN }}
-  # slackNotification:
-  #       name: Slack Notification
-  #       needs: release
-  #       runs-on: ubuntu-latest
-  #       steps:
-  #       - uses: actions/checkout@v2
-  #       - name: Slack Notification
-  #         uses: rtCamp/action-slack-notify@v2
-  #         env:
-  #           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  #           SLACK_USERNAME: Production release
-  #           SLACK_COLOR: ${{ job.status }}
-  #           SLACK_ICON: https://firebasestorage.googleapis.com/v0/b/livvinyl-health-connector.appspot.com/o/logo.png?alt=media&token=370f338d-c0da-48a4-8a47-2dd1c5aac75d
+  slackNotification:
+        name: Slack Notification
+        needs: [deploy-playstore, deploy-TestFlight]
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: Slack Notification
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: Production release
+            SLACK_COLOR: ${{ job.status }}
+            SLACK_ICON: https://firebasestorage.googleapis.com/v0/b/livvinyl-health-connector.appspot.com/o/logo.png?alt=media&token=370f338d-c0da-48a4-8a47-2dd1c5aac75d
+            SLACK_FOOTER: Powered by Livvinyl Inc
+            SLACK_MESSAGE: 'New Release for Android & IOS is Available for Testing Link-Android: https://play.google.com/apps/internaltest/4701654924397076080 Link-IOS: https://testflight.apple.com/join/Dmpagn2y'
             
