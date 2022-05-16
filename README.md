@@ -80,3 +80,7 @@ String uri = "image url goes here";
     final hash = BlurHash.encode(image!);
     print(hash);
   });
+
+## Github Actions CI / CD
+- [x] Android CI/CD
+- [ ] IOS CI/CD (There is a problem with podfile.lock on M1 Apple machine and Github Apple Machine M1 machine generates different podfile content which are not runnable on github) 
