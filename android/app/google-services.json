@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "335396837024-np1q9r80dac1d9vq7h3t5aurjil2utet.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.livvinyl.healthconnector.app",
+            "certificate_hash": "f695b9cbb7dc93f66116501349cc2e1e9ec3bfda"
+          }
+        },
+        {
           "client_id": "335396837024-o2vk25icl2kpc00gbt45oik3ajb6jgj6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -52,6 +60,14 @@
           "android_info": {
             "package_name": "com.livvinyl.healthconnector.app",
             "certificate_hash": "454fc00eb495e5023d5d64f49a9abe11a262114b"
+          }
+        },
+        {
+          "client_id": "335396837024-ugg7ncckt8co9dugj91p07l983o0akon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.livvinyl.healthconnector.app",
+            "certificate_hash": "49b62167a477c9f95f9540b8ba42e7460e826949"
           }
         },
         {

@@ -7,7 +7,6 @@ import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
 
 import 'components/exercise_widget.dart';
-import 'components/scan_widget.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({Key? key}) : super(key: key);
@@ -133,24 +132,24 @@ class _ExercisePageState extends State<ExercisePage> {
                           bottom: _size.height / 8),
                       child: Row(
                         children: [
-                          scanWidget(
-                              size: _size,
-                              context: context,
-                              text: "Face Scan",
-                              imagePath: Assets.ahiFaceScan,
-                              type: enums.ScanType.face),
-                          scanWidget(
-                              size: _size,
-                              context: context,
-                              text: "Body Scan",
-                              imagePath: Assets.ahiBodyScan,
-                              type: enums.ScanType.body),
-                          scanWidget(
-                              size: _size,
-                              context: context,
-                              text: "Derma Scan",
-                              imagePath: Assets.ahiDermaScan,
-                              type: enums.ScanType.derma),
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Face Scan",
+                          //     imagePath: Assets.ahiFaceScan,
+                          //     type: enums.ScanType.face),
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Body Scan",
+                          //     imagePath: Assets.ahiBodyScan,
+                          //     type: enums.ScanType.body),
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Derma Scan",
+                          //     imagePath: Assets.ahiDermaScan,
+                          //     type: enums.ScanType.derma),
                         ],
                       ),
                     ),

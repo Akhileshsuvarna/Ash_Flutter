@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';
-import 'package:health_connector/screens/video_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'FireStoreChat/InboxScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onItemSelected: (index) {
           setState(() {
             debugPrint('$index');
-            selectedIndex = 1;
+            selectedIndex = index;
           });
         },
       ),
@@ -74,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
         inactiveColorPrimary: Constants.unSelectedTab,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.video_collection),
-        title: selectedIndex == 1 ? ("Video") : null,
+        icon: const Icon(Icons.video_call),
+        title: selectedIndex == 1 ? ("Video Chat") : null,
         activeColorPrimary: Constants.selectedTab,
         inactiveColorPrimary: Constants.unSelectedTab,
       ),
@@ -91,7 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _buildScreens() {
     return [
       const ExercisePage(),
-      const VideoScreen(),
+      // const VideoScreen(),
+      const RoomsPage(),
+      //RoomsPage is Inbox Screen
       const UserProfileScreen()
     ];
   }

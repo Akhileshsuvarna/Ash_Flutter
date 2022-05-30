@@ -70,6 +70,7 @@ class Constants {
   static const String userHomeScreen = 'home_screen';
   static const String questionScreen = 'QuestionScreen';
   static const String questionScreen1 = 'QuestionScreen1';
+  static const String videoCallScreen = "videoCallScreen";
 
   static Map<String, WidgetBuilder> myroutes = <String, WidgetBuilder>{
     logIn: (BuildContext context) => const LoginPage(),
