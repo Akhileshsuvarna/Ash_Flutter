@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:health_connector/constants.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/UserProfile.dart';
 import 'package:health_connector/models/assets.dart';
 import 'package:health_connector/services/social_sign_in.dart';
 import 'package:health_connector/util/device_utils.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import 'components/rounded_button.dart';
 
@@ -151,6 +153,15 @@ class _LoginPageState extends State<LoginPage> {
             address: '',
             firebaseToken: prefs.getString('fcmToken') ?? '',
             uuid: credential.user!.uid));
+
+    await FirebaseChatCore.instance.createUserInFirestore(
+      types.User(
+        firstName: credential.user!.displayName,
+        id: credential.user!.uid, // UID from Firebase Authentication
+        imageUrl: credential.user!.photoURL,
+        lastName: '',
+      ),
+    );
 
     await firebaseDatabase
         .ref()

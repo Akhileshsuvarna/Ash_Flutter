@@ -89,19 +89,22 @@ class _UsersPageState extends State<UsersPage> {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    child: Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              _buildAvatar(user),
-                              Text(getUserName(user)),
-                            ],
-                          ),
-                          Divider(height: 8,)
-                        ],
-                      ),
+                    // child: Expanded(
+                    //   flex: 1,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            _buildAvatar(user),
+                            Text(getUserName(user)),
+                          ],
+                        ),
+                        const Divider(
+                          height: 8,
+                        )
+                      ],
                     ),
+                    // ),
                   ),
                 );
               },
