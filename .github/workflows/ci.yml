@@ -30,7 +30,7 @@ jobs:
   #       run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
   #     - name: Decoding android/neumodore_key.jks
   #       run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/key.jks
-  #     - run: flutter build appbundle --release --no-sound-null-safety
+  #     - arun: flutter build appbundle --release --no-sound-null-safety
   #     - name: upload aab to artifacts
   #       uses: actions/upload-artifact@v1
   #       with:

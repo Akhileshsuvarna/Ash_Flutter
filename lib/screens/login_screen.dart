@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/UserProfile.dart';
+import 'package:health_connector/models/assets.dart';
 import 'package:health_connector/services/social_sign_in.dart';
 import 'package:health_connector/util/device_utils.dart';
 
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                           right: _size.width / 16),
                       child: RoundedButton(
                         color: Colors.white,
-                        prefix: Image.asset("assets/social/google-logo.png"),
+                        prefix: Image.asset(Assets.appLogo),
                         text: "Sign in with Google",
                         textColor: Colors.black,
                         onPressed: _signUpwithGoogle,
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: RoundedButton(
                         color: Colors.white,
-                        prefix: Image.asset("assets/social/apple-logo.png"),
+                        prefix: Image.asset(Assets.socialLoginAppleLogo),
                         text: "Sign in with Apple",
                         textColor: Colors.black,
                         onPressed: _signUpwithApple,

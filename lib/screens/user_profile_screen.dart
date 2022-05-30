@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:health_connector/models/assets.dart';
 
 import 'package:health_connector/util/device_utils.dart';
 
@@ -115,8 +116,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           CircleAvatar(
               backgroundImage: NetworkImage(user!.photoURL!),
               radius: 30.0,
-
-              // backgroundImage: AssetImage("assets/images/profile.png"),
               backgroundColor: Colors.transparent,
             )
           : const Icon(
@@ -339,7 +338,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     alignment: Alignment.topCenter,
                     heightFactor: 1,
                     child: Image.asset(
-                      "assets/images/Celebration.png",
+                      Assets.userProfileCelebrations,
                     ),
                   )),
                   subtitle: const Padding(
@@ -372,25 +371,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               borderRadius: BorderRadius.circular(10), // if you need this
             ),
             color: Colors.grey[100],
-            child: const ListTile(
+            child: ListTile(
               leading: CircleAvatar(
                 radius: 20.0,
-                backgroundImage:
-                    AssetImage("assets/images/ic_sharp-check-circle.png"),
+                backgroundImage: AssetImage(Assets.tick),
                 backgroundColor: Colors.transparent,
               ),
-              title: Text("CAT COW",
+              title: const Text("CAT COW",
                   style: TextStyle(
                       fontSize: 14.0,
                       fontFamily: 'Lexend Deca',
                       fontWeight: FontWeight.w600)),
-              subtitle: Text('Complete',
+              subtitle: const Text('Complete',
                   style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.black,
                       fontFamily: 'Lexend Deca',
                       fontWeight: FontWeight.w600)),
-              trailing: Text.rich(
+              trailing: const Text.rich(
                 TextSpan(
                   text: '87/100' '\n',
                   style: TextStyle(
@@ -418,31 +416,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               borderRadius: BorderRadius.circular(10), // if you need this
             ),
             color: Colors.grey[100],
-            child: const ListTile(
+            child: ListTile(
               leading: CircleAvatar(
                 radius: 20.0,
-                backgroundImage:
-                    AssetImage("assets/images/ic_sharp-check-circle.png"),
+                backgroundImage: AssetImage(Assets.tick),
                 backgroundColor: Colors.transparent,
               ),
-              title: Text("Sphinx",
-                  style: TextStyle(
+              title: const Text("Sphinx",
+                  style: const TextStyle(
                       fontSize: 14.0,
                       fontFamily: 'Lexend Deca',
                       fontWeight: FontWeight.w600)),
-              subtitle: Text('Complete',
+              subtitle: const Text('Complete',
                   style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.black,
                       fontFamily: 'Lexend Deca',
                       fontWeight: FontWeight.w600)),
-              trailing: Text.rich(
+              trailing: const Text.rich(
                 TextSpan(
                   text: '95/100' '\n',
                   style: TextStyle(
                       fontStyle: FontStyle.normal,
                       fontFamily: 'Lexend Deca',
-                      color: Color(0xFF662D90),
+                      color: const Color(0xFF662D90),
                       fontWeight: FontWeight.bold), // default text style
                   children: <TextSpan>[
                     TextSpan(
@@ -464,26 +461,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               borderRadius: BorderRadius.circular(10), // if you need this
             ),
             color: Colors.grey[100],
-            child: const ListTile(
+            child: ListTile(
               leading: CircleAvatar(
                 radius: 20.0,
-                backgroundImage:
-                    AssetImage("assets/images/ic_sharp-check-circle.png"),
+                backgroundImage: AssetImage(Assets.tick),
                 backgroundColor: Colors.transparent,
               ),
-              title: Text("Plank",
+              title: const Text("Plank",
                   style: TextStyle(
                       fontSize: 14.0,
                       color: Colors.black,
                       fontStyle: FontStyle.normal,
                       fontFamily: 'Lexend Deca',
                       fontWeight: FontWeight.w600)),
-              subtitle: Text('Complete',
+              subtitle: const Text('Complete',
                   style: TextStyle(
                       fontSize: 12.0,
                       color: Colors.black,
                       fontWeight: FontWeight.w600)),
-              trailing: Text.rich(
+              trailing: const Text.rich(
                 TextSpan(
                   text: '80/100' '\n',
                   style: TextStyle(

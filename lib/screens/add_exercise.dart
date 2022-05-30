@@ -126,30 +126,30 @@ class _AddExerciseState extends State<AddExercise> {
                   labelText: 'Exercise duration',
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: _size.height / 32),
-                child: DropdownSearch<String>(
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
-                  selectedItem: _selectedIntensity,
-                  items: const ['Low', 'Medium', 'High'],
-                  label: "Intensity",
-                  onChanged: (value) =>
-                      setState(() => _selectedIntensity = value),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: _size.height / 32),
-                child: DropdownSearch<String>(
-                  mode: Mode.BOTTOM_SHEET,
-                  showSelectedItems: true,
-                  selectedItem: _selectedLocation,
-                  items: const ['Indoor', 'Outdoor', 'Indoor/Outdoor'],
-                  label: "Location",
-                  onChanged: (value) =>
-                      setState(() => _selectedLocation = value),
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: _size.height / 32),
+              //   child: DropdownSearch<String>(
+              //     mode: Mode.BOTTOM_SHEET,
+              //     showSelectedItems: true,
+              //     selectedItem: _selectedIntensity,
+              //     items: const ['Low', 'Medium', 'High'],
+              //     label: "Intensity",
+              //     onChanged: (value) =>
+              //         setState(() => _selectedIntensity = value),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: _size.height / 32),
+              //   child: DropdownSearch<String>(
+              //     mode: Mode.BOTTOM_SHEET,
+              //     showSelectedItems: true,
+              //     selectedItem: _selectedLocation,
+              //     items: const ['Indoor', 'Outdoor', 'Indoor/Outdoor'],
+              //     label: "Location",
+              //     onChanged: (value) =>
+              //         setState(() => _selectedLocation = value),
+              //   ),
+              // ),
               CheckboxListTile(
                 title: const Text("Is video available"),
                 activeColor: Constants.primaryColor,
@@ -320,51 +320,51 @@ class _AddExerciseState extends State<AddExercise> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Flexible(
-              child: DropdownSearch<String>(
-                mode: Mode.BOTTOM_SHEET,
-                showSelectedItems: true,
-                selectedItem: node.axis != null
-                    ? Utils.splitListBySeperatorAsList([node.axis], '.')[0]
-                    : '',
-                items: Utils.splitListBySeperatorAsList(enums.Axis.values, '.'),
-                label: "Axis",
-                onChanged: (value) => _onAxisSelect(value!, index),
-              ),
-            ),
-            Flexible(
-              child: DropdownSearch<String>(
-                showSearchBox: true,
-                mode: Mode.BOTTOM_SHEET,
-                showSelectedItems: true,
-                selectedItem: node.greaterLandmark != null
-                    ? Utils.splitListBySeperatorAsList(
-                        [node.greaterLandmark], '.')[0]
-                    : '',
-                items: Utils.splitListBySeperatorAsList(
-                    PoseLandmarkType.values, '.'),
-                label: "Greater",
-                onChanged: (value) => _onLandmarkSelect(value!, true, index),
-              ),
-            ),
+            // Flexible(
+            //   child: DropdownSearch<String>(
+            //     mode: Mode.BOTTOM_SHEET,
+            //     showSelectedItems: true,
+            //     selectedItem: node.axis != null
+            //         ? Utils.splitListBySeperatorAsList([node.axis], '.')[0]
+            //         : '',
+            //     items: Utils.splitListBySeperatorAsList(enums.Axis.values, '.'),
+            //     label: "Axis",
+            //     onChanged: (value) => _onAxisSelect(value!, index),
+            //   ),
+            // ),
+            // Flexible(
+            //   child: DropdownSearch<String>(
+            //     showSearchBox: true,
+            //     mode: Mode.BOTTOM_SHEET,
+            //     showSelectedItems: true,
+            //     selectedItem: node.greaterLandmark != null
+            //         ? Utils.splitListBySeperatorAsList(
+            //             [node.greaterLandmark], '.')[0]
+            //         : '',
+            //     items: Utils.splitListBySeperatorAsList(
+            //         PoseLandmarkType.values, '.'),
+            //     label: "Greater",
+            //     onChanged: (value) => _onLandmarkSelect(value!, true, index),
+            //   ),
+            // ),
             const Flexible(
               child: Text('>'),
             ),
-            Flexible(
-              child: DropdownSearch<String>(
-                mode: Mode.MENU,
-                showSearchBox: true,
-                showSelectedItems: true,
-                selectedItem: node.smallerLandmark != null
-                    ? Utils.splitListBySeperatorAsList(
-                        [node.smallerLandmark], '.')[0]
-                    : '',
-                items: Utils.splitListBySeperatorAsList(
-                    PoseLandmarkType.values, '.'),
-                label: "Smaller",
-                onChanged: (value) => _onLandmarkSelect(value!, false, index),
-              ),
-            ),
+            // Flexible(
+            //   child: DropdownSearch<String>(
+            //     mode: Mode.MENU,
+            //     showSearchBox: true,
+            //     showSelectedItems: true,
+            //     selectedItem: node.smallerLandmark != null
+            //         ? Utils.splitListBySeperatorAsList(
+            //             [node.smallerLandmark], '.')[0]
+            //         : '',
+            //     items: Utils.splitListBySeperatorAsList(
+            //         PoseLandmarkType.values, '.'),
+            //     label: "Smaller",
+            //     onChanged: (value) => _onLandmarkSelect(value!, false, index),
+            //   ),
+            // ),
             GestureDetector(
               onTap: () => _onComparisonRemoved(node),
               child: const Icon(Icons.remove_circle, color: Colors.red),

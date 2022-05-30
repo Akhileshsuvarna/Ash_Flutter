@@ -64,6 +64,7 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 ## Bugs
 - [ ] When user standing it counts it like Plank sometimte.
 - [ ] when user standing with hands up the pose switches left with right and right wth left.
+- [ ] Make Skelton less Jerkey by repaint only when current position is xamout differ from last position.
 
 
 
