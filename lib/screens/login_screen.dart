@@ -3,11 +3,14 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:health_connector/constants.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/UserProfile.dart';
-import 'package:health_connector/services/socialSignIn.dart';
+import 'package:health_connector/models/assets.dart';
+import 'package:health_connector/services/social_sign_in.dart';
 import 'package:health_connector/util/device_utils.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import 'components/rounded_button.dart';
 
@@ -28,71 +31,74 @@ class _LoginPageState extends State<LoginPage> {
       key: scaffoldKey,
       backgroundColor: Constants.appBackgroundColor,
       body: Center(
-        child: Column(
-          //TODO-Sikander confirm alignment on testing
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              //TODO-Sikander make this padding dynamic so that Top padding will always remain responsive for all screen sizes.
-              padding: EdgeInsets.only(top: DeviceUtils.height(context) / 8),
-              child: Image.asset(
-                'assets/images/logo.png',
-                scale: 1.0,
+        child: SingleChildScrollView(
+          child: Column(
+            //TODO-Sikander confirm alignment on testing
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                //TODO-Sikander make this padding dynamic so that Top padding will always remain responsive for all screen sizes.
+                padding: EdgeInsets.only(top: DeviceUtils.height(context) / 8),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  scale: 1.0,
+                ),
               ),
-            ),
-            //Continue with Google
-            Platform.isAndroid
-                ? Padding(
-                    padding: EdgeInsets.only(
-                        top: 0.0,
-                        left: _size.width / 16,
-                        right: _size.width / 16),
-                    child: RoundedButton(
-                      color: Colors.white,
-                      prefix: Image.asset("assets/social/google-logo.png"),
-                      text: "Sign in with Google",
-                      textColor: Colors.black,
-                      onPressed: _signUpwithGoogle,
-                    ),
-                  )
-                : const SizedBox(height: 0),
-            // Continue with Apple
-            Platform.isIOS
-                ? Padding(
-                    padding: EdgeInsets.only(
-                      top: _size.height / 128,
-                      left: _size.width / 16,
-                      right: _size.width / 16,
-                    ),
-                    child: RoundedButton(
-                      color: Colors.white,
-                      prefix: Image.asset("assets/social/apple-logo.png"),
-                      text: "Sign in with Apple",
-                      textColor: Colors.black,
-                      onPressed: _signUpwithApple,
-                    ),
-                  )
-                : const SizedBox(height: 0),
 
-            const Padding(padding: EdgeInsets.only(bottom: 50)),
-            // Padding(
-            //   padding: EdgeInsets.only(
-            //       left: DeviceUtils.width(context) / 8,
-            //       right: DeviceUtils.width(context) / 8,
-            //       top: DeviceUtils.height(context) / 8),
-            //   child: _logInButton(),
-            // ),
-            // TODO-Sikander make this padding dynamic so that bottom padding will always remain responsive for all screen sizes.
-            Padding(
-              padding:
-                  EdgeInsets.only(bottom: DeviceUtils.height(context) / 32),
-              child: const Text(
-                'By signing in, you accept our Terms and Conditions',
-                style: TextStyle(fontSize: 12),
+              //Continue with Google
+              Platform.isAndroid
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                          top: 0.0,
+                          left: _size.width / 16,
+                          right: _size.width / 16),
+                      child: RoundedButton(
+                        color: Colors.white,
+                        prefix: Image.asset(Assets.appLogo),
+                        text: "Sign in with Google",
+                        textColor: Colors.black,
+                        onPressed: _signUpwithGoogle,
+                      ),
+                    )
+                  : const SizedBox(height: 0),
+              // Continue with Apple
+              Platform.isIOS
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        top: _size.height / 128,
+                        left: _size.width / 16,
+                        right: _size.width / 16,
+                      ),
+                      child: RoundedButton(
+                        color: Colors.white,
+                        prefix: Image.asset(Assets.socialLoginAppleLogo),
+                        text: "Sign in with Apple",
+                        textColor: Colors.black,
+                        onPressed: _signUpwithApple,
+                      ),
+                    )
+                  : const SizedBox(height: 0),
+
+              const Padding(padding: EdgeInsets.only(bottom: 50)),
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //       left: DeviceUtils.width(context) / 8,
+              //       right: DeviceUtils.width(context) / 8,
+              //       top: DeviceUtils.height(context) / 8),
+              //   child: _logInButton(),
+              // ),
+              // TODO-Sikander make this padding dynamic so that bottom padding will always remain responsive for all screen sizes.
+              Padding(
+                padding:
+                    EdgeInsets.only(bottom: DeviceUtils.height(context) / 32),
+                child: const Text(
+                  'By signing in, you accept our Terms and Conditions',
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -107,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   void _onLoginButtonPressed() =>
-      Navigator.of(context).pushReplacementNamed(Constants.exerciseScreen);
+      Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
 
   _signUpwithGoogle() async {
     {
@@ -148,6 +154,15 @@ class _LoginPageState extends State<LoginPage> {
             firebaseToken: prefs.getString('fcmToken') ?? '',
             uuid: credential.user!.uid));
 
+    await FirebaseChatCore.instance.createUserInFirestore(
+      types.User(
+        firstName: credential.user!.displayName,
+        id: credential.user!.uid, // UID from Firebase Authentication
+        imageUrl: credential.user!.photoURL,
+        lastName: '',
+      ),
+    );
+
     await firebaseDatabase
         .ref()
         .child(Constants.dbRoot)
@@ -175,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setString("userProfile", jsonEncode(userProfile.toJson()));
     prefs.setBool('_isLoggedIn', true);
     //TODO: Navigate to Home Screen
-    Navigator.of(context).pushReplacementNamed(Constants.exerciseScreen);
+    Navigator.of(context).pushReplacementNamed(Constants.questionScreen);
+    // Navigator.of(context).pushReplacementNamed(Constants.exerciseScreen);
   }
 }

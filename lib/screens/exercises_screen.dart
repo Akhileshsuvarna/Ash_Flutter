@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
-import 'package:health_connector/main.dart';
+import 'package:health_connector/enums/enums.dart' as enums;
+import 'package:health_connector/models/assets.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
@@ -39,34 +40,49 @@ class _ExercisePageState extends State<ExercisePage> {
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Constants.appBarColor,
-        appBar: AppBar(backgroundColor: Constants.appBarColor, elevation: 0),
-        body: Scaffold(
-            key: scaffoldKey,
-            appBar: AppBar(
-                backgroundColor: Constants.appBarColor,
-                automaticallyImplyLeading: false,
-                title: const Text('Exercises',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontStyle: FontStyle.normal,
-                        fontFamily: 'Lexend Deca',
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold)),
-                centerTitle: false,
-                elevation: 0,
-                actions: _appBarActions()),
-            backgroundColor: Constants.appBackgroundColor,
-            body: _body()));
+        key: scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Constants.appBarColor,
+          automaticallyImplyLeading: false,
+          title: const Text('Exercises',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontFamily: 'Lexend Deca',
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold)),
+          centerTitle: false,
+          elevation: 0,
+          // actions: _appBarActions(),
+        ),
+        backgroundColor: Constants.appBackgroundColor,
+        body: _body());
   }
 
+  // List<Widget> _appBarActions() => [
+  //       prefs.getBool('isAdmin') != null && prefs.getBool('isAdmin') != false
+  //           ? IconButton(
+  //               onPressed: _addExercise, icon: const Icon(Icons.add, size: 32))
+  //           : Container()
+  //     ];
+
   List<Widget> _appBarActions() => [
-        prefs.getBool('isAdmin') != null && prefs.getBool('isAdmin') != false
-            ? IconButton(
-                onPressed: _addExercise, icon: const Icon(Icons.add, size: 32))
-            : Container()
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(Constants.userProfileScreen);
+            },
+            icon: const Icon(
+              Icons.account_circle_sharp,
+              size: 40,
+            ),
+          ),
+        )
       ];
+
   _addExercise() => Navigator.push(
       context, MaterialPageRoute(builder: (context) => const AddExercise()));
   _body() => FutureBuilder(
@@ -93,17 +109,53 @@ class _ExercisePageState extends State<ExercisePage> {
   _exercises(List<ExerciseMeta> metaData) => ListView.builder(
         itemCount: metaData.length,
         itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.only(
-            left: _size.width / 16,
-            right: _size.width / 16,
-            top: _size.height / 48,
-          ),
-          child: exerciseWidget(
-            size: _size,
-            context: context,
-            meta: metaData[index],
-          ),
-        ),
+            padding: EdgeInsets.only(
+              left: _size.width / 16,
+              right: _size.width / 16,
+              top: _size.height / 48,
+            ),
+            child: Column(
+              children: [
+                exerciseWidget(
+                  size: _size,
+                  context: context,
+                  meta: metaData[index],
+                ),
+                if (index == 2)
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          // left: _size.width / 16,
+                          // right: _size.width / 16,
+                          top: _size.height / 48,
+                          bottom: _size.height / 8),
+                      child: Row(
+                        children: [
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Face Scan",
+                          //     imagePath: Assets.ahiFaceScan,
+                          //     type: enums.ScanType.face),
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Body Scan",
+                          //     imagePath: Assets.ahiBodyScan,
+                          //     type: enums.ScanType.body),
+                          // scanWidget(
+                          //     size: _size,
+                          //     context: context,
+                          //     text: "Derma Scan",
+                          //     imagePath: Assets.ahiDermaScan,
+                          //     type: enums.ScanType.derma),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            )),
       );
 
   void onFloatPressed() async {

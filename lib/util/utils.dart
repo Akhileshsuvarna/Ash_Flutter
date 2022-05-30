@@ -1,15 +1,21 @@
 import 'dart:convert' show utf8, LineSplitter;
 import 'dart:io';
+import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash_dart/blurhash_dart.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:health_connector/constants.dart';
 
 import '../log/logger.dart';
+import '../main.dart';
 import 'pose_data.dart';
 
 class Utils {
   const Utils._();
+
+  static Future speak(String text) async {
+    var result = await flutterTts.speak(text);
+    Logger.debug(result);
+  }
 
   static bool isBlank(dynamic obj) {
     if (obj == null) {

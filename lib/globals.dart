@@ -81,27 +81,33 @@ class Globals {
   }
 
   static getProfileRemote() async {
-    await firebaseDatabase
-        .ref()
-        .child(Constants.dbRoot)
-        .child('users')
-        .child(userProfile.data!.uuid)
-        .get()
-        .then((snapshot) async {
-      if (snapshot.exists) {
-        var data = snapshot.value as Map<Object, Object>;
-        Map<String, dynamic> parsedmap = {};
-        for (int i = 0; i < data.length; i++) {
-          parsedmap.addEntries([
-            MapEntry(data.entries.elementAt(i).key.toString(),
-                data.entries.elementAt(i).value)
-          ]);
+    try {
+      await firebaseDatabase
+          .ref()
+          .child(Constants.dbRoot)
+          .child('users')
+          .child(userProfile.data!.uuid)
+          .get()
+          .then((snapshot) async {
+        if (snapshot.exists) {
+          dynamic data = snapshot.value; // as Map<String, dynamic>;
+          Map<String, dynamic> parsedmap = {};
+          for (int i = 0; i < data.length; i++) {
+            parsedmap.addEntries([
+              MapEntry(data.entries.elementAt(i).key.toString(),
+                  data.entries.elementAt(i).value)
+            ]);
+          }
+          UserProfile tmp = UserProfile(data: Data.fromJson(parsedmap));
+          tmp.data = Data.fromJson(parsedmap);
+          userProfile = tmp;
+          Logger.info("user Profile fetched from Remote");
         }
-        UserProfile tmp = UserProfile(data: Data.fromJson(parsedmap));
-        tmp.data = Data.fromJson(parsedmap);
-        userProfile = tmp;
-        Logger.info("user Profile Updated from Remote");
-      }
-    });
+      });
+    } catch (e, stackTrace) {
+      Logger.error(
+          'Error occured while fetching remote profile ${e.toString()}',
+          stackTrace: stackTrace);
+    }
   }
 }
