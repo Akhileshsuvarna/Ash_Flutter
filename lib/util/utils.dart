@@ -1,5 +1,6 @@
 import 'dart:convert' show utf8, LineSplitter;
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:blurhash_dart/blurhash_dart.dart';
@@ -123,18 +124,30 @@ class Utils {
     // else{
     //   // Unknown Side Compare All Worst case scnerio
     // }
-    var poseData = PoseData.fromMap(pose.landmarks);
-    if (Utils.x && poseData.leftHip.x > poseData.nose.x) {}
+    // var poseData = PoseData.fromMap(pose.landmarks);
+    // if (Utils.x && poseData.leftHip.x > poseData.nose.x) {}
   }
 
-  static bool isCatPose(Pose pose) {
-    var poseData = PoseData.fromMap(pose.landmarks);
-    Logger.debug("""Y-Axis: leftShoulder ${poseData.leftShoulder.y} 
-        | leftHip ${poseData.leftHip.y} 
-        | leftElbow ${poseData.leftElbow.y} 
-        | leftKnee ${poseData.leftKnee.y} 
-        | leftAnkle ${poseData.leftAnkle.y} 
-        | leftWrist ${poseData.leftWrist.y}""");
+  static bool isCatPose(Pose pose, Size size) {
+    var poseData = PoseData.fromMap(pose.landmarks, size);
+    // Logger.debug("""X-Axis: leftShoulder ${poseData.leftShoulder.x}
+    //     | leftHip ${poseData.leftHip.x}
+    //     | leftElbow ${poseData.leftElbow.x}
+    //     | leftKnee ${poseData.leftKnee.x}
+    //     | leftAnkle ${poseData.leftAnkle.x}
+    //     | leftWrist ${poseData.leftWrist.x}""");
+    // Logger.debug("""Y-Axis: leftShoulder ${poseData.leftShoulder.y}
+    //     | leftHip ${poseData.leftHip.y}
+    //     | leftElbow ${poseData.leftElbow.y}
+    //     | leftKnee ${poseData.leftKnee.y}
+    //     | leftAnkle ${poseData.leftAnkle.y}
+    //     | leftWrist ${poseData.leftWrist.y}""");
+    // Logger.debug("""Z-Axis: leftShoulder ${poseData.leftShoulder.y}
+    //     | leftHip ${poseData.leftHip.z}
+    //     | leftElbow ${poseData.leftElbow.z}
+    //     | leftKnee ${poseData.leftKnee.z}
+    //     | leftAnkle ${poseData.leftAnkle.z}
+    //     | leftWrist ${poseData.leftWrist.z}""");
     if (poseData.leftAnkle.x > poseData.leftShoulder.x) {
       return _catLeft(poseData);
     } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {
@@ -227,8 +240,8 @@ class Utils {
     return false;
   }
 
-  static bool isSphinxPose(Pose pose) {
-    var poseData = PoseData.fromMap(pose.landmarks);
+  static bool isSphinxPose(Pose pose, Size size) {
+    var poseData = PoseData.fromMap(pose.landmarks, size);
     if (poseData.leftShoulder.x < poseData.leftAnkle.x) {
       return _sphinxLeft(poseData);
     } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {
@@ -319,8 +332,8 @@ class Utils {
     return false;
   }
 
-  static bool isPlankPose(Pose pose) {
-    var poseData = PoseData.fromMap(pose.landmarks);
+  static bool isPlankPose(Pose pose, Size size) {
+    var poseData = PoseData.fromMap(pose.landmarks, size);
     if (poseData.leftShoulder.x < poseData.leftAnkle.x) {
       return _plankLeft(poseData);
     } else if (poseData.rightAnkle.x < poseData.rightShoulder.x) {

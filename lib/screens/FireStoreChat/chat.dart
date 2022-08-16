@@ -16,7 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../constants.dart';
 
 class ChatPage extends StatefulWidget {
-   ChatPage({
+  ChatPage({
     Key? key,
     required this.room,
     this.chatUserName,
@@ -195,7 +195,10 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
-        title: Text(widget.room.name != null ? widget.room.name! : widget.chatUserName!,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+        title: Text(
+          widget.room.name != null ? widget.room.name! : widget.chatUserName!,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
       ),
       body: StreamBuilder<types.Room>(
         initialData: widget.room,

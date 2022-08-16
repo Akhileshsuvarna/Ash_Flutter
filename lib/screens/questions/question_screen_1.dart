@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:health_connector/main.dart';
 import 'package:health_connector/util/device_utils.dart';
 
 import '../../constants.dart';
 
-class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({Key? key}) : super(key: key);
+class QuestionScreen1 extends StatefulWidget {
+  const QuestionScreen1({Key? key}) : super(key: key);
 
   @override
-  _QuestionScreenState createState() => _QuestionScreenState();
+  _QuestionScreen1State createState() => _QuestionScreen1State();
 }
 
-class _QuestionScreenState extends State<QuestionScreen> {
+class _QuestionScreen1State extends State<QuestionScreen1> {
   int _questionIndex = 0;
   int _answerIndex = 0;
 
   TextEditingController editController = TextEditingController();
 
-  String? _selectedColor;
+  String? _selectedAnswer;
 
   ///
   ///Redirect to next index question-answer
@@ -24,32 +25,33 @@ class _QuestionScreenState extends State<QuestionScreen> {
   void _nextQuestion() async {
     setState(() {
       if (_questionIndex == 4 && _answerIndex == 4) {
-        if (_selectedColor?.toLowerCase() ==
+        if (_selectedAnswer?.toLowerCase() ==
                 _answer[_answerIndex]['answers']![1].toLowerCase() ||
-            _selectedColor == _answer[_answerIndex]['answers']![2]) {
+            _selectedAnswer == _answer[_answerIndex]['answers']![2]) {
           _questionIndex = 6;
           _answerIndex = 6;
-          _selectedColor = null;
+          _selectedAnswer = null;
           return;
-        } else if (_selectedColor == _answer[_answerIndex]['answers']![0]) {
+        } else if (_selectedAnswer == _answer[_answerIndex]['answers']![0]) {
           _questionIndex = 5;
           _answerIndex = 5;
-          _selectedColor = null;
+          _selectedAnswer = null;
           return;
         }
       }
-      if (_questionIndex == 5 && _answerIndex == 5 && _selectedColor != null) {
+      if (_questionIndex == 5 && _answerIndex == 5 && _selectedAnswer != null) {
+        //TODO upload Questionaire data to firebase here from questionareData object.
         Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
       } else if (_questionIndex == 6 &&
           _answerIndex == 6 &&
-          _selectedColor != null) {
+          _selectedAnswer != null) {
         Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
       } else {
         if (_questionIndex < 5 && _answerIndex < 5) {
           _questionIndex++;
           _answerIndex++;
         }
-        _selectedColor = null;
+        _selectedAnswer = null;
       }
     });
   }
@@ -59,12 +61,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
   ///
   void _previousQuestion() async {
     if (_questionIndex == 0 && _answerIndex == 0) {
-      Navigator.of(context).pushReplacementNamed(Constants.questionScreen);
+      Navigator.of(context).pushReplacementNamed(Constants.questionScreen0);
     } else {
       setState(() {
         _questionIndex--;
         _answerIndex--;
-        _selectedColor = null;
+        _selectedAnswer = null;
       });
     }
   }
@@ -245,10 +247,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
                   borderSide: BorderSide(color: Colors.transparent))),
           onChanged: (value) {
             setState(() {
-              _selectedColor = value;
+              _selectedAnswer = value;
             });
           },
-          value: _selectedColor,
+          value: _selectedAnswer,
           hint: Padding(
             padding: EdgeInsets.only(
                 left: DeviceUtils.width(context) / 20,
@@ -370,7 +372,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               child: ElevatedButton(
                   onPressed: () {
                     if (_questionIndex == 0 || _questionIndex > 1) {
-                      if (_selectedColor == null) {
+                      if (_selectedAnswer == null) {
                         //  TODO(skandar): Code duplication. snackbar functionavailable in Constants.
                         //  TODO(skandar): Move snackBar to utils instead of constants.
                         ScaffoldMessenger.of(context)
@@ -385,6 +387,20 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           ),
                         ));
                         return;
+                      } else {
+                        if (_questionIndex == 0) {
+                          questionaireData.numberOfAreasOfConcerns =
+                              _selectedAnswer;
+                        } else if (_questionIndex == 2) {
+                          questionaireData.painDuration = _selectedAnswer;
+                        } else if (_questionIndex == 3) {
+                          questionaireData.firstTimeOrOngoing = _selectedAnswer;
+                        } else if (_questionIndex == 4) {
+                          questionaireData.levelOfActivity = _selectedAnswer;
+                        } else if (_questionIndex == 5) {
+                          questionaireData.nonExercisingReason =
+                              _selectedAnswer;
+                        }
                       }
                     } else if (_questionIndex == 1) {
                       if (editController.text.isEmpty) {
@@ -400,6 +416,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           ),
                         )); //
                         return;
+                      } else {
+                        questionaireData.areasOfConcern = editController.text;
                       }
                     }
                     _nextQuestion();

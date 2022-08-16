@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/home_screen.dart';
+import 'package:health_connector/screens/leader_score_board.dart';
 import 'package:health_connector/screens/login_screen.dart';
-import 'package:health_connector/screens/questions/question_screen.dart';
+import 'package:health_connector/screens/questions/question_screen0.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';
 import 'screens/internet_error.dart';
 import 'screens/questions/question_screen_1.dart';
@@ -68,7 +69,7 @@ class Constants {
   static const String pinCodeScreen = "pincode_screen";
   static const String userProfileScreen = 'user_profile_screen';
   static const String userHomeScreen = 'home_screen';
-  static const String questionScreen = 'QuestionScreen';
+  static const String questionScreen0 = 'QuestionScreen0';
   static const String questionScreen1 = 'QuestionScreen1';
   static const String videoCallScreen = "videoCallScreen";
 
@@ -77,8 +78,8 @@ class Constants {
     // PW_RESET: (BuildContext context) => ResetPasswordScreen(),
     exerciseScreen: (BuildContext context) => const ExercisePage(),
     userProfileScreen: (BuildContext context) => const UserProfileScreen(),
-    questionScreen: (BuildContext context) => const QuestionScreen0(),
-    questionScreen1: (BuildContext context) => const QuestionScreen(),
+    questionScreen0: (BuildContext context) => const QuestionScreen0(),
+    questionScreen1: (BuildContext context) => const QuestionScreen1(),
 
     userHomeScreen: (BuildContext context) => const HomeScreen(),
     // STORY_SCREEN: (BuildContext context) => StoryScreen(),
@@ -116,4 +117,23 @@ class Constants {
   static const String messagingSenderId = '335396837024';
 
   static const String measurementId = 'G-XJVZYTYMVZ';
+
+  // Agora constants
+
+  static const tokenServerBaseUrl = "";
+  static const tokenServerVideoPublisherWithUid = '/rtc/video/publisher/uid/';
+  static const tokenServerAudioPublisherWithUid = '/rtc/audio/publisher/uid/';
+  static const defaultVideoChannelExpiry = '?expiry=3600';
+
+  static String getPublisherVideoURLWithUid({int uid = 0}) =>
+      tokenServerBaseUrl +
+      tokenServerVideoPublisherWithUid +
+      uid.toString() +
+      defaultVideoChannelExpiry;
+
+  static String getPublisherAudioURLWithUid({int uid = 0}) =>
+      tokenServerBaseUrl +
+      tokenServerVideoPublisherWithUid +
+      uid.toString() +
+      defaultVideoChannelExpiry;
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
@@ -13,12 +14,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PersistentTabController _controller =
+  late PersistentTabController persistentTabController =
       PersistentTabController(initialIndex: 0);
   int selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  _monitorLoginState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
   }
 
   @override
@@ -26,18 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: PersistentTabView(
         context,
-        controller: _controller,
+        controller: persistentTabController,
         screens: _buildScreens(),
         items: _navBarsItems(),
         confineInSafeArea: true,
         backgroundColor: Colors.white,
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
-        stateManagement: true,
+        stateManagement: false,
         navBarHeight: MediaQuery.of(context).viewInsets.bottom > 0
             ? 0.0
             : kBottomNavigationBarHeight,
-        hideNavigationBarWhenKeyboardShows: true,
+        hideNavigationBarWhenKeyboardShows: false,
         margin: const EdgeInsets.all(0.0),
         popActionScreens: PopActionScreensType.all,
         bottomScreenMargin: 0.0,

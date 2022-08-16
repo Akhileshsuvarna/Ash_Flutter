@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,7 +41,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       ],
     );
 
-    // FirebaseAuth.instance.currentUser?.photoURL;
+    FirebaseAuth.instance.currentUser?.photoURL;
     client.initialize();
 
     return true;

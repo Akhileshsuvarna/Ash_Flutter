@@ -60,6 +60,7 @@ Health connector.ai is health and fitness app powered by Livvinyl progressive me
 - [ ] Start Timer on Initial pose Detection and stop timer when pose is not detected for 1 to 2 seconds(threshold should be configurable from backend remotely)
 - [ ] Make a function to capture exercise So Admin can capture exercise Poses and Add Aexercise.
 - [ ] Make a Generic function to detect if live pose is smilar / same pose from required exercise.
+- [ ] replace circular cout timer with percent_indicator circular widget.
 
 ## Bugs
 - [ ] When user standing it counts it like Plank sometimte.

@@ -12,5 +12,9 @@ class ExerciseParams {
   static const String exerciseType = 'exerciseType';
   static const String poseData = 'poseData';
   static const String orderId = 'orderId';
-  static const String modelUrl = 'modelUrl';
+  static const String modelUrlAndroid = 'modelUrlAndroid';
+  static const String modelUrlIOS = 'modelUrlIOS';
+  static const String modelName = 'modelName';
+  static const String videoUrl = 'videoUrl';
+  static const String description = 'description';
 }

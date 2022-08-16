@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:health_connector/util/converter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../constants.dart';
 import '../Agora/AudioCallScreen.dart';
@@ -29,6 +31,11 @@ class _RoomsPageState extends State<RoomsPage> {
   void initState() {
     initializeFlutterFire();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void initializeFlutterFire() async {
@@ -71,13 +78,22 @@ class _RoomsPageState extends State<RoomsPage> {
       margin: const EdgeInsets.only(right: 8),
       child: CircleAvatar(
         backgroundColor: hasImage ? Colors.transparent : color,
-        backgroundImage: hasImage ? NetworkImage(room.imageUrl!) : null,
+        // backgroundImage: null,
+        backgroundImage:
+            hasImage ? _getNetWorkImage(room.imageUrl ?? "") : null,
         radius: 20,
         child: !hasImage
-            ? Text(
-                name.isEmpty ? '' : name[0].toUpperCase(),
-                style: const TextStyle(color: Colors.white),
-              )
+            ? name.isEmpty
+                ? const Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                  )
+                : Text(
+                    name.isEmpty ? '' : name[1].toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(color: Colors.white),
+                    ),
+                  )
             : null,
       ),
     );
@@ -149,37 +165,33 @@ class _RoomsPageState extends State<RoomsPage> {
                   children: [
                     Column(
                       children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            // SizedBox(
-                            //   width: 12,
-                            // ),
-                            // Icon(
-                            //   Icons.settings,
-                            //   color: Colors.black,
-                            //   size: 30,
-                            // ),
-                            // Spacer(),
+                          children: [
+                            const SizedBox(width: 12),
+                            const Icon(
+                              Icons.settings,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            const Spacer(),
                             Text(
                               "Inbox",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 34,
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 34,
+                                ),
                               ),
                             ),
-                            // Spacer(),
-                            // Icon(
-                            //   Icons.search,
-                            //   color: Colors.black,
-                            //   size: 30,
-                            // ),
-                            // SizedBox(
-                            //   width: 12,
-                            // ),
+                            const Spacer(),
+                            const Icon(
+                              Icons.search_outlined,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            const SizedBox(width: 12),
                           ],
                         ),
                         const SizedBox(
@@ -207,20 +219,22 @@ class _RoomsPageState extends State<RoomsPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Row(
-                                      children: const [
-                                        Icon(
+                                      children: [
+                                        const Icon(
                                           Icons.call,
                                           color: Colors.white,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
                                           "Audio",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                          style: GoogleFonts.poppins(
+                                            textStyle: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -247,20 +261,22 @@ class _RoomsPageState extends State<RoomsPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Row(
-                                      children: const [
-                                        Icon(
+                                      children: [
+                                        const Icon(
                                           Icons.video_call_outlined,
                                           color: Colors.white,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
                                           "Video",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                          style: GoogleFonts.poppins(
+                                            textStyle: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -269,14 +285,10 @@ class _RoomsPageState extends State<RoomsPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 25,
-                            ),
+                            const SizedBox(width: 25),
                           ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         StreamBuilder<List<types.Room>>(
                           stream: FirebaseChatCore.instance.rooms(),
                           initialData: const [],
@@ -313,8 +325,9 @@ class _RoomsPageState extends State<RoomsPage> {
                                             decoration: BoxDecoration(
                                                 color: Colors.grey.shade300
                                                     .withOpacity(0.5),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5))
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5))
                                                 // boxShadow: const [
                                                 //   BoxShadow(
                                                 //     color: Colors.black12,
@@ -341,20 +354,37 @@ class _RoomsPageState extends State<RoomsPage> {
                                               leading: _buildAvatar(room),
                                               title: Text(
                                                 room.name ?? '',
-                                                style: TextStyle(
-                                                    fontStyle: FontStyle.normal,
-                                                    fontFamily: 'Lexend Deca',
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                style: GoogleFonts.poppins(
+                                                  textStyle: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.normal,
+                                                      color:
+                                                          Converter.hexToColor(
+                                                              '#1D2429'),
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
                                               ),
                                               subtitle: FutureBuilder(
                                                   future: _getLastMessage(room),
                                                   builder: (context, snapshot) {
                                                     if (snapshot.hasData) {
-                                                      return Text(snapshot.data
-                                                          as String);
+                                                      return Text(
+                                                        snapshot.data as String,
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          textStyle: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 13.5,
+                                                            color: Converter
+                                                                .hexToColor(
+                                                              '#57636c',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
                                                     } else {
                                                       return Container();
                                                     }
@@ -362,16 +392,30 @@ class _RoomsPageState extends State<RoomsPage> {
                                               trailing: Container(
                                                 child: const Icon(
                                                   Icons.arrow_forward_ios,
+                                                  color: Colors.black,
                                                   size: 15,
                                                 ),
                                                 height: 30,
                                                 width: 30,
                                                 decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                15))),
+                                                  color: Colors.grey[300],
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(15),
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 1,
+                                                      offset: const Offset(
+                                                        0.5,
+                                                        1.5,
+                                                      ), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -402,17 +446,18 @@ class _RoomsPageState extends State<RoomsPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Row(
-                          children: const [
-                            Icon(
+                          children: [
+                            const Icon(
                               Icons.chat,
                               color: Colors.white,
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
+                            const SizedBox(width: 5),
                             Text(
-                              "New Chat!  ",
-                              style: TextStyle(color: Colors.white),
+                              "Create Chat!  ",
+                              style: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600)),
                             ),
                           ],
                         ),
@@ -421,11 +466,18 @@ class _RoomsPageState extends State<RoomsPage> {
                     onTap: _user == null
                         ? null
                         : () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                fullscreenDialog: true,
-                                builder: (context) => const UsersPage(),
-                              ),
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     fullscreenDialog: true,
+                            //     builder: (context) => const UsersPage(),
+                            //   ),
+                            // );
+                            pushNewScreen(
+                              context,
+                              screen: const UsersPage(),
+                              withNavBar: false,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
                             );
                           },
                   ),
@@ -433,5 +485,13 @@ class _RoomsPageState extends State<RoomsPage> {
               ],
             ),
           );
+  }
+}
+
+ImageProvider _getNetWorkImage(String url) {
+  if (url != "") {
+    return NetworkImage(url);
+  } else {
+    return const AssetImage('assets/images/logo.png');
   }
 }

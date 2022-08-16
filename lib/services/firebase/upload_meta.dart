@@ -6,12 +6,11 @@ class UploadMeta {
   UploadMeta._();
 
   static upload(ExerciseMeta exerciseMeta) async {
-    
     await firebaseDatabase
         .ref()
         .child(Constants.dbRoot)
         .child(Constants.exercises)
         .child(DateTime.now().millisecondsSinceEpoch.toString())
-        .set(exerciseMeta.toMap());
+        .set(exerciseMeta.toJson());
   }
 }

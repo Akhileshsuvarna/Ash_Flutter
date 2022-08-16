@@ -6,7 +6,8 @@ import '../constants.dart';
 ///
 /// Can be overwritten by any kind of function.
 class Logger {
-  const Logger._();
+  List<String> logs = []; //TODO(skandar) preserve all logs
+  factory Logger() => Logger();
 
   static void Function(Object o, {StackTrace? stackTrace}) debug = consoleLog;
 

@@ -1,11 +1,19 @@
+import 'dart:io';
+
+import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:health_connector/constants.dart';
-import 'package:health_connector/enums/enums.dart' as enums;
-import 'package:health_connector/models/assets.dart';
+import 'package:health_connector/log/logger.dart';
+import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
+import 'package:health_connector/util/converter.dart';
 
+import '../globals.dart';
 import 'components/exercise_widget.dart';
 
 class ExercisePage extends StatefulWidget {
@@ -29,35 +37,65 @@ class _ExercisePageState extends State<ExercisePage> {
     var data = await FirebaseRtdbServices.getDataAtNode(
         FirebaseRtdbServices.getDatabaseReferenceRecursively(
             rootNode: Constants.dbRoot, nodes: ['exercises']));
-    return _validateExerciseMeta(data) ? ExerciseMeta.listFromMap(data) : null;
+    if (_validateExerciseMeta(data)) {
+      var metaData = ExerciseMeta.listFromMap(data);
+      downloadAssets(metaData);
+      return metaData;
+    }
+    return null;
   }
 
   bool _validateExerciseMeta(dynamic data) {
     return true;
   }
 
+  downloadAssets(List<ExerciseMeta> data) async {
+    for (var element in data) {
+      var modelAtPath =
+          await File('$localPath/${element.modelName}.usdz').exists();
+      if (!modelAtPath) {
+        var taskID = await FlutterDownloader.enqueue(
+            url: element.modelUrlIOS, savedDir: localPath);
+        if (taskID != null) {
+          Logger.debug(taskID);
+          prefs.setString(taskID, element.title);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Constants.appBarColor,
-          automaticallyImplyLeading: false,
-          title: const Text('Exercises',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontFamily: 'Lexend Deca',
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold)),
-          centerTitle: false,
-          elevation: 0,
-          // actions: _appBarActions(),
+      key: scaffoldKey,
+      appBar: AppBar(
+        // backgroundColor: Constants.appBarColor,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Exercises',
+          textAlign: TextAlign.start,
+          style: GoogleFonts.poppins(
+            textStyle: const TextStyle(
+              fontSize: 28.0,
+              fontWeight: FontWeight.w600,
+              fontStyle: FontStyle.normal,
+              color: Colors.black,
+            ),
+          ),
         ),
-        backgroundColor: Constants.appBackgroundColor,
-        body: _body());
+        centerTitle: false,
+        elevation: 0,
+        actions: _appBarActions(),
+      ),
+      backgroundColor: Constants.appBackgroundColor,
+      body: _body(),
+      // floatingActionButton: FloatingActionButton(onPressed: () async {
+      //   var x = await flutterTts.getVoices;
+      //   print(x);
+      // }),
+    );
   }
 
   // List<Widget> _appBarActions() => [
@@ -72,12 +110,15 @@ class _ExercisePageState extends State<ExercisePage> {
           padding: const EdgeInsets.all(8.0),
           child: IconButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(Constants.userProfileScreen);
+              // Navigator.of(context)
+              //     .pushReplacementNamed(Constants.userProfileScreen);
             },
-            icon: const Icon(
-              Icons.account_circle_sharp,
-              size: 40,
+            icon: const Center(
+              child: Icon(
+                Icons.settings,
+                size: 28,
+                color: Colors.black,
+              ),
             ),
           ),
         )
@@ -90,21 +131,22 @@ class _ExercisePageState extends State<ExercisePage> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return _progressIndicator();
+            return Globals.progressIndicator();
           case ConnectionState.none:
-            return _progressIndicator();
+            return Globals.progressIndicator();
           case ConnectionState.active:
-            return _progressIndicator();
+            return Globals.progressIndicator();
           case ConnectionState.done:
             return snapshot.data != null
                 ? _exercises(snapshot.data as List<ExerciseMeta>)
                 : const Center(
-                    child: Text(
-                        'We are sorry for the inconvenience, our team is working on getting the right services for you'));
+                    child: Expanded(
+                      child: Text(
+                          'We are sorry for the inconvenience, our team is working on getting the right services for you'),
+                    ),
+                  );
         }
       });
-
-  _progressIndicator() => const Center(child: CircularProgressIndicator());
 
   _exercises(List<ExerciseMeta> metaData) => ListView.builder(
         itemCount: metaData.length,
@@ -121,49 +163,30 @@ class _ExercisePageState extends State<ExercisePage> {
                   context: context,
                   meta: metaData[index],
                 ),
-                if (index == 2)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          // left: _size.width / 16,
-                          // right: _size.width / 16,
-                          top: _size.height / 48,
-                          bottom: _size.height / 8),
-                      child: Row(
-                        children: [
-                          // scanWidget(
-                          //     size: _size,
-                          //     context: context,
-                          //     text: "Face Scan",
-                          //     imagePath: Assets.ahiFaceScan,
-                          //     type: enums.ScanType.face),
-                          // scanWidget(
-                          //     size: _size,
-                          //     context: context,
-                          //     text: "Body Scan",
-                          //     imagePath: Assets.ahiBodyScan,
-                          //     type: enums.ScanType.body),
-                          // scanWidget(
-                          //     size: _size,
-                          //     context: context,
-                          //     text: "Derma Scan",
-                          //     imagePath: Assets.ahiDermaScan,
-                          //     type: enums.ScanType.derma),
-                        ],
+                if (index == metaData.length - 1)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 100),
+                    child: AnimatedButton(
+                      child: Text(
+                        'Add Exercise',
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.normal,
+                              color: Colors.white),
+                        ),
                       ),
+                      height: 56,
+                      onPressed: () {
+                        Constants.showMessage(context, "Feature coming soon !");
+                      },
+                      color: Converter.hexToColor('#27A9E1')!,
+                      // width: _width / 2,
+                      duration: 5,
                     ),
                   ),
               ],
             )),
       );
-
-  void onFloatPressed() async {
-    // var dbRef = FirebaseRtdbServices.getDatabaseReferenceRecursively(
-    //     rootNode: 'healthconnector', nodes: ['exercises']);
-
-    // var map = await FirebaseRtdbServices.getDataAtNode(dbRef);
-
-    // var list = ExerciseMeta.listFromMap(map);
-  }
 }

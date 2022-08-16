@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'package:health_connector/main.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 
 class PoseData {
   late PoseLandmark nose;
@@ -35,77 +38,107 @@ class PoseData {
   late PoseLandmark leftFootIndex;
   late PoseLandmark rightFootIndex;
 
-  PoseData.fromMap(Map<PoseLandmarkType, PoseLandmark> landmarks) {
+  PoseData.fromMap(Map<PoseLandmarkType, PoseLandmark> landmarks, Size size) {
     landmarks.forEach((key, value) {
       if (key == PoseLandmarkType.nose) {
-        nose = value;
+        nose = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftEyeInner) {
-        leftEyeInner = value;
+        leftEyeInner = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftEye) {
-        leftEye = value;
+        leftEye = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftEyeOuter) {
-        leftEyeOuter = value;
+        leftEyeOuter = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightEyeInner) {
-        rightEyeInner = value;
+        rightEyeInner = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightEye) {
-        rightEye = value;
+        rightEye = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightEyeOuter) {
-        rightEyeOuter = value;
+        rightEyeOuter = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftEar) {
-        leftEar = value;
+        leftEar = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightEar) {
-        rightEar = value;
+        rightEar = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftMouth) {
-        leftMouth = value;
+        leftMouth = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightMouth) {
-        rightMouth = value;
+        rightMouth = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftShoulder) {
-        leftShoulder = value;
+        leftShoulder = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightShoulder) {
-        rightShoulder = value;
+        rightShoulder = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftElbow) {
-        leftElbow = value;
+        leftElbow = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightElbow) {
-        rightElbow = value;
+        rightElbow = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftWrist) {
-        leftWrist = value;
+        leftWrist = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightWrist) {
-        rightWrist = value;
+        rightWrist = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftPinky) {
-        leftPinky = value;
+        leftPinky = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightPinky) {
-        rightPinky = value;
+        rightPinky = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftIndex) {
-        leftIndex = value;
+        leftIndex = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightIndex) {
-        rightIndex = value;
+        rightIndex = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftThumb) {
-        leftThumb = value;
+        leftThumb = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightThumb) {
-        rightThumb = value;
+        rightThumb = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftHip) {
-        leftHip = value;
+        leftHip = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightHip) {
-        rightHip = value;
+        rightHip = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftKnee) {
-        leftKnee = value;
+        leftKnee = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightKnee) {
-        rightKnee = value;
+        rightKnee = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftAnkle) {
-        leftAnkle = value;
+        leftAnkle = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightAnkle) {
-        rightAnkle = value;
+        rightAnkle = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftHeel) {
-        leftHeel = value;
+        leftHeel = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightHeel) {
-        rightHeel = value;
+        rightHeel = axisMap(value, size);
       } else if (key == PoseLandmarkType.leftFootIndex) {
-        leftFootIndex = value;
+        leftFootIndex = axisMap(value, size);
       } else if (key == PoseLandmarkType.rightFootIndex) {
-        rightFootIndex = value;
+        rightFootIndex = axisMap(value, size);
       } else {
         throw 'unknown PoseLandmarkType -> $key';
       }
     });
+  }
+
+  PoseLandmark axisMap(PoseLandmark landmark, Size size) {
+    switch (currentDeviceOrientation) {
+      case NativeDeviceOrientation.portraitUp:
+        return landmark;
+      case NativeDeviceOrientation.portraitDown:
+        return PoseLandmark(
+            type: landmark.type,
+            x: size.width - landmark.x,
+            y: size.height - landmark.y,
+            z: landmark.z,
+            likelihood: landmark.likelihood);
+      case NativeDeviceOrientation.landscapeLeft:
+        return PoseLandmark(
+            type: landmark.type,
+            x: size.width - landmark.y,
+            y: size.height - landmark.x,
+            z: landmark.z,
+            likelihood: landmark.likelihood);
+      case NativeDeviceOrientation.landscapeRight:
+        return PoseLandmark(
+            type: landmark.type,
+            x: landmark.y,
+            y: landmark.x,
+            z: landmark.z,
+            likelihood: landmark.likelihood);
+      case NativeDeviceOrientation.unknown:
+        return landmark;
+    }
   }
 }

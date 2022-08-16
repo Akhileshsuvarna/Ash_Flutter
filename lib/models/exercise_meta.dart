@@ -13,42 +13,55 @@ class ExerciseMeta {
       this.isVideoAvailable,
       this.poseData,
       this.orderId,
-      this.modelUrl);
-  String title;
-  int exerciseDuration;
-  String exerciseLocation;
-  String exerciseIntensity;
-  bool isARAvailable;
-  bool isVideoAvailable;
-  String coverImageUrl;
-  String blurHash;
-  int orderId;
-  List<dynamic> poseData;
-  String modelUrl;
+      this.modelUrlAndroid,
+      this.modelUrlIOS,
+      this.modelName,
+      this.videoUrl,
+      this.description);
+  late String title;
+  late int exerciseDuration;
+  late String exerciseLocation;
+  late String exerciseIntensity;
+  late bool isARAvailable;
+  late bool isVideoAvailable;
+  late String coverImageUrl;
+  late String blurHash;
+  late int orderId;
+  late List<dynamic> poseData;
+  late String modelUrlAndroid;
+  late String modelUrlIOS;
+  late String modelName;
+  late String videoUrl;
+  late String description;
 
   static listFromMap(Map map) {
     List<ExerciseMeta> result = [];
     map.forEach((key, value) {
       result.add(
         ExerciseMeta(
-            value[ExerciseParams.title] ?? '',
-            value[ExerciseParams.exerciseDuration] ?? 5,
-            value[ExerciseParams.exerciseIntensity] ?? 'Low Intensity',
-            value[ExerciseParams.exerciseLocation] ?? 'Indoor/Outdoor',
-            value[ExerciseParams.coverImageUrl],
-            value[ExerciseParams.blurHash],
-            value[ExerciseParams.isARAvailable] ?? false,
-            value[ExerciseParams.isVideoAvailable] ?? false,
-            value[ExerciseParams.poseData],
-            value[ExerciseParams.orderId],
-            value[ExerciseParams.modelUrl]),
+          value[ExerciseParams.title] ?? '',
+          value[ExerciseParams.exerciseDuration] ?? 5,
+          value[ExerciseParams.exerciseIntensity] ?? 'Low Intensity',
+          value[ExerciseParams.exerciseLocation] ?? 'Indoor/Outdoor',
+          value[ExerciseParams.coverImageUrl],
+          value[ExerciseParams.blurHash],
+          value[ExerciseParams.isARAvailable] ?? false,
+          value[ExerciseParams.isVideoAvailable] ?? false,
+          value[ExerciseParams.poseData],
+          value[ExerciseParams.orderId],
+          value[ExerciseParams.modelUrlAndroid],
+          value[ExerciseParams.modelUrlIOS],
+          value[ExerciseParams.modelName],
+          value[ExerciseParams.videoUrl],
+          value[ExerciseParams.description],
+        ),
       );
     });
     result.sort((a, b) => a.orderId.compareTo(b.orderId));
     return result;
   }
 
-  fromMap(Map map) {
+  ExerciseMeta.fromMap(Map map) {
     title = map[ExerciseParams.title];
     exerciseDuration = map[ExerciseParams.exerciseDuration];
     exerciseIntensity = map[ExerciseParams.exerciseIntensity];
@@ -58,10 +71,14 @@ class ExerciseMeta {
     isARAvailable = map[ExerciseParams.isARAvailable];
     isVideoAvailable = map[ExerciseParams.isVideoAvailable];
     poseData = map[ExerciseParams.poseData];
-    modelUrl = map[ExerciseParams.modelUrl];
+    modelUrlAndroid = map[ExerciseParams.modelUrlAndroid];
+    modelUrlIOS = map[ExerciseParams.modelUrlIOS];
+    modelName = map[ExerciseParams.modelName];
+    videoUrl = map[ExerciseParams.videoUrl];
+    description = map[ExerciseParams.description];
   }
 
-  toMap() => {
+  toJson() => {
         ExerciseParams.title: title,
         ExerciseParams.exerciseDuration: exerciseDuration,
         ExerciseParams.exerciseIntensity: exerciseIntensity,
@@ -71,6 +88,10 @@ class ExerciseMeta {
         ExerciseParams.isARAvailable: isARAvailable,
         ExerciseParams.isVideoAvailable: isVideoAvailable,
         ExerciseParams.poseData: poseData,
-        ExerciseParams.modelUrl: modelUrl
+        ExerciseParams.modelUrlAndroid: modelUrlAndroid,
+        ExerciseParams.modelUrlIOS: modelUrlIOS,
+        ExerciseParams.modelName: modelName,
+        ExerciseParams.videoUrl: videoUrl,
+        ExerciseParams.description: description,
       };
 }
