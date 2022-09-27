@@ -131,13 +131,6 @@ class _ExercisePageState extends State<ExercisePage> {
       ),
       backgroundColor: Constants.appBackgroundColor,
       body: _body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Constants.logout(context);
-          LoadingOverlay.of(context).hide();
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
     );
   }
 

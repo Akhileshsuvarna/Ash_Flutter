@@ -20,7 +20,7 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   bool isFetchingData = false;
   int selectedIndex = -1;
-  late types.User selectedUser;
+  types.User? selectedUser;
 
   void _handlePressed(types.User otherUser, BuildContext context) async {
     final room = await FirebaseChatCore.instance.createRoom(otherUser);
@@ -179,7 +179,12 @@ class _UsersPageState extends State<UsersPage> {
       ),
       bottomSheet: GestureDetector(
         onTap: () {
-          _handlePressed(selectedUser, context);
+          if (selectedUser != null) {
+            _handlePressed(selectedUser!, context);
+          } else {
+            Constants.showMessage(
+                context, "Please select a user to invite to chat");
+          }
         },
         child: Container(
           height: MediaQuery.of(context).size.height / 8,
