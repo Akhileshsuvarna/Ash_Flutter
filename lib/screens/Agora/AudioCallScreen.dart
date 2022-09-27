@@ -9,7 +9,8 @@ import '../../main.dart';
 import '../../services/token_services.dart';
 
 class AudioCallScreen extends StatefulWidget {
-  const AudioCallScreen({Key? key}) : super(key: key);
+  final String? roomId;
+  const AudioCallScreen({Key? key, this.roomId}) : super(key: key);
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -20,11 +21,18 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   late final String audioToken;
   late final String appId;
 
-  String _getAppId() => Constants.agoraAppID;
+  Future<String> _getAppId() async {
+    DocumentSnapshot queryDocumentSnapshot =
+        await FirebaseFirestore.instance.collection("/agora").doc("app").get();
+    return queryDocumentSnapshot.get("appID");
+  }
 
   Future<Map<String, dynamic>> _getAudioToken() async {
     if (incomingCallEvent != null) {
-      return {}; //incomingCallEvent!.sessionId;
+      return {
+        "rtcToken": incomingCallEvent!.sessionId,
+        "channelName": "TODO(skandar)"
+      };
     } else {
       return await Provider.of<AgoraTokenServices>(context, listen: false)
           .generateRTCToken(
@@ -34,10 +42,18 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
   Future<bool> clientInitializer() async {
     var resp = await _getAudioToken();
+
+    await Provider.of<AgoraTokenServices>(context, listen: false).sendInvite(
+        FirebaseAuth.instance.currentUser!.uid,
+        widget.roomId!,
+        RtcCallType.audio,
+        resp['channelName'],
+        Uri.encodeComponent(Uri.encodeComponent(resp['rtcToken'])));
+
     client = AgoraClient(
       agoraConnectionData: AgoraConnectionData(
         rtmEnabled: false,
-        appId: _getAppId(),
+        appId: await _getAppId(),
         channelName: resp['channelName'],
         tempToken: resp['rtcToken'],
       ),
@@ -65,7 +81,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.call,
                       size: 50,
                       color: Colors.deepPurpleAccent,

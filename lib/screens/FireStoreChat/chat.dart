@@ -209,7 +209,8 @@ class _ChatPageState extends State<ChatPage> {
           GestureDetector(
             onTap: () {
               pushNewScreen(context,
-                  screen: const AudioCallScreen(), withNavBar: false);
+                  screen: AudioCallScreen(roomId: widget.room.id),
+                  withNavBar: false);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

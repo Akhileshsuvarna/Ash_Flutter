@@ -128,7 +128,7 @@ class Constants {
 
   static const agoraAppID = "e06a6c1e2e5e4aa9bb2804d6213c06d7";
 
-  static const tokenServerBaseUrl = "";
+  static const tokenServerBaseUrl = 'healthconnector-token-server.web.app';
   static const tokenServerVideoPublisherWithUid = '/rtc/video/publisher/uid/';
   static agoraGetAudioChannelPath({required String channelName}) =>
       '/rtc/$channelName/publisher/uid/0';
@@ -141,8 +141,9 @@ class Constants {
           {required String senderUid,
           required String roomID,
           required RtcCallType inviteType,
+          required String channelName,
           required agoraSessionToken}) =>
-      '/invite/$senderUid/$roomID/${inviteType == RtcCallType.audio ? 'audio' : 'video'}/$agoraSessionToken';
+      '/invite/$senderUid/$roomID/${inviteType == RtcCallType.audio ? 'audio' : 'video'}/$channelName/$agoraSessionToken';
 
   static String getPublisherVideoURLWithUid({int uid = 0}) =>
       tokenServerBaseUrl +

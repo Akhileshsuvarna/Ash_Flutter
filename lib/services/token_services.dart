@@ -19,11 +19,11 @@ abstract class IAgoraTokenServices {
   Future<Map<String, dynamic>> generateRTMToken();
   Future<bool> pingServer();
   FutureOr<bool> sendInvite(String uid, String roomId, RtcCallType inviteType,
-      String agoraSessionToken);
+      String channelName, String agoraSessionToken);
 }
 
 class AgoraTokenServices extends IAgoraTokenServices {
-  final String _baseUrl = 'healthconnector-token-server.web.app';
+  final String _baseUrl = Constants.tokenServerBaseUrl;
   late WebServices webServices;
 
   AgoraTokenServices() {
@@ -68,15 +68,19 @@ class AgoraTokenServices extends IAgoraTokenServices {
 
   @override
   Future<bool> sendInvite(String uid, String roomId, RtcCallType inviteType,
-      String agoraSessionToken) async {
+      String channelName, String agoraSessionToken) async {
     try {
       var _path = Constants.getAgoraInviteUrl(
           senderUid: uid,
           roomID: roomId,
           inviteType: inviteType,
+          channelName: channelName,
           agoraSessionToken: agoraSessionToken);
       var response = await webServices.get(_path);
-      return json.decode(response.body);
+      if (response.statusCode == 404) {
+        return false;
+      }
+      var responseBody = json.decode(response.body);
       return true;
     } catch (e, stackTrace) {
       Logger.error(e, stackTrace: stackTrace);
