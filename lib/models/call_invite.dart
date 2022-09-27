@@ -7,8 +7,9 @@ class CallerData {
   final String inviteType;
   final String sessionToken;
   final String roomId;
+  final String channelName;
   CallerData(this.hostName, this.hostImage, this.hostToken, this.hostEmail,
-      this.hostUUID, this.inviteType, this.sessionToken, this.roomId);
+      this.hostUUID, this.inviteType, this.sessionToken, this.roomId, this.channelName);
 
   toJson() => {
         "hostName": hostName,
@@ -18,6 +19,7 @@ class CallerData {
         "hostUUID": hostUUID,
         "inviteType": inviteType,
         "sessionToken": sessionToken,
-        "roomId": roomId
+        "roomId": roomId,
+        "channelName": channelName
       };
 }

@@ -1,3 +1,4 @@
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
@@ -30,8 +31,8 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   Future<Map<String, dynamic>> _getAudioToken() async {
     if (incomingCallEvent != null) {
       return {
-        "rtcToken": incomingCallEvent!.sessionId,
-        "channelName": "TODO(skandar)"
+        "rtcToken": incomingCallEvent!.userInfo!['sessionToken'],
+        "channelName": incomingCallEvent!.userInfo!['channelName']
       };
     } else {
       return await Provider.of<AgoraTokenServices>(context, listen: false)
@@ -69,11 +70,38 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     return true;
   }
 
+    Future<bool> incomingCallInitializer() async {
+    var resp = await _getAudioToken();
+
+    client = AgoraClient(
+      agoraConnectionData: AgoraConnectionData(
+        rtmEnabled: false,
+        appId: await _getAppId(),
+        channelName: resp['channelName'],
+        tempToken: resp['rtcToken'],
+      ),
+      enabledPermission: [
+        Permission.camera,
+        Permission.microphone,
+      ],
+      agoraEventHandlers: AgoraRtcEventHandlers(leaveChannel: (state) {
+        incomingCallEvent = null;
+        bloc.callServicesEventSink.add(null);
+        Navigator.of(context).pop();
+      })
+    );
+
+    FirebaseAuth.instance.currentUser?.photoURL;
+    client.initialize();
+
+    return true;
+  }
+
 // Build your layout
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: clientInitializer(),
+        future: incomingCallEvent != null? incomingCallInitializer() : clientInitializer(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -91,6 +119,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                         client: client,
                         enabledButtons: const [
                           BuiltInButtons.callEnd,
+                          BuiltInButtons.toggleMic,
                         ],
                       ),
                       bottom: 0,

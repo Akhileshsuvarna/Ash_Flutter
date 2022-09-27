@@ -23,6 +23,7 @@ class NotificationHelper {
         data['inviteType'],
         data['sessionToken'],
         data['roomId'],
+        data['channelName'],
       );
 
   static void showCallNotification(CallerData callerData) {

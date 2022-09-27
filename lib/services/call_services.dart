@@ -30,7 +30,7 @@ class CallServices {
   final _callServicesEventController = StreamController<CallEvent>();
 
   // Public Field
-  Sink<CallEvent> get callServicesEventSink =>
+  Sink<CallEvent?> get callServicesEventSink =>
       _callServicesEventController.sink;
 
   set callServicesEventSinkAdd(CallEvent event) =>

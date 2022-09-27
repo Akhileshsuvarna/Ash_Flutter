@@ -93,11 +93,13 @@ main() async {
 Future<void> _onCallAccepted(CallEvent callEvent) async {
   print("the call was accepted $callEvent");
   bloc.callServicesEventSinkAdd = callEvent;
+  incomingCallEvent = callEvent;
 }
 
 Future<void> _onCallRejected(CallEvent callEvent) async {
   print("the call was rejected");
   bloc.callServicesEventSink.add(callEvent);
+  //  incomingCallEvent = callEvent;
 }
 
 void downloadCallback(String id, DownloadTaskStatus status, int progress) {
@@ -215,8 +217,12 @@ class _HealthConnectorAppState extends State<HealthConnectorApp> {
   }
 }
 
-Future onCallRejectedWhenTerminated(CallEvent event) async =>
+Future onCallRejectedWhenTerminated(CallEvent event) async {
     bloc.callServicesEventSink.add(event);
+     incomingCallEvent = event;
+}
 
-Future onCallAcceptedWhenTerminated(CallEvent event) async =>
+Future onCallAcceptedWhenTerminated(CallEvent event) async {
     bloc.callServicesEventSink.add(event);
+     incomingCallEvent = event;
+}

@@ -8,6 +8,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../log/logger.dart';
 import '../main.dart';
 import '../services/call_services.dart';
+import 'Agora/AudioCallScreen.dart';
 import 'FireStoreChat/InboxScreen.dart';
 import 'login_screen.dart';
 
@@ -73,10 +74,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     return _homeScreen(context);
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingVideoCall) {
-                    return Text('Incoming video call');
+                    return Center(
+                        child: Text('Incoming video call',
+                            style: TextStyle(color: Colors.green)));
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingAudioCall) {
-                    return Text('Incoming Audio call');
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => Navigator.of(context, rootNavigator: true)
+                          .pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return  AudioCallScreen(roomId: incomingCallEvent!.userInfo!['roomId']);
+                          },
+                        ),
+                        (_) => false,
+                      ),
+                    );
+                    return Center(
+                        child: Text('Incoming audio call',
+                            style: TextStyle(color: Colors.green)));
                   } else {
                     return _homeScreen(context);
                   }
