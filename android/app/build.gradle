@@ -49,7 +49,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.livvinyl.healthconnector.app"
+        applicationId "ai.healthconnector.mobileapp"
         minSdkVersion 23
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

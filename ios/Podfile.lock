@@ -646,13 +646,15 @@ PODS:
   - BoringSSL-GRPC/Interface (0.0.24)
   - camera_avfoundation (0.0.1):
     - Flutter
-  - cloud_firestore (3.4.1):
+  - cloud_firestore (3.4.6):
     - Firebase/Firestore (= 9.3.0)
     - firebase_core
     - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
+  - connectycube_flutter_call_kit (2.0.9):
+    - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -704,14 +706,14 @@ PODS:
   - Firebase/Storage (9.3.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 9.3.0)
-  - firebase_auth (3.6.0):
+  - firebase_auth (3.7.0):
     - Firebase/Auth (= 9.3.0)
     - firebase_core
     - Flutter
   - firebase_core (1.20.0):
     - Firebase/CoreOnly (= 9.3.0)
     - Flutter
-  - firebase_database (9.0.20):
+  - firebase_database (9.1.3):
     - Firebase/Database (= 9.3.0)
     - firebase_core
     - Flutter
@@ -719,7 +721,7 @@ PODS:
     - Firebase/Messaging (= 9.3.0)
     - firebase_core
     - Flutter
-  - firebase_storage (10.3.4):
+  - firebase_storage (10.3.7):
     - Firebase/Storage (= 9.3.0)
     - firebase_core
     - Flutter
@@ -1004,8 +1006,6 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
-  - webview_flutter (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
@@ -1015,6 +1015,7 @@ DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
+  - connectycube_flutter_call_kit (from `.symlinks/plugins/connectycube_flutter_call_kit/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -1042,7 +1043,6 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
-  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -1113,6 +1113,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
+  connectycube_flutter_call_kit:
+    :path: ".symlinks/plugins/connectycube_flutter_call_kit/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_auth:
@@ -1167,8 +1169,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
-  webview_flutter:
-    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -1182,17 +1182,18 @@ SPEC CHECKSUMS:
   awesome_notifications: 04530aafec8dac4635244ed4b4072f4aea6cc938
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
-  cloud_firestore: bc004ee2498babe8c3df4abfd68754939b398135
+  cloud_firestore: ef9c0c27fecf467c78c5dc31333d41cab1d86c0d
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
+  connectycube_flutter_call_kit: 969dfc13b1a46d7b7e310ed58bf845f6a95f7e5e
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
   Firebase: ef75abb1cdbc746d5a38f4e26c422c807b189b8c
-  firebase_auth: 6cc131dfcf2190b596234b73972bd7c5af163219
+  firebase_auth: e9a024f4cd147a81064a1fb202b70eecb43cfda2
   firebase_core: 96214f90497b808a2cf2a24517084c5f6de37b53
-  firebase_database: 0643b8de71ac87697817b7b1317e8f70cafa7735
+  firebase_database: a04b8ccfaa14e5a9e5e5cb87e59a973d94536e20
   firebase_messaging: 24112f219663060db68ef803f20166d374138b6e
-  firebase_storage: e95ec41580e311cb30b1ed7459b9e94fb4bbe672
+  firebase_storage: 97ea0887f3650a4eb908c0d11847c8529f0a2490
   FirebaseAppCheckInterop: f6b9670fb1360cf12006ca426e9c3b9a35317d17
   FirebaseAuth: 9ebc3577fe0acf9092df21ac314024b70aebf21e
   FirebaseAuthInterop: 79826b4edc64e1d10135947866ad4437657e8696
@@ -1206,7 +1207,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 2f6e38b6133059eb796ec224104f09379298a8c3
   FirebaseStorage: 1414d27e15fa04f6350ef6602accef0e951c8bca
   FirebaseStorageInternal: f1a6d64cace780580d2b8ffa0a0c8cf3c376f3f8
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_downloader: b7301ae057deadd4b1650dc7c05375f10ff12c39
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -1256,7 +1257,6 @@ SPEC CHECKSUMS:
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
-  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 

@@ -160,21 +160,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: _size.height / 32),
                     child: AnimatedButton(
-                      onPressed: () async {
-                        await prefs.clear();
-                        await FirebaseAuth.instance.signOut();
-                        initialRoute = Constants.logIn;
-                        // RestartWidget.restartApp(context);
-                        Navigator.of(context, rootNavigator: true)
-                            .pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return const LoginPage();
-                            },
-                          ),
-                          (_) => false,
-                        );
-                      },
+                      onPressed: () => Constants.logout(context),
                       child: Text(
                         'Logout',
                         style: GoogleFonts.poppins(

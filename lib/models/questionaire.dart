@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Questionaire {
   late int? age;
   late int? height;

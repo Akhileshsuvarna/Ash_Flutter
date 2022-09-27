@@ -161,7 +161,7 @@ jobs:
   #       uses: r0adkll/upload-google-play@v1.0.15
   #       with:
   #         serviceAccountJson: service_account.json
-  #         packageName: com.livvinyl.healthconnector.app
+  #         packageName: ai.healthconnector.mobileapp
   #         releaseFiles: app-release-aab/*.aab
   #         track: internal
   #         inAppUpdatePriority: 5

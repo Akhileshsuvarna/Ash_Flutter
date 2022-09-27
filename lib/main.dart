@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
@@ -12,10 +11,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:health_connector/services/internet_connectivity.dart';
+import 'package:health_connector/services/token_services.dart';
 import 'package:health_connector/util/notification_helper.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'services/call_services.dart';
+import 'config/app_theme.dart';
 import 'constants.dart';
 import 'globals.dart';
 import 'log/logger.dart';
@@ -36,13 +40,13 @@ String initialRoute = Constants.logIn;
 FlutterTts flutterTts = FlutterTts();
 late String localPath;
 late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> chatStream;
-
-late Set<int> test = {1};
+CallEvent? incomingCallEvent;
+final bloc = CallServices();
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Logger.debug("Handling a background message: ${message.messageId}");
 
-  if (NotificationHelper.isCallInvite(message.notification?.title)) {
+  if (NotificationHelper.isCallInvite(message.data)) {
     var callerData =
         NotificationHelper.parseNotificationDataToCallerData(message.data);
     ConnectycubeFlutterCallKit.setOnLockScreenVisibility(isVisible: true);
@@ -54,7 +58,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
   Logger.debug("Handling a foreground message: ${message.messageId}");
 
-  if (NotificationHelper.isCallInvite(message.notification?.title)) {
+  if (NotificationHelper.isCallInvite(message.data)) {
     var callerData =
         NotificationHelper.parseNotificationDataToCallerData(message.data);
     ConnectycubeFlutterCallKit.setOnLockScreenVisibility(isVisible: false);
@@ -79,16 +83,21 @@ main() async {
     onCallAccepted: _onCallAccepted,
     onCallRejected: _onCallRejected,
   );
+
+  ConnectycubeFlutterCallKit.onCallRejectedWhenTerminated =
+      onCallRejectedWhenTerminated;
+  ConnectycubeFlutterCallKit.onCallAcceptedWhenTerminated =
+      onCallAcceptedWhenTerminated;
 }
 
 Future<void> _onCallAccepted(CallEvent callEvent) async {
-  print("the call was accepted");
-
-  // Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
+  print("the call was accepted $callEvent");
+  bloc.callServicesEventSinkAdd = callEvent;
 }
 
 Future<void> _onCallRejected(CallEvent callEvent) async {
   print("the call was rejected");
+  bloc.callServicesEventSink.add(callEvent);
 }
 
 void downloadCallback(String id, DownloadTaskStatus status, int progress) {
@@ -100,6 +109,7 @@ void downloadCallback(String id, DownloadTaskStatus status, int progress) {
 _initMain() {
   Globals.lookupInternet().then((value) async {
     prefs = await SharedPreferences.getInstance();
+
     // prefs.clear();
     prefs.setBool('isAdmin', true);
     if (value) {
@@ -133,7 +143,13 @@ _initMain() {
       initialRoute = Constants.internetError;
     }
     cameras = await availableCameras();
-    runApp(const HealthConnectorApp());
+    runApp(MultiProvider(providers: [
+      // ChangeNotifierProvider(create: (context) => AppTheme.of(context)),
+      ChangeNotifierProvider(create: (context) => InternetConnectivity()),
+      // Provider(create: (context) => AppTheme.of(context)),
+      Provider(create: (context) => AgoraTokenServices()),
+    ], child: const HealthConnectorApp()));
+    // ], child: LoadingOverlay(child: const HealthConnectorApp()))); // TODO(skandar) use loading overlay when Need ~ Maybe Later.
   });
 }
 
@@ -186,6 +202,10 @@ class _HealthConnectorAppState extends State<HealthConnectorApp> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    if (!Provider.of<InternetConnectivity>(context).status) {
+      initialRoute = Constants.internetError;
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Constants.appTheme,
@@ -194,3 +214,9 @@ class _HealthConnectorAppState extends State<HealthConnectorApp> {
     );
   }
 }
+
+Future onCallRejectedWhenTerminated(CallEvent event) async =>
+    bloc.callServicesEventSink.add(event);
+
+Future onCallAcceptedWhenTerminated(CallEvent event) async =>
+    bloc.callServicesEventSink.add(event);

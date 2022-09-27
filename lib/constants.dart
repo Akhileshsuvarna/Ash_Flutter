@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
@@ -6,6 +9,9 @@ import 'package:health_connector/screens/leader_score_board.dart';
 import 'package:health_connector/screens/login_screen.dart';
 import 'package:health_connector/screens/questions/question_screen0.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';
+import 'package:health_connector/services/token_services.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'main.dart';
 import 'screens/internet_error.dart';
 import 'screens/questions/question_screen_1.dart';
 
@@ -120,10 +126,23 @@ class Constants {
 
   // Agora constants
 
+  static const agoraAppID = "e06a6c1e2e5e4aa9bb2804d6213c06d7";
+
   static const tokenServerBaseUrl = "";
   static const tokenServerVideoPublisherWithUid = '/rtc/video/publisher/uid/';
-  static const tokenServerAudioPublisherWithUid = '/rtc/audio/publisher/uid/';
+  static agoraGetAudioChannelPath({required String channelName}) =>
+      '/rtc/$channelName/publisher/uid/0';
   static const defaultVideoChannelExpiry = '?expiry=3600';
+
+  static const agoraSendInviteUrl =
+      '/invite/:userid/:roomId/:inviteType/:agoraSessionToken';
+
+  static String getAgoraInviteUrl(
+          {required String senderUid,
+          required String roomID,
+          required RtcCallType inviteType,
+          required agoraSessionToken}) =>
+      '/invite/$senderUid/$roomID/${inviteType == RtcCallType.audio ? 'audio' : 'video'}/$agoraSessionToken';
 
   static String getPublisherVideoURLWithUid({int uid = 0}) =>
       tokenServerBaseUrl +
@@ -136,4 +155,28 @@ class Constants {
       tokenServerVideoPublisherWithUid +
       uid.toString() +
       defaultVideoChannelExpiry;
+
+  static void logout(BuildContext context) async {
+    await prefs.clear();
+    await FirebaseAuth.instance.signOut();
+    initialRoute = Constants.logIn;
+  }
+
+  // To reciveve call in background systemAlertWindow is [required]
+  static Future<bool> isSystemAlertWindowPermissionGranted() async {
+    if (Platform.isAndroid) {
+      return await Permission.systemAlertWindow.isGranted;
+    } else {
+      return true;
+    }
+  }
+
+  // opens settings for systemAlertWindow permission
+  static Future<bool> openSettingsForSystemAlertWindowPermission() async {
+    if (Platform.isAndroid) {
+      return await Permission.systemAlertWindow.request().isGranted;
+    } else {
+      return true;
+    }
+  }
 }

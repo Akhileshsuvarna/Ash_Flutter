@@ -2,6 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:health_connector/constants.dart';
+import 'package:provider/provider.dart';
+
+import '../../main.dart';
+import '../../services/token_services.dart';
 
 class AudioCallScreen extends StatefulWidget {
   const AudioCallScreen({Key? key}) : super(key: key);
@@ -15,25 +20,26 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   late final String audioToken;
   late final String appId;
 
-  Future<String> _getAppId() async {
-    DocumentSnapshot queryDocumentSnapshot =
-        await FirebaseFirestore.instance.collection("/agora").doc("app").get();
-    return queryDocumentSnapshot.get("appid");
-  }
+  String _getAppId() => Constants.agoraAppID;
 
-  Future<String> _getAudioToken() async {
-    DocumentSnapshot queryDocumentSnapshot =
-        await FirebaseFirestore.instance.collection("/agora").doc("app").get();
-    return queryDocumentSnapshot.get("audio");
+  Future<Map<String, dynamic>> _getAudioToken() async {
+    if (incomingCallEvent != null) {
+      return {}; //incomingCallEvent!.sessionId;
+    } else {
+      return await Provider.of<AgoraTokenServices>(context, listen: false)
+          .generateRTCToken(
+              RtcCallType.audio, RtcRole.publisher, RtcTokenType.uid);
+    }
   }
 
   Future<bool> clientInitializer() async {
+    var resp = await _getAudioToken();
     client = AgoraClient(
       agoraConnectionData: AgoraConnectionData(
         rtmEnabled: false,
-        appId: await _getAppId(),
-        channelName: 'audio',
-        tempToken: await _getAudioToken(),
+        appId: _getAppId(),
+        channelName: resp['channelName'],
+        tempToken: resp['rtcToken'],
       ),
       enabledPermission: [
         Permission.camera,

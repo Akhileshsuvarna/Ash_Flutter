@@ -7,7 +7,6 @@ import 'package:native_ar_viewer/native_ar_viewer.dart';
 import 'package:native_ar_viewer/native_ar_viewer_platform_interface.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:quick_look/quick_look.dart';
 
 import '../../constants.dart';
 import '../../main.dart';
@@ -167,8 +166,7 @@ viewModelInAR(BuildContext context, ExerciseMeta meta) async {
     var modelPath = '$localPath/${meta.modelName}.usdz';
     var modelAtPath = await File(modelPath).exists();
     if (modelAtPath) {
-      // await NativeArViewerPlatform.instance.launchAR(modelPath);
-      await QuickLook.openURL(modelPath);
+      await NativeArViewerPlatform.instance.launchAR(modelPath);
 
       // NativeArViewerPlatform.instance.launchAR(
       //     "/var/mobile/Containers/Data/Application/E9BB6AB6-2FD7-441D-8700-41DB6E710FCE/Documents/Astronaut.usdz");

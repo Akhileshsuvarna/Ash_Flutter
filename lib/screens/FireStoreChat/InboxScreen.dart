@@ -26,16 +26,25 @@ class _RoomsPageState extends State<RoomsPage> {
   bool _error = false;
   bool _initialized = false;
   User? _user;
+  late Size _size;
 
   @override
   void initState() {
     initializeFlutterFire();
+    checkReceivingCallinBackgroundPermission();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void checkReceivingCallinBackgroundPermission() async {
+    if (!await Constants.isSystemAlertWindowPermissionGranted()) {
+      //TODO(skandar) Show some Dialouge before opening settings and Guide user on what todo.
+      Constants.openSettingsForSystemAlertWindowPermission();
+    }
   }
 
   void initializeFlutterFire() async {
@@ -133,7 +142,7 @@ class _RoomsPageState extends State<RoomsPage> {
     if (!_initialized) {
       return Container();
     }
-
+    _size = MediaQuery.of(context).size;
     return _user == null
         ? Container(
             alignment: Alignment.center,
@@ -197,97 +206,97 @@ class _RoomsPageState extends State<RoomsPage> {
                         const SizedBox(
                           height: 22,
                         ),
-                        Row(
-                          children: [
-                            const SizedBox(
-                              width: 25,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                pushNewScreen(context,
-                                    screen: const AudioCallScreen(),
-                                    withNavBar: false);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Constants.primaryColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.call,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Audio",
-                                          style: GoogleFonts.poppins(
-                                            textStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                pushNewScreen(context,
-                                    screen: const VideoCallScreen(),
-                                    withNavBar: false);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Constants.primaryColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16)),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.video_call_outlined,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Video",
-                                          style: GoogleFonts.poppins(
-                                            textStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 25),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     const SizedBox(
+                        //       width: 25,
+                        //     ),
+                        //     GestureDetector(
+                        //       onTap: () {
+                        //         pushNewScreen(context,
+                        //             screen: const AudioCallScreen(),
+                        //             withNavBar: false);
+                        //       },
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: Container(
+                        //           decoration: const BoxDecoration(
+                        //             color: Constants.primaryColor,
+                        //             borderRadius:
+                        //                 BorderRadius.all(Radius.circular(16)),
+                        //           ),
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.all(10.0),
+                        //             child: Row(
+                        //               children: [
+                        //                 const Icon(
+                        //                   Icons.call,
+                        //                   color: Colors.white,
+                        //                 ),
+                        //                 const SizedBox(
+                        //                   width: 10,
+                        //                 ),
+                        //                 Text(
+                        //                   "Audio",
+                        //                   style: GoogleFonts.poppins(
+                        //                     textStyle: const TextStyle(
+                        //                       color: Colors.white,
+                        //                       fontSize: 18,
+                        //                       fontWeight: FontWeight.bold,
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const Spacer(),
+                        //     GestureDetector(
+                        //       onTap: () {
+                        //         pushNewScreen(context,
+                        //             screen: const VideoCallScreen(),
+                        //             withNavBar: false);
+                        //       },
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: Container(
+                        //           decoration: const BoxDecoration(
+                        //             color: Constants.primaryColor,
+                        //             borderRadius:
+                        //                 BorderRadius.all(Radius.circular(16)),
+                        //           ),
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.all(10.0),
+                        //             child: Row(
+                        //               children: [
+                        //                 const Icon(
+                        //                   Icons.video_call_outlined,
+                        //                   color: Colors.white,
+                        //                 ),
+                        //                 const SizedBox(
+                        //                   width: 10,
+                        //                 ),
+                        //                 Text(
+                        //                   "Video",
+                        //                   style: GoogleFonts.poppins(
+                        //                     textStyle: const TextStyle(
+                        //                       color: Colors.white,
+                        //                       fontSize: 18,
+                        //                       fontWeight: FontWeight.bold,
+                        //                     ),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(width: 25),
+                        //   ],
+                        // ),
                         const SizedBox(height: 20),
                         StreamBuilder<List<types.Room>>(
                           stream: FirebaseChatCore.instance.rooms(),
@@ -303,130 +312,139 @@ class _RoomsPageState extends State<RoomsPage> {
                               );
                             }
 
-                            return Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  final room = snapshot.data![index];
-                                  return InkWell(
-                                    onTap: () {
-                                      pushNewScreen(context,
-                                          screen: ChatPage(room: room),
-                                          withNavBar: false);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 4.0, left: 8.0, right: 8),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey.shade300
-                                                    .withOpacity(0.5),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(5))
-                                                // boxShadow: const [
-                                                //   BoxShadow(
-                                                //     color: Colors.black12,
-                                                //     offset:  Offset(
-                                                //       0.0,
-                                                //       0.0,
-                                                //     ),
-                                                //     blurRadius: 8.0,
-                                                //     spreadRadius: 0.5,
-                                                //   ), //BoxShadow
-                                                //   BoxShadow(
-                                                //     color: Colors.white,
-                                                //     offset:  Offset(0.0, 0.0),
-                                                //     blurRadius: 0.0,
-                                                //     spreadRadius: 0.0,
-                                                //   ), //BoxShadow
-                                                // ],
-                                                ),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 0,
-                                              vertical: 0,
-                                            ),
-                                            child: ListTile(
-                                              leading: _buildAvatar(room),
-                                              title: Text(
-                                                room.name ?? '',
-                                                style: GoogleFonts.poppins(
-                                                  textStyle: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      color:
-                                                          Converter.hexToColor(
-                                                              '#1D2429'),
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                ),
-                                              ),
-                                              subtitle: FutureBuilder(
-                                                  future: _getLastMessage(room),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      return Text(
-                                                        snapshot.data as String,
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                          textStyle: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 13.5,
-                                                            color: Converter
-                                                                .hexToColor(
-                                                              '#57636c',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return Container();
-                                                    }
-                                                  }),
-                                              trailing: Container(
-                                                child: const Icon(
-                                                  Icons.arrow_forward_ios,
-                                                  color: Colors.black,
-                                                  size: 15,
-                                                ),
-                                                height: 30,
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[300],
+                            return SingleChildScrollView(
+                              child: Container(
+                                height: _size.height / 1.5,
+                                padding: const EdgeInsets.all(4.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    final room = snapshot.data![index];
+                                    return InkWell(
+                                      onTap: () {
+                                        pushNewScreen(context,
+                                            screen: ChatPage(room: room),
+                                            withNavBar: false);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 4.0, left: 8.0, right: 8),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade300
+                                                      .withOpacity(0.5),
                                                   borderRadius:
                                                       const BorderRadius.all(
-                                                    Radius.circular(15),
+                                                          Radius.circular(5))
+                                                  // boxShadow: const [
+                                                  //   BoxShadow(
+                                                  //     color: Colors.black12,
+                                                  //     offset:  Offset(
+                                                  //       0.0,
+                                                  //       0.0,
+                                                  //     ),
+                                                  //     blurRadius: 8.0,
+                                                  //     spreadRadius: 0.5,
+                                                  //   ), //BoxShadow
+                                                  //   BoxShadow(
+                                                  //     color: Colors.white,
+                                                  //     offset:  Offset(0.0, 0.0),
+                                                  //     blurRadius: 0.0,
+                                                  //     spreadRadius: 0.0,
+                                                  //   ), //BoxShadow
+                                                  // ],
                                                   ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 1,
-                                                      offset: const Offset(
-                                                        0.5,
-                                                        1.5,
-                                                      ), // changes position of shadow
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 0,
+                                                vertical: 0,
+                                              ),
+                                              child: ListTile(
+                                                leading: _buildAvatar(room),
+                                                title: Text(
+                                                  room.name ?? '',
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        color: Converter
+                                                            .hexToColor(
+                                                                '#1D2429'),
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                ),
+                                                subtitle: FutureBuilder(
+                                                    future:
+                                                        _getLastMessage(room),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasData) {
+                                                        return Text(
+                                                          snapshot.data
+                                                              as String,
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              fontSize: 13.5,
+                                                              color: Converter
+                                                                  .hexToColor(
+                                                                '#57636c',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        return Container();
+                                                      }
+                                                    }),
+                                                trailing: Container(
+                                                  child: const Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    color: Colors.black,
+                                                    size: 15,
+                                                  ),
+                                                  height: 30,
+                                                  width: 30,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(15),
                                                     ),
-                                                  ],
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 1,
+                                                        blurRadius: 1,
+                                                        offset: const Offset(
+                                                          0.5,
+                                                          1.5,
+                                                        ), // changes position of shadow
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          // const Divider(
-                                          //   height: 10,
-                                          // ),
-                                        ],
+                                            // const Divider(
+                                            //   height: 10,
+                                            // ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               ),
                             );
                           },

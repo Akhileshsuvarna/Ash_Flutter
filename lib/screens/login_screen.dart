@@ -71,10 +71,10 @@ class _LoginPageState extends State<LoginPage> {
                         right: _size.width / 16,
                       ),
                       child: RoundedButton(
-                        color: Colors.white,
+                        color: Colors.black,
                         prefix: Image.asset(Assets.socialLoginAppleLogo),
                         text: "Sign in with Apple",
-                        textColor: Colors.black,
+                        textColor: Colors.white,
                         onPressed: _signUpwithApple,
                       ),
                     )

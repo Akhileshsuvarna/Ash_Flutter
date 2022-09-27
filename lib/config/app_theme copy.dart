@@ -1,80 +1,45 @@
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
+// import 'package:provider/provider.dart';
 
 // class AppTheme extends ThemeData with ChangeNotifier {
-//   static bool _isDark = false;
-//   factory AppTheme._dark() {
+//   factory AppTheme.dark() {
 //     const primary = Color(0xFF7E57C2);
-//     const secondaryColor = Color(0xfffad080);
+//     const accent = Color(0xfffad080); // TODO: this should be secondary
 
 //     final base = ThemeData.dark();
 //     var canvasColor = primary;
 
-//     var x = ThemeData(appBarTheme: AppBarTheme(color: Colors.green));
-
 //     return AppTheme(
-//       name: 'dark',
-//       base: base,
-//       brightness: Brightness.dark,
-//       colorScheme: base.colorScheme.copyWith(
-//         primary: secondaryColor,
-//         secondary: base.unselectedWidgetColor,
-//         surface: canvasColor,
-//         onSurface: Colors.white,
-//       ),
-//       primaryColor: primary,
-//       accentColor: secondaryColor,
-//       canvasColor: primary,
-//       backgroundColor: primary,
-//       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-//         selectedItemColor: primary,
-//         unselectedItemColor: Colors.black,
-//       ),
-//     );
-//   }
-
-//   factory AppTheme._light() {
-//     const primary = Colors.green;
-//     const secondaryColor = Colors.red; // TODO: this should be secondary
-
-//     final base = ThemeData.light();
-//     var canvasColor = primary;
-
-//     return AppTheme(
-//       name: 'light',
-//       base: base,
-//       brightness: Brightness.light,
-//       colorScheme: base.colorScheme.copyWith(
-//         primary: secondaryColor,
-//         secondary: base.unselectedWidgetColor,
-//         surface: canvasColor,
-//         onSurface: Colors.white,
-//       ),
-//       primaryColor: primary,
-//       accentColor: secondaryColor,
-//       canvasColor: primary,
-//       backgroundColor: primary,
-//       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-//         selectedItemColor: primary,
-//         unselectedItemColor: Colors.black,
-//       ),
-//     );
-//   }
-
-//   void updateThemeMode(ThemeMode mode) {
-//     switch (mode) {
-//       case ThemeMode.system:
-//         // TODO: Handle this case.
-//         throw 'ThemeMode.system not implemented';
-//       case ThemeMode.light:
-//         _isDark = false;
-//         break;
-//       case ThemeMode.dark:
-//         _isDark = true;
-//         break;
-//     }
-//     notifyListeners();
+//         name: 'dark',
+//         base: base,
+//         brightness: Brightness.dark,
+//         colorScheme: base.colorScheme.copyWith(
+//           primary: accent,
+//           secondary: base.unselectedWidgetColor,
+//           surface: canvasColor,
+//           onSurface: Colors.white,
+//         ),
+//         primaryColor: primary,
+//         accentColor: accent,
+//         canvasColor: primary,
+//         backgroundColor: primary,
+//         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+//           selectedItemColor: primary,
+//           unselectedItemColor: Colors.black,
+//         ),
+//         timePickerTheme: const TimePickerThemeData(
+//             // backgroundColor : Colors.red,
+//             //hourMinuteTextColor : Colors.red,
+//             //hourMinuteColor : Colors.red,
+//             //dayPeriodTextColor : Colors.red,
+//             //dayPeriodColor : Colors.red,
+//             //dialHandColor : Colors.red,
+//             //dialBackgroundColor : Colors.red,
+//             //dialTextColor : Colors.red,
+//             //entryModeIconColor : Colors.red,
+//             ));
 //   }
 
 //   final welcomePageIndicatorInactive =
@@ -704,6 +669,26 @@
 //           extensions: {},
 //         );
 
-//   static AppTheme of(BuildContext context) =>
-//       _isDark ? AppTheme._dark() : AppTheme._light();
+//   static AppTheme of(BuildContext context) {
+//     // TODO: when other themes are implemented return active theme
+//     return AppTheme.dark();
+//   }
+
+//   Theme withTheme(child) => Theme(
+//       data: copyWith(
+//           inputDecorationTheme: InputDecorationTheme(
+//         floatingLabelBehavior: FloatingLabelBehavior.auto,
+//         border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(3),
+//             borderSide:
+//                 const BorderSide(color: Color(0xffa4a4c4), width: 1.25)),
+//       )),
+//       child: child);
+
+//   flatButton({primary, height, width, padding}) {
+//     return TextButton.styleFrom(
+//         primary: Colors.white,
+//         minimumSize: Size(width ?? 80, height ?? 40),
+//         padding: padding ?? EdgeInsets.zero);
+//   }
 // }

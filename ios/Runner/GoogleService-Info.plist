@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>335396837024-hspkpj53ogn1uvqvllqkc30v0mcmffps.apps.googleusercontent.com</string>
+	<string>970460065596-21pgbsscfeasv8qlb4o3lpf86osjuihh.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.335396837024-hspkpj53ogn1uvqvllqkc30v0mcmffps</string>
+	<string>com.googleusercontent.apps.970460065596-21pgbsscfeasv8qlb4o3lpf86osjuihh</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>970460065596-eob6s6bq2ks1ocjj07ls7t37tfd7r7km.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAlqq6PZylLKD5C0sN0wRPvTpbHry1Yl4w</string>
+	<string>AIzaSyDlxrE-UDpvc_g9Fa5Oqbrg6xXgfrejm10</string>
 	<key>GCM_SENDER_ID</key>
-	<string>335396837024</string>
+	<string>970460065596</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.livvinyl.healthconnector.app</string>
+	<string>ai.healthconnector.mobileapp</string>
 	<key>PROJECT_ID</key>
-	<string>livvinyl-health-connector</string>
+	<string>healthconnector-ai</string>
 	<key>STORAGE_BUCKET</key>
-	<string>livvinyl-health-connector.appspot.com</string>
+	<string>healthconnector-ai.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:335396837024:ios:0c0696df1d939def0c9bc5</string>
+	<string>1:970460065596:ios:ed527a8d63406d994e3839</string>
+	<key>DATABASE_URL</key>
+	<string>https://healthconnector-ai-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

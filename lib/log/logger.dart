@@ -20,11 +20,11 @@ class Logger {
   static void consoleLog(Object o, {StackTrace? stackTrace}) {
     if (Constants.isDebug) {
       print(o);
-    }
 
-    if (stackTrace != null) {
-      if (Constants.isDebug) {
-        print(stackTrace);
+      if (stackTrace != null) {
+        if (Constants.isDebug) {
+          print(stackTrace);
+        }
       }
     }
   }

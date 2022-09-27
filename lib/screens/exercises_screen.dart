@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animated_button/animated_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -10,11 +11,18 @@ import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
+import 'package:health_connector/screens/components/loading_overlay.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
+import 'package:health_connector/services/token_services.dart';
 import 'package:health_connector/util/converter.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
 
 import '../globals.dart';
+import 'Agora/AudioCallScreen.dart';
+import 'Agora/VideoCallScreen.dart';
 import 'components/exercise_widget.dart';
+import 'login_screen.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({Key? key}) : super(key: key);
@@ -28,7 +36,35 @@ class _ExercisePageState extends State<ExercisePage> {
   late Size _size;
 
   @override
-  initState() => super.initState();
+  void dispose() {
+    super.dispose();
+
+    Logger.info("ExercisePage was disposed");
+  }
+
+  @override
+  initState() {
+    super.initState();
+
+    if (incomingCallEvent != null) {
+      try {
+        if (incomingCallEvent!.userInfo!['inviteType']
+                .toString()
+                .toLowerCase() ==
+            "audio".toLowerCase()) {
+          pushNewScreen(context,
+              screen: const AudioCallScreen(), withNavBar: false);
+        } else {
+          pushNewScreen(context,
+              screen: const VideoCallScreen(), withNavBar: false);
+        }
+      } catch (ex, stackTrace) {
+        Logger.error(ex, stackTrace: stackTrace);
+      } finally {
+        incomingCallEvent = null;
+      }
+    }
+  }
 
   // TODO-Sikander get Exercise(s) Meta information.
   // Check if Firebase is connected.
@@ -66,6 +102,10 @@ class _ExercisePageState extends State<ExercisePage> {
 
   @override
   Widget build(BuildContext context) {
+    // var res = Provider.of<AgoraTokenServices>(context, listen: false)
+    //     .generateRTCToken(
+    //         RtcCallType.audio, RtcRole.publisher, RtcTokenType.uid);
+
     _size = MediaQuery.of(context).size;
     return Scaffold(
       key: scaffoldKey,
@@ -91,10 +131,13 @@ class _ExercisePageState extends State<ExercisePage> {
       ),
       backgroundColor: Constants.appBackgroundColor,
       body: _body(),
-      // floatingActionButton: FloatingActionButton(onPressed: () async {
-      //   var x = await flutterTts.getVoices;
-      //   print(x);
-      // }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Constants.logout(context);
+          LoadingOverlay.of(context).hide();
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
     );
   }
 

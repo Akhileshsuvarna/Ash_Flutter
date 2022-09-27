@@ -4,20 +4,26 @@ import 'package:health_connector/models/call_invite.dart';
 class NotificationHelper {
   NotificationHelper._();
 
-  static bool isCallInvite(String? title) =>
-      title?.toLowerCase() == 'Incoming Call'.toLowerCase();
+  static bool isCallInvite(Map<String, dynamic> data) {
+    if (data['callInvite'] != null &&
+        data['callInvite'].toString().toLowerCase() == 'true') {
+      return true;
+    }
+    return false;
+  }
 
   static CallerData parseNotificationDataToCallerData(
           Map<String, dynamic> data) =>
       CallerData(
-          data['hostName'],
-          data['hostImage'],
-          data['hostToken'],
-          data['hostEmail'],
-          data['hostUUID'],
-          data['inviteType'],
-          data['sessionToken'],
-          data['roomId']);
+        data['hostName'],
+        data['hostImage'],
+        data['hostToken'],
+        data['hostEmail'],
+        data['hostUUID'],
+        data['inviteType'],
+        data['sessionToken'],
+        data['roomId'],
+      );
 
   static void showCallNotification(CallerData callerData) {
     CallEvent callEvent = CallEvent(
