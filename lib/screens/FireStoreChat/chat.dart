@@ -200,7 +200,9 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
         title: Text(
-          widget.room.name != null ? widget.room.name! : widget.chatUserName!,
+          widget.room.name != null && widget.room.name!.isNotEmpty
+              ? widget.room.name!
+              : widget.chatUserName!,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         actions: [

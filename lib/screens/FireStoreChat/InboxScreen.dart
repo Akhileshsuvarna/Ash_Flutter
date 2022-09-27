@@ -324,7 +324,10 @@ class _RoomsPageState extends State<RoomsPage> {
                                     return InkWell(
                                       onTap: () {
                                         pushNewScreen(context,
-                                            screen: ChatPage(room: room),
+                                            screen: ChatPage(
+                                                room: room,
+                                                chatUserName:
+                                                    _getUserName(room)),
                                             withNavBar: false);
                                       },
                                       child: Padding(
@@ -334,29 +337,29 @@ class _RoomsPageState extends State<RoomsPage> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.grey.shade300
-                                                      .withOpacity(0.5),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(5))
-                                                  // boxShadow: const [
-                                                  //   BoxShadow(
-                                                  //     color: Colors.black12,
-                                                  //     offset:  Offset(
-                                                  //       0.0,
-                                                  //       0.0,
-                                                  //     ),
-                                                  //     blurRadius: 8.0,
-                                                  //     spreadRadius: 0.5,
-                                                  //   ), //BoxShadow
-                                                  //   BoxShadow(
-                                                  //     color: Colors.white,
-                                                  //     offset:  Offset(0.0, 0.0),
-                                                  //     blurRadius: 0.0,
-                                                  //     spreadRadius: 0.0,
-                                                  //   ), //BoxShadow
-                                                  // ],
-                                                  ),
+                                                color: Colors.grey.shade300
+                                                    .withOpacity(0.5),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5)),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    offset: Offset(
+                                                      0.0,
+                                                      0.0,
+                                                    ),
+                                                    blurRadius: 8.0,
+                                                    spreadRadius: 0.5,
+                                                  ), //BoxShadow
+                                                  BoxShadow(
+                                                    color: Colors.white,
+                                                    offset: Offset(0.0, 0.0),
+                                                    blurRadius: 0.0,
+                                                    spreadRadius: 0.0,
+                                                  ), //BoxShadow
+                                                ],
+                                              ),
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                 horizontal: 0,
@@ -365,7 +368,11 @@ class _RoomsPageState extends State<RoomsPage> {
                                               child: ListTile(
                                                 leading: _buildAvatar(room),
                                                 title: Text(
-                                                  room.name ?? '',
+                                                  (room.name != null &&
+                                                          room.name!.isNotEmpty)
+                                                      ? room.name!
+                                                      : _getUserName(room)
+                                                          .substring(0, 5),
                                                   style: GoogleFonts.poppins(
                                                     textStyle: TextStyle(
                                                         fontStyle:
@@ -503,6 +510,19 @@ class _RoomsPageState extends State<RoomsPage> {
               ],
             ),
           );
+  }
+
+  String _getUserName(types.Room room) {
+    var user = room.users.firstWhere(
+        (element) => element.id != FirebaseAuth.instance.currentUser!.uid);
+
+    if (user.firstName != null && user.firstName!.isNotEmpty) {
+      return user.firstName!;
+    } else if (user.lastName != null && user.lastName!.isNotEmpty) {
+      return user.lastName!;
+    } else {
+      return user.id;
+    }
   }
 }
 

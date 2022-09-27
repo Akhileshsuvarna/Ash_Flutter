@@ -761,9 +761,11 @@ packages:
   native_screenshot:
     dependency: "direct main"
     description:
-      path: "../native_screenshot"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: c61bc0fea3402d5257dd689dd733e63fb7b8673d
+      url: "https://github.com/sikandernoori/native_screenshot.git"
+    source: git
     version: "1.0.0"
   nested:
     dependency: transitive
