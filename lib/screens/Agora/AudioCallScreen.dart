@@ -70,7 +70,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     return true;
   }
 
-    Future<bool> incomingCallInitializer() async {
+  Future<bool> incomingCallInitializer() async {
     var resp = await _getAudioToken();
 
     client = AgoraClient(
@@ -84,11 +84,22 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         Permission.camera,
         Permission.microphone,
       ],
-      agoraEventHandlers: AgoraRtcEventHandlers(leaveChannel: (state) {
-        incomingCallEvent = null;
-        bloc.callServicesEventSink.add(null);
-        Navigator.of(context).pop();
-      })
+      // agoraEventHandlers: AgoraRtcEventHandlers(
+      //   leaveChannel: (state) {
+      //     incomingCallEvent = null;
+      //     bloc.callServicesEventSink.add(null);
+      //     Navigator.of(context).pop();
+      //   },
+      //   joinChannelSuccess: (channel, uid, elapsed) {
+      //     print('joinChannel Success');
+      //   },
+      //   userJoined: (uid, elapsed) {
+      //     print("user joined");
+      //   },
+      //   userOffline: (uid, reason) {
+      //     print("user offline");
+      //   },
+      // ),
     );
 
     FirebaseAuth.instance.currentUser?.photoURL;
@@ -97,11 +108,22 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     return true;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    incomingCallEvent = null;
+    bloc.callServicesEventSink.add(null);
+    Navigator.of(context).pop();
+  }
+
 // Build your layout
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: incomingCallEvent != null? incomingCallInitializer() : clientInitializer(),
+        future: incomingCallEvent != null
+            ? incomingCallInitializer()
+            : clientInitializer(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -128,6 +150,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                   ],
                 ),
               ),
+              floatingActionButton: FloatingActionButton(onPressed: () {
+                client.engine.leaveChannel();
+              }),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
