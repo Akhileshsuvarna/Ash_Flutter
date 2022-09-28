@@ -40,6 +40,11 @@ class CallServices {
     _callServicesEventController.stream.listen(_mapEventToState);
   }
 
+  void setCallState(CallServicesCallState state) {
+    _callState = state;
+    _emitState.add(_callState);
+  }
+
   _mapEventToState(CallEvent? event) {
     if (event == null) {
       _callState = CallServicesCallState.idle;

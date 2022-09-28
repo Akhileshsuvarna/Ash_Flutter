@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:health_connector/constants.dart';
+import 'package:health_connector/services/call_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../main.dart';
@@ -84,22 +85,22 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         Permission.camera,
         Permission.microphone,
       ],
-      // agoraEventHandlers: AgoraRtcEventHandlers(
-      //   leaveChannel: (state) {
-      //     incomingCallEvent = null;
-      //     bloc.callServicesEventSink.add(null);
-      //     Navigator.of(context).pop();
-      //   },
-      //   joinChannelSuccess: (channel, uid, elapsed) {
-      //     print('joinChannel Success');
-      //   },
-      //   userJoined: (uid, elapsed) {
-      //     print("user joined");
-      //   },
-      //   userOffline: (uid, reason) {
-      //     print("user offline");
-      //   },
-      // ),
+      agoraEventHandlers: AgoraRtcEventHandlers(
+        leaveChannel: (state) {
+          incomingCallEvent = null;
+          bloc.callServicesEventSink.add(null);
+          Navigator.of(context).pop();
+        },
+        joinChannelSuccess: (channel, uid, elapsed) {
+          print('joinChannel Success');
+        },
+        userJoined: (uid, elapsed) {
+          print("user joined");
+        },
+        userOffline: (uid, reason) {
+          print("user offline");
+        },
+      ),
     );
 
     FirebaseAuth.instance.currentUser?.photoURL;
@@ -111,10 +112,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   @override
   void dispose() {
     super.dispose();
-
-    incomingCallEvent = null;
-    bloc.callServicesEventSink.add(null);
-    Navigator.of(context).pop();
+    bloc.setCallState(CallServicesCallState.idle);
   }
 
 // Build your layout

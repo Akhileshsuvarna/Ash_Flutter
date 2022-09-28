@@ -45,25 +45,6 @@ class _ExercisePageState extends State<ExercisePage> {
   @override
   initState() {
     super.initState();
-
-    if (incomingCallEvent != null) {
-      try {
-        if (incomingCallEvent!.userInfo!['inviteType']
-                .toString()
-                .toLowerCase() ==
-            "audio".toLowerCase()) {
-          pushNewScreen(context,
-              screen: const AudioCallScreen(), withNavBar: false);
-        } else {
-          pushNewScreen(context,
-              screen: const VideoCallScreen(), withNavBar: false);
-        }
-      } catch (ex, stackTrace) {
-        Logger.error(ex, stackTrace: stackTrace);
-      } finally {
-        incomingCallEvent = null;
-      }
-    }
   }
 
   // TODO-Sikander get Exercise(s) Meta information.
