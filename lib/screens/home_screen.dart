@@ -2,6 +2,7 @@ import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/constants.dart';
+import 'package:health_connector/screens/Agora/VideoCallScreen.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -74,7 +75,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     return _homeScreen(context);
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingVideoCall) {
-                    return Center(
+                    //
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return VideoCallScreen(
+                                roomId: incomingCallEvent!.userInfo!['roomId']);
+                          },
+                        ),
+                      ),
+                    );
+                    return const Center(
                         child: Text('Incoming video call',
                             style: TextStyle(color: Colors.green)));
                   } else if (snapshot.data as CallServicesCallState ==
@@ -90,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     );
-                    return Center(
+                    return const Center(
                         child: Text('Incoming audio call',
                             style: TextStyle(color: Colors.green)));
                   } else {

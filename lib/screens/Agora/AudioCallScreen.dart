@@ -93,10 +93,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           Navigator.of(context).pop();
         },
         joinChannelSuccess: (channel, uid, elapsed) {
-          print('joinChannel Success');
+          Logger.info('joinChannel Success');
         },
         userJoined: (uid, elapsed) {
-          print("user joined");
+          Logger.info("user joined");
         },
         userOffline: (uid, reason) {
           Logger.info("user offline");
@@ -115,6 +115,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   @override
   void dispose() {
     super.dispose();
+    client.engine.destroy();
     bloc.setCallState(CallServicesCallState.idle);
   }
 
