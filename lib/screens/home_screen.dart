@@ -81,15 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       CallServicesCallState.incomingAudioCall) {
                     //
                     WidgetsBinding.instance.addPostFrameCallback(
-                      (_) => Navigator.of(context, rootNavigator: true)
-                          .pushAndRemoveUntil(
+                      (_) => Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return AudioCallScreen(
                                 roomId: incomingCallEvent!.userInfo!['roomId']);
                           },
                         ),
-                        (_) => false,
                       ),
                     );
                     return Center(

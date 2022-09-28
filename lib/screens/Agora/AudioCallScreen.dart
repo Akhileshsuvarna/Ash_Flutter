@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:health_connector/constants.dart';
+import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/services/call_services.dart';
 import 'package:provider/provider.dart';
 
@@ -98,7 +99,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           print("user joined");
         },
         userOffline: (uid, reason) {
-          print("user offline");
+          Logger.info("user offline");
+          client.engine.leaveChannel();
+          Navigator.of(context).pop();
         },
       ),
     );
@@ -148,9 +151,6 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                   ],
                 ),
               ),
-              floatingActionButton: FloatingActionButton(onPressed: () {
-                client.engine.leaveChannel();
-              }),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
