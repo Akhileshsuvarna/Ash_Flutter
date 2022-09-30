@@ -29,8 +29,9 @@ jobs:
       - name: Decoding android/key.properties
         run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
       - name: Decoding android/neumodore_key.jks
-        run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/key.jks
-      - arun: flutter build appbundle --release
+        run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/upload-keystore.jks
+      - name: Build app bundle
+        run: flutter build appbundle --release
       - name: upload aab to artifacts
         uses: actions/upload-artifact@v1
         with:
