@@ -167,10 +167,12 @@ viewModelInAR(BuildContext context, ExerciseMeta meta) async {
     var modelAtPath = await File(modelPath).exists();
     if (modelAtPath) {
       await NativeArViewerPlatform.instance.launchAR(modelPath);
-
-      // NativeArViewerPlatform.instance.launchAR(
-      //     "/var/mobile/Containers/Data/Application/E9BB6AB6-2FD7-441D-8700-41DB6E710FCE/Documents/Astronaut.usdz");
     } else {
+      final dir = Directory(localPath);
+      final List<FileSystemEntity> entities = await dir.list().toList();
+      for (var element in entities) {
+        print('Item at path:$element');
+      }
       Constants.showMessage(context, 'Please wait assets are being downloaded');
     }
   }
