@@ -9,46 +9,47 @@ on:
     branches:
       - code-refactor
 jobs:
-  build-android:
-    name: Test, Build & upload aab
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: code-refactor
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.3.2'
-          channel: 'stable'
-      - name: Get Flutter Pub
-        run: flutter pub get
-      - name: Decoding android/key.properties
-        run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
-      - name: Decoding android/neumodore_key.jks
-        run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/upload-keystore.jks
-      - name: Build app bundle
-        run: flutter build appbundle --release
-      - name: upload aab to artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-release-aab
-          path: 'build/app/outputs/bundle/release/app-release.aab'
-      - name: upload mapping file to artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: android-mapping
-          path: 'build/app/outputs/mapping/release/mapping.txt'
+  # build-android:
+  #   name: Test, Build & upload aab
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         ref: code-refactor
+  #     - uses: actions/setup-java@v2
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '8'
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         flutter-version: '3.3.2'
+  #         channel: 'stable'
+  #     - name: Get Flutter Pub
+  #       run: flutter pub get
+  #     - name: Decoding android/key.properties
+  #       run: echo "${{ secrets.KEYPROP_PROD }}" | base64 --decode > android/key.properties
+  #     - name: Decoding android/neumodore_key.jks
+  #       run: echo "${{ secrets.KEYJKS_PROD }}" | base64 --decode > android/app/upload-keystore.jks
+  #     - name: Build app bundle
+  #       run: flutter build appbundle --release
+  #     - name: upload aab to artifacts
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: app-release-aab
+  #         path: 'build/app/outputs/bundle/release/app-release.aab'
+  #     - name: upload mapping file to artifacts
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: android-mapping
+  #         path: 'build/app/outputs/mapping/release/mapping.txt'
+  
   build-ios:
     name: Build IOS
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: master
+          ref: code-refactor
       - name: add java
         uses: actions/setup-java@v2
         with:
