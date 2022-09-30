@@ -2,9 +2,9 @@ name: "Build & Release"
 on:
   release:
     types: [published]
-  pull_request:
-    branches:
-      - master
+  # pull_request:
+  #   branches:
+  #     - master
   push:
     branches:
       - code-refactor
