@@ -9,6 +9,7 @@ import 'package:health_connector/models/exercise_score.dart';
 import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/screens/result_screen.dart';
 import 'package:health_connector/util/enum_utils.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../util/utils.dart';
 import 'camera_view.dart';
@@ -41,6 +42,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     super.initState();
     isBusy = false;
     _startActivity();
+    Wakelock.enable();
   }
 
   @override
@@ -48,6 +50,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     super.dispose();
     await poseDetector.close();
     isBusy = false;
+    Wakelock.disable();
 
     if (_exerciseTime.isActive) {
       _exerciseTime.cancel();

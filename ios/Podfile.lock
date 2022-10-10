@@ -717,7 +717,7 @@ PODS:
     - Firebase/Database (= 9.3.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (11.4.4):
+  - firebase_messaging (13.1.0):
     - Firebase/Messaging (= 9.3.0)
     - firebase_core
     - Flutter
@@ -1006,6 +1006,8 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+  - wakelock (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
@@ -1043,6 +1045,7 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
@@ -1169,6 +1172,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -1192,7 +1197,7 @@ SPEC CHECKSUMS:
   firebase_auth: e9a024f4cd147a81064a1fb202b70eecb43cfda2
   firebase_core: 96214f90497b808a2cf2a24517084c5f6de37b53
   firebase_database: a04b8ccfaa14e5a9e5e5cb87e59a973d94536e20
-  firebase_messaging: 24112f219663060db68ef803f20166d374138b6e
+  firebase_messaging: faf30029105b2fcc74c29223eac1b7c3231a5e45
   firebase_storage: 97ea0887f3650a4eb908c0d11847c8529f0a2490
   FirebaseAppCheckInterop: f6b9670fb1360cf12006ca426e9c3b9a35317d17
   FirebaseAuth: 9ebc3577fe0acf9092df21ac314024b70aebf21e
@@ -1257,6 +1262,7 @@ SPEC CHECKSUMS:
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: 67f2f09a727a3672b8459b0f79ab481440171f0e
 
