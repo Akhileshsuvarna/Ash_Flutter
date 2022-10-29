@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../main.dart';
 
 class UserProfile {
@@ -33,6 +35,7 @@ class Data {
   String uuid = "";
   String address = "";
   bool isAdmin = false;
+  String platform = "";
 
   Data(
       {this.firebaseToken = "",
@@ -47,7 +50,8 @@ class Data {
       this.updatedAt = "",
       this.photoURL = "",
       this.uuid = "",
-      this.address = ""});
+      this.address = "",
+      this.platform = ""});
 
   Data.fromJson(Map<String, dynamic> json) {
     firebaseToken = json['firebaseToken'] ?? prefs.get('fcmToken');
@@ -64,6 +68,7 @@ class Data {
     uuid = json['uuid'] ?? '';
     address = json['address'] ?? '';
     isAdmin = json['isAdmin'] ?? false;
+    platform = json['platform'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -79,6 +84,7 @@ class Data {
         'uuid': uuid,
         'address': address,
         'created_at': createdAt,
-        'updated_at': updatedAt
+        'updated_at': updatedAt,
+        'platform': platform
       };
 }

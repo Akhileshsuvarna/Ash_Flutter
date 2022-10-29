@@ -28,7 +28,9 @@ class NotificationHelper {
 
   static void showCallNotification(CallerData callerData) {
     CallEvent callEvent = CallEvent(
-        sessionId: callerData.sessionToken,
+        sessionId: DateTime.now()
+            .microsecondsSinceEpoch
+            .toString(), //callerData.sessionToken,
         callType: callerData.inviteType.toLowerCase() == "audio".toLowerCase()
             ? 1
             : 1,

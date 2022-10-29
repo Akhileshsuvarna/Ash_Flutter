@@ -26,12 +26,14 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   late final AgoraClient client;
   late final String videoToken;
   late final String appId;
+  bool? isClientInitialized;
 
   @override
   void dispose() {
     super.dispose();
     client.engine.destroy();
     bloc.setCallState(CallServicesCallState.idle);
+    incomingCallEvent = null;
   }
 
   Future<String> _getAppId() async {
@@ -69,30 +71,38 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   Future<bool> clientInitializer() async {
     var resp = await _getVideoToken();
 
-    await Provider.of<AgoraTokenServices>(context, listen: false).sendInvite(
-        FirebaseAuth.instance.currentUser!.uid,
-        widget.roomId!,
-        RtcCallType.video,
-        resp['channelName'],
-        Uri.encodeComponent(Uri.encodeComponent(resp['rtcToken'])));
+    if (await Provider.of<AgoraTokenServices>(context, listen: false)
+        .sendInvite(
+            FirebaseAuth.instance.currentUser!.uid,
+            widget.roomId!,
+            RtcCallType.video,
+            resp['channelName'],
+            Uri.encodeComponent(Uri.encodeComponent(resp['rtcToken'])))) {
+      client = AgoraClient(
+        agoraConnectionData: AgoraConnectionData(
+          rtmEnabled: false,
+          appId: await _getAppId(),
+          channelName: resp['channelName'],
+          tempToken: resp['rtcToken'],
+        ),
+        enabledPermission: [
+          Permission.camera,
+          Permission.microphone,
+        ],
+      );
 
-    client = AgoraClient(
-      agoraConnectionData: AgoraConnectionData(
-        rtmEnabled: false,
-        appId: await _getAppId(),
-        channelName: resp['channelName'],
-        tempToken: resp['rtcToken'],
-      ),
-      enabledPermission: [
-        Permission.camera,
-        Permission.microphone,
-      ],
-    );
+      FirebaseAuth.instance.currentUser?.photoURL;
+      client.initialize();
 
-    FirebaseAuth.instance.currentUser?.photoURL;
-    client.initialize();
+      isClientInitialized = true;
 
-    return true;
+      return true;
+    } else {
+      setState(() {
+        isClientInitialized = false;
+      });
+      return false;
+    }
   }
 
   Future<bool> incomingCallInitializer() async {
@@ -139,7 +149,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: clientInitializer(),
+        future: incomingCallEvent != null
+            ? incomingCallInitializer()
+            : clientInitializer(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -156,7 +168,20 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               ),
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Constants.primaryColor,
+                  elevation: 0,
+                ),
+                extendBody: true,
+                body: Container(
+                  color: Colors.white,
+                  child: Center(
+                      child: isClientInitialized != null
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              "Network not available, please try later")),
+                ));
           }
         });
   }

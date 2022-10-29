@@ -22,4 +22,17 @@ class Questionaire {
     this.levelOfActivity,
     this.nonExercisingReason,
   });
+
+  toJson() => {
+        "age": age,
+        "height": height,
+        "weight": weight,
+        "gender": gender,
+        "numberOfAreasOfConcerns": numberOfAreasOfConcerns,
+        "areasOfConcern": areasOfConcern,
+        "painDuration": painDuration,
+        "firstTimeOrOngoing": firstTimeOrOngoing,
+        "levelOfActivity": levelOfActivity,
+        "nonExercisingReason": nonExercisingReason
+      };
 }

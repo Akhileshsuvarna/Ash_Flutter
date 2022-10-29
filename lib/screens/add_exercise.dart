@@ -257,9 +257,9 @@ class _AddExerciseState extends State<AddExercise> {
           '');
 
       Logger.info(metaData.toJson());
-
-      ViewUtils.popup(const Center(child: CircularProgressIndicator()),
-          const Center(child: Text("Uploading exercise")), context);
+      // TODO(skandar) Fix below
+      // ViewUtils.popup(const Center(child: CircularProgressIndicator()),
+      //     const Center(child: Text("Uploading exercise")), context);
 
       UploadMeta.upload(metaData).then((isUploaded) {
         if (isUploaded) {

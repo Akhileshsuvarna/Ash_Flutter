@@ -1,16 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:circular_progress_indicator/circular_progress_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:health_connector/constants.dart';
+import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/UserProfile.dart';
 import 'package:health_connector/models/assets.dart';
 import 'package:health_connector/services/social_sign_in.dart';
 import 'package:health_connector/util/device_utils.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:health_connector/util/view_utils.dart';
 
 import 'components/rounded_button.dart';
 
@@ -116,7 +119,8 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
 
   _signUpwithGoogle() async {
-    {
+    try {
+      ViewUtils.customCircularProgressPopup(context);
       UserCredential? result = await signInWithGoogle();
       if (result != null) {
         _logIn(result);
@@ -124,11 +128,15 @@ class _LoginPageState extends State<LoginPage> {
         Constants.showMessage(
             context, 'Sign in with google failed, please try again');
       }
+    } catch (e, stackTrace) {
+      Navigator.pop(context);
+      Logger.error(e, stackTrace: stackTrace);
     }
   }
 
   _signUpwithApple() async {
-    {
+    try {
+      ViewUtils.customCircularProgressPopup(context);
       UserCredential? result = await signInWithApple();
       if (result != null) {
         _logIn(result);
@@ -136,65 +144,74 @@ class _LoginPageState extends State<LoginPage> {
         Constants.showMessage(
             context, 'Sign in with google failed, please try again');
       }
+    } catch (e, stackTrace) {
+      Navigator.pop(context);
+      Logger.error(e, stackTrace: stackTrace);
     }
   }
 
   _logIn(UserCredential credential) async {
-    userProfile = UserProfile(
+    try {
+      userProfile = UserProfile(
         data: Data(
-            createdAt: DateTime.now().toString(),
-            email: credential.user!.email ?? '',
-            firstName: credential.additionalUserInfo!.username ?? '',
-            name: credential.user!.displayName ?? '',
-            phoneNumber: credential.user!.phoneNumber ?? '',
-            photoURL: credential.user!.photoURL ?? '',
-            dateOfBirth: '',
-            gender: '',
-            address: '',
-            firebaseToken: prefs.getString('fcmToken') ?? '',
-            uuid: credential.user!.uid));
+          createdAt: DateTime.now().toString(),
+          email: credential.user!.email ?? '',
+          firstName: credential.additionalUserInfo!.username ?? '',
+          name: credential.user!.displayName ?? '',
+          phoneNumber: credential.user!.phoneNumber ?? '',
+          photoURL: credential.user!.photoURL ?? '',
+          dateOfBirth: '',
+          gender: '',
+          address: '',
+          firebaseToken: prefs.getString('fcmToken') ?? '',
+          uuid: credential.user!.uid,
+          platform: Platform.isAndroid ? 'android' : 'ios',
+        ),
+      );
 
-    await FirebaseChatCore.instance.createUserInFirestore(
-      types.User(
-          firstName: credential.user!.displayName,
-          id: credential.user!.uid, // UID from Firebase Authentication
-          imageUrl: credential.user!.photoURL,
-          lastName: '',
-          metadata: {"email": credential.user!.email ?? ""}),
-    );
+      await FirebaseChatCore.instance.createUserInFirestore(
+        types.User(
+            firstName: credential.user!.displayName,
+            id: credential.user!.uid, // UID from Firebase Authentication
+            imageUrl: credential.user!.photoURL,
+            lastName: '',
+            metadata: {"email": credential.user!.email ?? ""}),
+      );
 
-    await firebaseDatabase
-        .ref()
-        .child(Constants.dbRoot)
-        .child('users')
-        .child(userProfile.data!.uuid)
-        .get()
-        .then((snapshot) async {
-      if (snapshot.exists) {
-        // TODO (skandar)
-        // update firebase user details.
-        await prefs.setBool("isFirstTime", false);
+      await firebaseDatabase
+          .ref()
+          .child(Constants.dbRoot)
+          .child('users')
+          .child(userProfile.data!.uuid)
+          .get()
+          .then((snapshot) async {
+        if (snapshot.exists) {
+          // TODO (skandar)
+          // update firebase user details.
+          await prefs.setBool("isFirstTime", false);
+        } else {
+          await prefs.setBool("isFirstTime", true);
+
+          await firebaseDatabase
+              .ref()
+              .child(Constants.dbRoot)
+              .child('users')
+              .child(userProfile.data!.uuid)
+              .set(userProfile.data!.toJson());
+        }
+      });
+
+      prefs.setString("userProfile", jsonEncode(userProfile.toJson()));
+      prefs.setBool('_isLoggedIn', true);
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
+    } finally {
+      Navigator.pop(context);
+      if (prefs.getBool("isFirstTime") ?? true) {
+        Navigator.of(context).pushReplacementNamed(Constants.questionScreen0);
       } else {
-        await prefs.setBool("isFirstTime", true);
-
-        await firebaseDatabase
-            .ref()
-            .child(Constants.dbRoot)
-            .child('users')
-            .child(userProfile.data!.uuid)
-            .set(userProfile.data!.toJson());
+        Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
       }
-    });
-
-    prefs.setString("userProfile", jsonEncode(userProfile.toJson()));
-    prefs.setBool('_isLoggedIn', true);
-    // TODO: Navigate to Home Screen
-    await prefs.setBool("isFirstTime", true);
-
-    if (prefs.getBool("isFirstTime") ?? true) {
-      Navigator.of(context).pushReplacementNamed(Constants.questionScreen0);
-    } else {
-      Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
     }
   }
 }

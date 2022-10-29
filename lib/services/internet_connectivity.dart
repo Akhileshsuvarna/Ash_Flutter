@@ -51,6 +51,9 @@ class InternetConnectivity extends ChangeNotifier {
         case ConnectivityResult.none:
           status = false;
           break;
+        case ConnectivityResult.vpn:
+          status = true;
+          break;
       }
       notifyListeners();
     });

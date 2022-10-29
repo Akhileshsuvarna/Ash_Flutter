@@ -381,7 +381,7 @@ class _QuestionScreen0State extends State<QuestionScreen0> {
                     ));
                     return;
                   } else {
-                    // TODO(skandar): Data not being stored anywhere. Inaccible for Scrren destruction.
+                    // TODO(skandar): Data not being stored anywhere. Inaccible for Screen destruction.
                     questionaireData = Questionaire(
                         age: int.parse(ageEditController.text),
                         height: int.parse(heightEditController.text),

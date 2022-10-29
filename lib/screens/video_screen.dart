@@ -115,9 +115,9 @@ class _VideoScreenState extends State<VideoScreen> {
                       ),
                     ]),
               )
-            : Container(
+            : SizedBox(
                 height: _size.height / 3,
-                child: Center(child: CircularProgressIndicator()));
+                child: Center(child: Globals.progressIndicator(size: 150)));
       },
       valueListenable: isInitialized,
     );

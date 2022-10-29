@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:health_connector/constants.dart';
+import 'package:health_connector/enums/enums.dart';
+import 'package:health_connector/globals.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/services/call_services.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +105,9 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
           client.engine.leaveChannel();
           Navigator.of(context).pop();
         },
+        userInfoUpdated: (p0, p1) {
+          print('First $p0 || Second ${p1.uid}');
+        },
       ),
     );
 
@@ -117,6 +122,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     super.dispose();
     client.engine.destroy();
     bloc.setCallState(CallServicesCallState.idle);
+    incomingCallEvent = null;
   }
 
 // Build your layout
@@ -133,10 +139,18 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    const Icon(
-                      Icons.call,
-                      size: 50,
-                      color: Colors.deepPurpleAccent,
+                    Column(
+                      children: [
+                        const Icon(
+                          Icons.call,
+                          size: 50,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        Text(
+                          CallStatus.Connecting.name,
+                          style: const TextStyle(color: Colors.black),
+                        ), // TODO(skandar) add call status, calling, ringing, connected and call duration
+                      ],
                     ),
                     Positioned(
                       child: AgoraVideoButtons(
@@ -154,7 +168,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               ),
             );
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: Globals.progressIndicator());
           }
         });
   }

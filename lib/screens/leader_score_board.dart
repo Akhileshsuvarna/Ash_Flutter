@@ -128,12 +128,12 @@ class _StateLeaderScoreBoard extends State<LeaderScoreBoard> {
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return Globals.progressIndicator();
+                      return const CircularProgressIndicator();
                     case ConnectionState.none:
-                      return Globals.progressIndicator();
+                      return const CircularProgressIndicator();
 
                     case ConnectionState.active:
-                      return Globals.progressIndicator();
+                      return const CircularProgressIndicator();
 
                     case ConnectionState.done:
                       updateRank(snapshot.data);
@@ -293,7 +293,7 @@ class _StateLeaderScoreBoard extends State<LeaderScoreBoard> {
                     : SizedBox(
                         height: _size.height / 16,
                         width: _size.height / 16,
-                        child: Globals.progressIndicator()),
+                        child: const CircularProgressIndicator()),
             valueListenable: _myRank,
           ),
         ),
@@ -410,7 +410,7 @@ class _StateLeaderScoreBoard extends State<LeaderScoreBoard> {
                       default:
                         return Row(
                           children: [
-                            Globals.progressIndicator(),
+                            const CircularProgressIndicator(),
                             const SizedBox(width: 20),
                             Text(
                               'Points',
