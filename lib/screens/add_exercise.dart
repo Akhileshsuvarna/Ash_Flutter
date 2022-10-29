@@ -240,20 +240,23 @@ class _AddExerciseState extends State<AddExercise> {
       // print(poseData);
 
       ExerciseMeta metaData = ExerciseMeta(
-        _exerciseTitleController.text,
-        int.parse(_exerciseDurationController.text),
-        _selectedIntensity!,
-        _selectedLocation!,
-        exerciseImage!.path,
-        Utils.getBlurHash(exerciseImage!.path),
-        true, // "TODO",
-        _isVideoAvailable ?? false,
-        [poseData],
-        0,
-        '',
-      );
+          _exerciseTitleController.text,
+          int.parse(_exerciseDurationController.text),
+          _selectedIntensity!,
+          _selectedLocation!,
+          exerciseImage!.path,
+          Utils.getBlurHash(exerciseImage!.path),
+          true, // "TODO",
+          _isVideoAvailable ?? false,
+          [poseData],
+          0,
+          '',
+          '',
+          '',
+          ',',
+          '');
 
-      Logger.info(metaData.toMap());
+      Logger.info(metaData.toJson());
 
       ViewUtils.popup(const Center(child: CircularProgressIndicator()),
           const Center(child: Text("Uploading exercise")), context);

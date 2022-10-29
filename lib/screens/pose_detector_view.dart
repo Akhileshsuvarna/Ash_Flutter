@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/models/exercise_meta.dart';
@@ -10,8 +9,8 @@ import 'package:health_connector/models/exercise_score.dart';
 import 'package:health_connector/screens/add_exercise.dart';
 import 'package:health_connector/screens/result_screen.dart';
 import 'package:health_connector/util/enum_utils.dart';
+import 'package:wakelock/wakelock.dart';
 
-import '../constants.dart';
 import '../util/utils.dart';
 import 'camera_view.dart';
 import 'painters/pose_painter.dart';
@@ -28,18 +27,22 @@ class PoseDetectorView extends StatefulWidget {
 
 class _PoseDetectorViewState extends State<PoseDetectorView> {
   PoseDetector poseDetector = PoseDetector(options: PoseDetectorOptions());
-  bool isBusy = false, _isMatched = false;
+  bool isBusy = false, _isMatched = false, _isFirstmatch = false;
   CustomPaint? customPaint;
   String? _path;
-  final ExerciseScore _eScore = ExerciseScore();
+  final ExerciseScore _eScore = ExerciseScore(0, 0, 0, 0, 0, [], []);
   late Timer _exerciseTime;
   final CountDownController _controller = CountDownController();
+  Stopwatch sw = Stopwatch();
+  Map<int, bool> pMap = {};
+  late Size _size;
 
   @override
   void initState() {
     super.initState();
     isBusy = false;
     _startActivity();
+    Wakelock.enable();
   }
 
   @override
@@ -47,6 +50,8 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     super.dispose();
     await poseDetector.close();
     isBusy = false;
+    Wakelock.disable();
+
     if (_exerciseTime.isActive) {
       _exerciseTime.cancel();
     }
@@ -60,32 +65,33 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     } else {
       await Utils.speak(
           'Starting exercise ${EnumUtils.getName(widget.meta.title)}');
-      _exerciseTime = Timer(Duration(minutes: widget.meta.exerciseDuration),
-          _exerciseTimeElapsed);
       _eScore.exerciseTimeAllotted = widget.meta.exerciseDuration;
+      sw.start();
     }
-    _controller.start();
   }
 
   _exerciseTimeElapsed() {
+    _eScore.calculateAgreegate();
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => ResultPage(
-          exerciseScore: _eScore,
-          exerciseName: widget.meta.title,
-        ),
+        builder: (BuildContext context) =>
+            ResultPage(exerciseScore: _eScore, meta: widget.meta),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      body: CameraView(
-          customPaint: customPaint,
-          onImage: (inputImage) => processImage(inputImage)),
-      floatingActionButton: _floatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop);
+  Widget build(BuildContext context) {
+    _size = MediaQuery.of(context).size;
+    return Scaffold(
+        body: CameraView(
+            customPaint: customPaint,
+            onImage: (inputImage) => processImage(inputImage)),
+        floatingActionButton: _floatingActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+  }
 
   // Widget? _floatingActionButton() => SizedBox(
   //     height: 70.0,
@@ -100,25 +106,26 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
         duration: widget.meta.exerciseDuration * 60,
 
         // Countdown initial elapsed Duration in Seconds.
-        initialDuration: 0,
+        // initialDuration: 0,
 
         // Controls (i.e Start, Pause, Resume, Restart) the Countdown Timer.
         controller: _controller,
 
         // Width of the Countdown Widget.
-        width: MediaQuery.of(context).size.width / 8,
+        width: MediaQuery.of(context).size.width / 3,
 
         // Height of the Countdown Widget.
-        height: MediaQuery.of(context).size.height / 8,
+        height: MediaQuery.of(context).size.height / 6,
 
         // Ring Color for Countdown Widget.
         ringColor: Colors.grey[300]!,
 
         // Ring Gradient for Countdown Widget.
-        ringGradient: null,
+        ringGradient:
+            const LinearGradient(colors: [Colors.purple, Colors.blue]),
 
         // Filling Color for Countdown Widget.
-        fillColor: Constants.primaryColor,
+        fillColor: Colors.white,
 
         // Filling Gradient for Countdown Widget.
         fillGradient: null,
@@ -130,7 +137,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
         backgroundGradient: null,
 
         // Border Thickness of the Countdown Ring.
-        strokeWidth: 8.0,
+        strokeWidth: 4.0,
 
         // Begin and end contours with a flat edge and no extension.
         strokeCap: StrokeCap.round,
@@ -146,10 +153,10 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
         textFormat: CountdownTextFormat.S,
 
         // Handles Countdown Timer (true for Reverse Countdown (max to 0), false for Forward Countdown (0 to max)).
-        isReverse: false,
+        isReverse: true,
 
         // Handles Animation Direction (true for Reverse Animation, false for Forward Animation).
-        isReverseAnimation: false,
+        isReverseAnimation: true,
 
         // Handles visibility of the Countdown Text.
         isTimerTextShown: true,
@@ -168,13 +175,37 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
           // Here, do whatever you want
           debugPrint('Countdown Ended');
         },
+        onChange: (value) async {
+          // print('onChange: $value');
+          if (int.parse(value) == 12 && !isprocessed(int.parse(value))) {
+            await Utils.speak('Exercise completing in');
+          }
+          if (int.parse(value) < 11 &&
+              int.parse(value) > 0 &&
+              !isprocessed(int.parse(value))) {
+            await Utils.speak(value);
+          }
+          if (int.parse(value) == 0 && !isprocessed(int.parse(value))) {
+            await Utils.speak("Exercise ${widget.meta.title} completed");
+          }
+        },
       );
+  bool isprocessed(int val) {
+    if (pMap[val] == null) {
+      pMap.addAll({val: true});
+      return false;
+    }
+    return true;
+  }
 
   Future<void> processImage(InputImage inputImage) async {
     if (isBusy) return;
     isBusy = true;
     // if (!_isMatched) {
-    _eScore.framesProcessed++;
+    if (_isFirstmatch) {
+      _eScore.framesProcessed++;
+    }
+
     final List<Pose> poses = await poseDetector.processImage(inputImage);
     // Logger.debug('pose detecte ${poses.length}');
     if (poses.length == 1) {
@@ -190,19 +221,35 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
           }
         } else {
           _isMatched = _isPoseMatched(poses[0], inputImage);
+          if (_isMatched && !_isFirstmatch) {
+            _controller.start();
+            _isFirstmatch = true;
+            _exerciseTime = Timer(
+                Duration(minutes: widget.meta.exerciseDuration),
+                _exerciseTimeElapsed);
+          }
         }
 
         if (_isMatched && !widget.addNew) {
-          _eScore.framesWithRequiredPose++;
+          if (_isFirstmatch) {
+            _eScore.frameStatus.add(FrameStatus(1, sw.elapsed.inSeconds));
+            _eScore.framesWithRequiredPose++;
+          }
           // _speak(
           //     '${EnumUtils.getName(widget.meta.title)!} position achieved');
           // TODO(skandar): Start Count Down Timer
         } else {
-          _eScore.framesWithRandomPose++;
+          if (_isFirstmatch) {
+            _eScore.framesWithRandomPose++;
+            _eScore.frameStatus.add(FrameStatus(-1, sw.elapsed.inSeconds));
+          }
         }
       }
     } else {
-      _eScore.framesWithoutPose++;
+      if (_isFirstmatch) {
+        _eScore.framesWithoutPose++;
+        _eScore.frameStatus.add(FrameStatus(0, sw.elapsed.inSeconds));
+      }
     }
     isBusy = false;
     // }
@@ -225,11 +272,11 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     // });
     // return false;
     if (widget.meta.title.toLowerCase().contains("cat")) {
-      return Utils.isCatPose(pose);
+      return Utils.isCatPose(pose, _size);
     } else if (widget.meta.title.toLowerCase().contains("sphinx")) {
-      return Utils.isSphinxPose(pose);
+      return Utils.isSphinxPose(pose, _size);
     } else if (widget.meta.title.toLowerCase().contains("plank")) {
-      return Utils.isPlankPose(pose);
+      return Utils.isPlankPose(pose, _size);
     } else {
       return false;
     }

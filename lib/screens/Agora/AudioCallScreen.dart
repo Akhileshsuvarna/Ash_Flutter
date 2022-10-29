@@ -1,9 +1,19 @@
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:health_connector/constants.dart';
+import 'package:health_connector/log/logger.dart';
+import 'package:health_connector/services/call_services.dart';
+import 'package:provider/provider.dart';
+
+import '../../main.dart';
+import '../../services/token_services.dart';
 
 class AudioCallScreen extends StatefulWidget {
-  const AudioCallScreen({Key? key}) : super(key: key);
+  final String? roomId;
+  const AudioCallScreen({Key? key, this.roomId}) : super(key: key);
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -17,22 +27,38 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   Future<String> _getAppId() async {
     DocumentSnapshot queryDocumentSnapshot =
         await FirebaseFirestore.instance.collection("/agora").doc("app").get();
-    return queryDocumentSnapshot.get("appid");
+    return queryDocumentSnapshot.get("appID");
   }
 
-  Future<String> _getAudioToken() async {
-    DocumentSnapshot queryDocumentSnapshot =
-        await FirebaseFirestore.instance.collection("/agora").doc("app").get();
-    return queryDocumentSnapshot.get("audio");
+  Future<Map<String, dynamic>> _getAudioToken() async {
+    if (incomingCallEvent != null) {
+      return {
+        "rtcToken": incomingCallEvent!.userInfo!['sessionToken'],
+        "channelName": incomingCallEvent!.userInfo!['channelName']
+      };
+    } else {
+      return await Provider.of<AgoraTokenServices>(context, listen: false)
+          .generateRTCToken(
+              RtcCallType.audio, RtcRole.publisher, RtcTokenType.uid);
+    }
   }
 
   Future<bool> clientInitializer() async {
+    var resp = await _getAudioToken();
+
+    await Provider.of<AgoraTokenServices>(context, listen: false).sendInvite(
+        FirebaseAuth.instance.currentUser!.uid,
+        widget.roomId!,
+        RtcCallType.audio,
+        resp['channelName'],
+        Uri.encodeComponent(Uri.encodeComponent(resp['rtcToken'])));
+
     client = AgoraClient(
       agoraConnectionData: AgoraConnectionData(
         rtmEnabled: false,
         appId: await _getAppId(),
-        channelName: 'audio',
-        tempToken: await _getAudioToken(),
+        channelName: resp['channelName'],
+        tempToken: resp['rtcToken'],
       ),
       enabledPermission: [
         Permission.camera,
@@ -40,17 +66,66 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       ],
     );
 
-    // FirebaseAuth.instance.currentUser?.photoURL;
+    FirebaseAuth.instance.currentUser?.photoURL;
     client.initialize();
 
     return true;
+  }
+
+  Future<bool> incomingCallInitializer() async {
+    var resp = await _getAudioToken();
+
+    client = AgoraClient(
+      agoraConnectionData: AgoraConnectionData(
+        rtmEnabled: false,
+        appId: await _getAppId(),
+        channelName: resp['channelName'],
+        tempToken: resp['rtcToken'],
+      ),
+      enabledPermission: [
+        Permission.camera,
+        Permission.microphone,
+      ],
+      agoraEventHandlers: AgoraRtcEventHandlers(
+        leaveChannel: (state) {
+          incomingCallEvent = null;
+          bloc.callServicesEventSink.add(null);
+          Navigator.of(context).pop();
+        },
+        joinChannelSuccess: (channel, uid, elapsed) {
+          Logger.info('joinChannel Success');
+        },
+        userJoined: (uid, elapsed) {
+          Logger.info("user joined");
+        },
+        userOffline: (uid, reason) {
+          Logger.info("user offline");
+          client.engine.leaveChannel();
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+
+    FirebaseAuth.instance.currentUser?.photoURL;
+    client.initialize();
+
+    return true;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    client.engine.destroy();
+    bloc.setCallState(CallServicesCallState.idle);
   }
 
 // Build your layout
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: clientInitializer(),
+        future: incomingCallEvent != null
+            ? incomingCallInitializer()
+            : clientInitializer(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
@@ -58,7 +133,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.call,
                       size: 50,
                       color: Colors.deepPurpleAccent,
@@ -68,6 +143,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                         client: client,
                         enabledButtons: const [
                           BuiltInButtons.callEnd,
+                          BuiltInButtons.toggleMic,
                         ],
                       ),
                       bottom: 0,

@@ -1,98 +1,43 @@
 {
   "project_info": {
-    "project_number": "335396837024",
-    "firebase_url": "https://livvinyl-health-connector-default-rtdb.firebaseio.com",
-    "project_id": "livvinyl-health-connector",
-    "storage_bucket": "livvinyl-health-connector.appspot.com"
+    "project_number": "970460065596",
+    "firebase_url": "https://healthconnector-ai-default-rtdb.firebaseio.com",
+    "project_id": "healthconnector-ai",
+    "storage_bucket": "healthconnector-ai.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:335396837024:android:ee1ef1184ae484920c9bc5",
+        "mobilesdk_app_id": "1:970460065596:android:1984dd0307377f0b4e3839",
         "android_client_info": {
-          "package_name": "com.livvinyl.healthconnector.app"
+          "package_name": "ai.healthconnector.mobileapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "335396837024-8ipjls5qgg4tu8orv0pst9070h5mg0e6.apps.googleusercontent.com",
+          "client_id": "970460065596-ju62vslql8o0mnhgat08fs3u54roaern.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "e1dbf48d25be9589801be9af4f37e8cc77638fd6"
-          }
-        },
-        {
-          "client_id": "335396837024-k3milk0j8n376gq713a7clo17ejr7i1h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "7b77f2196576270459a648fa8c0b90359aaee142"
-          }
-        },
-        {
-          "client_id": "335396837024-lf21rter9ptj5372qnhv07iqk1anl480.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "f518d5d078806961ba07a30c76fb16e5ff7dec8b"
-          }
-        },
-        {
-          "client_id": "335396837024-np1q9r80dac1d9vq7h3t5aurjil2utet.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "f695b9cbb7dc93f66116501349cc2e1e9ec3bfda"
-          }
-        },
-        {
-          "client_id": "335396837024-o2vk25icl2kpc00gbt45oik3ajb6jgj6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "6c24a349c679b9e1cf1293d632f508cc12382f40"
-          }
-        },
-        {
-          "client_id": "335396837024-qqa1rhmtginb8giu8sd0v6smnmmjfmn3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
-            "certificate_hash": "454fc00eb495e5023d5d64f49a9abe11a262114b"
-          }
-        },
-        {
-          "client_id": "335396837024-ugg7ncckt8co9dugj91p07l983o0akon.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.livvinyl.healthconnector.app",
+            "package_name": "ai.healthconnector.mobileapp",
             "certificate_hash": "49b62167a477c9f95f9540b8ba42e7460e826949"
           }
         },
         {
-          "client_id": "335396837024-bct02h3cmovf106lhfecrfqdflnmfch7.apps.googleusercontent.com",
+          "client_id": "970460065596-krverieb4pco3sitrsa0bh46nr62915v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD8CtMLbQa6VLVhZokj8aPZykyfkIEPd9E"
+          "current_key": "AIzaSyBEfgvGoZbbID94TL4xIA33kdPTlMUON6g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "335396837024-bct02h3cmovf106lhfecrfqdflnmfch7.apps.googleusercontent.com",
+              "client_id": "970460065596-krverieb4pco3sitrsa0bh46nr62915v.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "335396837024-hspkpj53ogn1uvqvllqkc30v0mcmffps.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.livvinyl.healthconnector.app"
-              }
             }
           ]
         }

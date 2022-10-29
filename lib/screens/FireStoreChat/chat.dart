@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:health_connector/Widgets/avatar_builder.dart';
 import 'package:health_connector/screens/FireStoreChat/util.dart';
 import 'package:http/http.dart' as http;
@@ -13,10 +14,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../constants.dart';
+import '../Agora/AudioCallScreen.dart';
+import '../Agora/VideoCallScreen.dart';
 
 class ChatPage extends StatefulWidget {
-   ChatPage({
+  ChatPage({
     Key? key,
     required this.room,
     this.chatUserName,
@@ -195,7 +199,74 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
-        title: Text(widget.room.name != null ? widget.room.name! : widget.chatUserName!,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+        title: Text(
+          widget.room.name != null && widget.room.name!.isNotEmpty
+              ? widget.room.name!
+              : widget.chatUserName!,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              pushNewScreen(context,
+                  screen: AudioCallScreen(roomId: widget.room.id),
+                  withNavBar: false);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Constants.primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.call,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              pushNewScreen(context,
+                  screen: VideoCallScreen(roomId: widget.room.id),
+                  withNavBar: false);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Constants.primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.video_call_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder<types.Room>(
         initialData: widget.room,

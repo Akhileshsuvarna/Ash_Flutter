@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:health_connector/util/device_utils.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
+import 'package:native_screenshot/native_screenshot.dart';
 import '../log/logger.dart';
 import '../main.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
@@ -30,6 +33,7 @@ class _CameraViewState extends State<CameraView> {
   Orientation? _lastOrientation;
   double _currentScale = 1.0, _baseScale = 1.0, _cW = 0.0, _cH = 0.0;
   final List<double> _availableZoom = [1.0, 1.0]; // min, max
+  late Size _size;
 
   @override
   void initState() {
@@ -54,6 +58,7 @@ class _CameraViewState extends State<CameraView> {
   @override
   Widget build(BuildContext context) {
     _lastOrientation = DeviceUtils.orientation(context);
+    _size = MediaQuery.of(context).size;
 
     // final Size size = DeviceUtils.size(context);
     // final double width = size.width;
@@ -66,36 +71,83 @@ class _CameraViewState extends State<CameraView> {
 
     // final Widget body = _body(width, height);
     return Scaffold(
-        appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
-        extendBodyBehindAppBar: true,
+        appBar: AppBar(elevation: 0, backgroundColor: Colors.black),
+        // extendBodyBehindAppBar: true,
+        backgroundColor: Colors.black,
         body: _body(),
         floatingActionButton: _floatingActionButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat);
   }
 
   Widget? _floatingActionButton() {
     if (cameras.length == 1) return null;
-    return SizedBox(
-        height: 70.0,
-        width: 70.0,
-        child: FloatingActionButton(
-            heroTag: 'flipCamera',
-            child: Icon(
-                Platform.isIOS
-                    ? Icons.flip_camera_ios_outlined
-                    : Icons.flip_camera_android_outlined,
-                size: 40),
-            onPressed: _switchLiveCamera));
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Padding(
+        padding: EdgeInsets.only(left: _size.width / 16),
+        child: SizedBox(
+          // width: MediaQuery.of(context).size.width / 3,
+          height: 70.0,
+          width: 70.0,
+          child: FloatingActionButton(
+              backgroundColor: Colors.black,
+              heroTag: 'takescreenshot',
+              child: const Icon(Icons.radio_button_checked, size: 60),
+              onPressed: () async {
+                var path = await NativeScreenshot.takeScreenshot();
+                Logger.debug('screenshot path = $path');
+              }),
+        ),
+      ),
+      // SizedBox(width: 40),
+      // Spacer(),
+      SizedBox(
+          // width: MediaQuery.of(context).size.width / 3,
+          height: 70.0,
+          width: 70.0,
+          child: FloatingActionButton(
+              backgroundColor: Colors.black,
+              heroTag: 'flipCamera',
+              child: Icon(
+                  Platform.isIOS
+                      ? Icons.flip_camera_ios_outlined
+                      : Icons.flip_camera_android_outlined,
+                  size: 40),
+              onPressed: _switchLiveCamera))
+    ]);
   }
 
   Widget _body() {
     if (cameraController?.value.isInitialized == false) {
       return Container();
     }
-    return Stack(fit: StackFit.expand, children: <Widget>[
-      CameraPreview(cameraController!),
-      if (widget.customPaint != null) widget.customPaint!
-    ]);
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      return Stack(fit: StackFit.expand, children: <Widget>[
+        CameraPreview(cameraController!),
+        if (widget.customPaint != null) widget.customPaint!
+      ]);
+    } else {
+      return ClipRect(
+        child: OverflowBox(
+          alignment: Alignment.topCenter,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: AspectRatio(
+                aspectRatio:
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? cameraController!.value.aspectRatio
+                        : 1 / cameraController!.value.aspectRatio,
+                child: Stack(fit: StackFit.expand, children: <Widget>[
+                  CameraPreview(cameraController!),
+                  if (widget.customPaint != null) widget.customPaint!
+                ]),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   // Widget _body(double width, double height) {
@@ -139,7 +191,7 @@ class _CameraViewState extends State<CameraView> {
     cameraController = CameraController(camera,
         Platform.isAndroid ? ResolutionPreset.low : ResolutionPreset.medium,
         enableAudio: false);
-    cameraController?.initialize().then((_) {
+    cameraController?.initialize().then((_) async {
       if (!mounted) {
         return;
       }
@@ -149,6 +201,8 @@ class _CameraViewState extends State<CameraView> {
       cameraController?.getMaxZoomLevel().then((value) {
         _availableZoom[1] = value;
       });
+      await cameraController
+          ?.lockCaptureOrientation(DeviceOrientation.portraitUp);
       cameraController?.startImageStream(_processCameraImage);
       setState(() {});
     });
@@ -238,6 +292,7 @@ class _CameraViewState extends State<CameraView> {
         Size(image.width.toDouble(), image.height.toDouble());
 
     final camera = cameras[_cameraIndex];
+
     final imageRotation =
         InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
             InputImageRotation.rotation0deg;
@@ -267,5 +322,15 @@ class _CameraViewState extends State<CameraView> {
         InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
 
     widget.onImage(inputImage);
+  }
+}
+
+int getOrientation() {
+  if (currentDeviceOrientation == NativeDeviceOrientation.portraitUp) {
+    return 90;
+  } else if (currentDeviceOrientation == NativeDeviceOrientation.portraitDown) {
+    return 180;
+  } else {
+    return 0;
   }
 }

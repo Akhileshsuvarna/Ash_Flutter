@@ -71,10 +71,10 @@ class _LoginPageState extends State<LoginPage> {
                         right: _size.width / 16,
                       ),
                       child: RoundedButton(
-                        color: Colors.white,
+                        color: Colors.black,
                         prefix: Image.asset(Assets.socialLoginAppleLogo),
                         text: "Sign in with Apple",
-                        textColor: Colors.black,
+                        textColor: Colors.white,
                         onPressed: _signUpwithApple,
                       ),
                     )
@@ -156,11 +156,11 @@ class _LoginPageState extends State<LoginPage> {
 
     await FirebaseChatCore.instance.createUserInFirestore(
       types.User(
-        firstName: credential.user!.displayName,
-        id: credential.user!.uid, // UID from Firebase Authentication
-        imageUrl: credential.user!.photoURL,
-        lastName: '',
-      ),
+          firstName: credential.user!.displayName,
+          id: credential.user!.uid, // UID from Firebase Authentication
+          imageUrl: credential.user!.photoURL,
+          lastName: '',
+          metadata: {"email": credential.user!.email ?? ""}),
     );
 
     await firebaseDatabase
@@ -171,26 +171,30 @@ class _LoginPageState extends State<LoginPage> {
         .get()
         .then((snapshot) async {
       if (snapshot.exists) {
+        // TODO (skandar)
+        // update firebase user details.
+        await prefs.setBool("isFirstTime", false);
+      } else {
+        await prefs.setBool("isFirstTime", true);
+
         await firebaseDatabase
             .ref()
             .child(Constants.dbRoot)
             .child('users')
             .child(userProfile.data!.uuid)
-            .remove();
+            .set(userProfile.data!.toJson());
       }
     });
 
-    await firebaseDatabase
-        .ref()
-        .child(Constants.dbRoot)
-        .child('users')
-        .child(userProfile.data!.uuid)
-        .set(userProfile.data!.toJson());
-
     prefs.setString("userProfile", jsonEncode(userProfile.toJson()));
     prefs.setBool('_isLoggedIn', true);
-    //TODO: Navigate to Home Screen
-    Navigator.of(context).pushReplacementNamed(Constants.questionScreen);
-    // Navigator.of(context).pushReplacementNamed(Constants.exerciseScreen);
+    // TODO: Navigate to Home Screen
+    await prefs.setBool("isFirstTime", true);
+
+    if (prefs.getBool("isFirstTime") ?? true) {
+      Navigator.of(context).pushReplacementNamed(Constants.questionScreen0);
+    } else {
+      Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
+    }
   }
 }
