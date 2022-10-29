@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:health_connector/globals.dart';
 import 'package:health_connector/util/converter.dart';
+import 'package:health_connector/util/view_utils.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../constants.dart';
 import '../Agora/AudioCallScreen.dart';
@@ -43,7 +45,46 @@ class _RoomsPageState extends State<RoomsPage> {
   void checkReceivingCallinBackgroundPermission() async {
     if (!await Constants.isSystemAlertWindowPermissionGranted()) {
       //TODO(skandar) Show some Dialouge before opening settings and Guide user on what todo.
-      Constants.openSettingsForSystemAlertWindowPermission();
+      ViewUtils.popup(
+          Text(
+            'Permission request',
+            style: GoogleFonts.poppins(
+              textStyle: const TextStyle(
+                fontSize: 22,
+                fontStyle: FontStyle.normal,
+              ),
+            ),
+          ),
+          content: Text(
+            'Please allow Health Connector app to Display over other apps. \n\nIf permission not allowed call functionality will not work properly.',
+            style: GoogleFonts.poppins(
+              textStyle: const TextStyle(
+                fontSize: 14,
+                fontStyle: FontStyle.normal,
+              ),
+            ),
+          ),
+          context,
+          boxColor: Colors.white,
+          barrierDismissible: true,
+          actions: [
+            GestureDetector(
+              onTap: () =>
+                  Constants.openSettingsForSystemAlertWindowPermission(),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16, bottom: 8),
+                child: Text(
+                  'Open Settings.',
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontStyle: FontStyle.normal,
+                        color: Constants.primaryColor),
+                  ),
+                ),
+              ),
+            ),
+          ]);
     }
   }
 
@@ -136,11 +177,11 @@ class _RoomsPageState extends State<RoomsPage> {
   @override
   Widget build(BuildContext context) {
     if (_error) {
-      return Container();
+      return Globals.progressIndicator();
     }
 
     if (!_initialized) {
-      return Container();
+      return Globals.progressIndicator();
     }
     _size = MediaQuery.of(context).size;
     return _user == null
@@ -308,7 +349,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                 margin: const EdgeInsets.only(
                                   bottom: 200,
                                 ),
-                                child: const Text('Press + to Start a Chat'),
+                                child: Globals.progressIndicator(),
                               );
                             }
 

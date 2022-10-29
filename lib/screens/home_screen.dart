@@ -76,32 +76,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingVideoCall) {
                     //
-                    WidgetsBinding.instance.addPostFrameCallback(
-                      (_) => Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return VideoCallScreen(
-                                roomId: incomingCallEvent!.userInfo!['roomId']);
-                          },
+                    if (incomingCallEvent != null) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return VideoCallScreen(
+                                  roomId:
+                                      incomingCallEvent!.userInfo!['roomId']);
+                            },
+                          ),
                         ),
+                      );
+                    }
+                    return const Center(
+                      child: Text(
+                        'Incoming video call',
+                        style: TextStyle(color: Colors.green),
                       ),
                     );
-                    return const Center(
-                        child: Text('Incoming video call',
-                            style: TextStyle(color: Colors.green)));
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingAudioCall) {
-                    //
-                    WidgetsBinding.instance.addPostFrameCallback(
-                      (_) => Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return AudioCallScreen(
-                                roomId: incomingCallEvent!.userInfo!['roomId']);
-                          },
+                    if (incomingCallEvent != null) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return AudioCallScreen(
+                                  roomId:
+                                      incomingCallEvent!.userInfo!['roomId']);
+                            },
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                     return const Center(
                         child: Text('Incoming audio call',
                             style: TextStyle(color: Colors.green)));

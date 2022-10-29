@@ -306,7 +306,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       default:
                         return Row(
                           children: [
-                            Globals.progressIndicator(),
+                            const CircularProgressIndicator(),
                             const SizedBox(width: 20),
                             Text(
                               'Points',

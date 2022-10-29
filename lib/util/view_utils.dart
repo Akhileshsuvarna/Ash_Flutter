@@ -1,27 +1,31 @@
+import 'package:circular_progress_indicator/circular_progress_indicator.dart';
 import 'package:flutter/material.dart'
     show
+        AlertDialog,
+        BorderRadius,
         BuildContext,
+        Center,
+        CircularProgressIndicator,
+        Color,
+        Colors,
+        Column,
+        Directionality,
+        GestureDetector,
+        MainAxisAlignment,
+        Navigator,
+        Radius,
+        RoundedRectangleBorder,
         ScaffoldMessenger,
         SnackBar,
-        Text,
-        TextStyle,
         SnackBarBehavior,
-        Colors,
-        RoundedRectangleBorder,
-        BorderRadius,
-        Radius,
-        Navigator,
-        Center,
-        Column,
-        MainAxisAlignment,
-        CircularProgressIndicator,
-        Widget,
-        AlertDialog,
-        showDialog,
-        TextDirection,
-        Directionality,
         State,
-        VoidCallback;
+        Text,
+        TextDirection,
+        TextStyle,
+        VoidCallback,
+        Widget,
+        showDialog;
+import 'package:flutter/src/widgets/container.dart';
 
 import '../constants.dart';
 
@@ -46,15 +50,41 @@ class ViewUtils {
           duration: Duration(seconds: error ? 5 : 3),
           content: Text(text, style: const TextStyle(color: Colors.white))));
 
-  static void popup(Widget? title, Widget? content, BuildContext context) =>
+  static void popup(
+    Widget? title,
+    BuildContext context, {
+    Widget? content,
+    bool barrierDismissible = false,
+    Color boxColor = Colors.transparent,
+    List<Widget>? actions,
+  }) =>
       showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => AlertDialog(
-              backgroundColor: Colors.white,
-              shape: dialogShape,
-              title: title,
-              content: content));
+        context: context,
+        barrierDismissible: barrierDismissible,
+        builder: (context) => AlertDialog(
+          backgroundColor: boxColor,
+          shape: dialogShape,
+          title: title,
+          content: content,
+          actions: actions,
+        ),
+      );
+
+  static void customCircularProgressPopup(BuildContext context) => popup(
+        customProgressIndicatorWidget(),
+        context,
+      );
+
+  static Widget customProgressIndicatorWidget({double size = 200}) =>
+      CustomProgressIndicator(
+        height: size,
+        width: size,
+        fourthArcColor: Constants.primaryColor,
+        firstArcColor: Colors.blue,
+        secondArcColor: Colors.white,
+        thirdArcColor: Colors.white,
+        backgroundColor: Colors.transparent,
+      );
 
   static void pop(BuildContext context) {
     if (Navigator.canPop(context)) {

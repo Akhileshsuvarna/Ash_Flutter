@@ -3,7 +3,7 @@ description: Health connector.ai is health and fitness app powered by Livvinyl p
 
 publish_to: 'none'
 
-version: 1.0.0+10
+version: 1.0.0+11
 
 environment:
   sdk: '>=2.17.3 <3.0.0'
@@ -17,7 +17,7 @@ dependencies:
   firebase_messaging: ^13.1.0
   firebase_core: ^1.11.0
   firebase_database: ^9.0.20
-  permission_handler: ^9.2.0
+  permission_handler: ^10.1.0
   flutter_tts: ^3.2.3
   google_fonts: ^2.1.0
   firebase_auth: ^3.3.13
@@ -40,7 +40,6 @@ dependencies:
   google_mlkit_translation: ^0.3.0
   flutter_cache_manager: ^3.3.0
   agora_uikit: ^1.0.2
-  agora_rtc_engine: ^5.3.1
   flutter_firebase_chat_core: ^1.6.3
   file_picker: ^4.6.0
   flutter_chat_ui: ^1.6.4
@@ -65,10 +64,15 @@ dependencies:
     git:
       url: https://github.com/sikandernoori/native_screenshot.git
   native_device_orientation: ^1.1.4
-  connectycube_flutter_call_kit: ^2.0.6
+  connectycube_flutter_call_kit:
+    git:
+      ref: 9004d758f9601d95b182f1c2aef9717f8f880884
+      url: https://github.com/sikandernoori/connectycube-flutter-call-kit.git
   provider: ^6.0.3
   flutter_bloc: ^8.1.1
   wakelock: ^0.6.2
+  circular_progress_indicator:
+    path: ./plugins/circular_progress_indicator
 
 
 flutter_icons:

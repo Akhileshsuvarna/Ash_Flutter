@@ -11,18 +11,11 @@ import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
 import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/screens/add_exercise.dart';
-import 'package:health_connector/screens/components/loading_overlay.dart';
 import 'package:health_connector/services/firebase/firebase_rtdb_services.dart';
-import 'package:health_connector/services/token_services.dart';
 import 'package:health_connector/util/converter.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:provider/provider.dart';
 
 import '../globals.dart';
-import 'Agora/AudioCallScreen.dart';
-import 'Agora/VideoCallScreen.dart';
 import 'components/exercise_widget.dart';
-import 'login_screen.dart';
 
 class ExercisePage extends StatefulWidget {
   const ExercisePage({Key? key}) : super(key: key);

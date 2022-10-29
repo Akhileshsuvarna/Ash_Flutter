@@ -41,7 +41,15 @@ class _QuestionScreen1State extends State<QuestionScreen1> {
       }
       if (_questionIndex == 5 && _answerIndex == 5 && _selectedAnswer != null) {
         //TODO upload Questionaire data to firebase here from questionareData object.
-        Navigator.of(context).pushReplacementNamed(Constants.userHomeScreen);
+        firebaseDatabase
+            .ref()
+            .child(Constants.dbRoot)
+            .child('users')
+            .child(userProfile.data!.uuid)
+            .child('questionnaireData')
+            .set(questionaireData.toJson())
+            .then((value) => Navigator.of(context)
+                .pushReplacementNamed(Constants.userHomeScreen));
       } else if (_questionIndex == 6 &&
           _answerIndex == 6 &&
           _selectedAnswer != null) {

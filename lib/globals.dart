@@ -9,6 +9,7 @@ import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/models/exercise_result.dart';
 import 'package:health_connector/models/exercise_score.dart';
 import 'package:health_connector/models/user_score.dart';
+import 'package:health_connector/util/view_utils.dart';
 
 import 'constants.dart';
 import 'log/logger.dart';
@@ -256,6 +257,6 @@ class Globals {
     return result;
   }
 
-  static progressIndicator() =>
-      const Center(child: CircularProgressIndicator());
+  static Widget progressIndicator({double size = 200}) =>
+      Center(child: ViewUtils.customProgressIndicatorWidget(size: size));
 }
