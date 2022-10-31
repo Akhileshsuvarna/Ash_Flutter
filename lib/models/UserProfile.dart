@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../main.dart';
 
 class UserProfile {

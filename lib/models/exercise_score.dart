@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:health_connector/log/logger.dart';
+
 class ExerciseScore {
   ExerciseScore(
       this.framesProcessed,
@@ -24,7 +26,6 @@ class ExerciseScore {
       int streakStartTime = frameStatus[0].time;
       int streakEndTime = frameStatus[0].time;
       int streakStatus = frameStatus[0].status;
-      int streakNumber = 0;
       for (int i = 0; i < frameStatus.length; i++) {
         if (frameStatus[i].status == lastStatus) {
           streakEndTime = frameStatus[i].time;
@@ -49,7 +50,6 @@ class ExerciseScore {
           streakStartTime = frameStatus[i].time;
           lastStatus = frameStatus[i].status;
           streakStatus = lastStatus;
-          streakNumber++;
         }
 
         if (i == frameStatus.length - 1) {
@@ -62,8 +62,8 @@ class ExerciseScore {
           ));
         }
       }
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      Logger.error(e, stackTrace: stackTrace);
       rethrow;
     }
   }

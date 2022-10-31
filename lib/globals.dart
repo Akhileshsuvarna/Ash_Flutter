@@ -56,7 +56,7 @@ class Globals {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
       FirebaseMessaging.onMessageOpenedApp.listen((event) {
-        print("Gotcha $event");
+        Logger.info("Gotcha $event");
       });
 
       FirebaseMessaging.onMessage.listen(firebaseMessagingForegroundHandler);
@@ -252,7 +252,6 @@ class Globals {
     } catch (e) {
       Logger.error(e);
     }
-    var x = 10;
 
     return result;
   }

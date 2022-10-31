@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/home_screen.dart';
-import 'package:health_connector/screens/leader_score_board.dart';
 import 'package:health_connector/screens/login_screen.dart';
 import 'package:health_connector/screens/questions/question_screen0.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';

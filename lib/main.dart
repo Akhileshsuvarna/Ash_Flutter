@@ -19,7 +19,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/call_services.dart';
-import 'config/app_theme.dart';
 import 'constants.dart';
 import 'globals.dart';
 import 'log/logger.dart';
@@ -91,19 +90,19 @@ main() async {
 }
 
 Future<void> _onCallAccepted(CallEvent callEvent) async {
-  print("the call was accepted $callEvent");
+  Logger.info("the call was accepted $callEvent");
   bloc.callServicesEventSinkAdd = callEvent;
   incomingCallEvent = callEvent;
 }
 
 Future<void> _onCallRejected(CallEvent callEvent) async {
-  print("the call was rejected");
+  Logger.info("the call was rejected");
   // bloc.callServicesEventSink.add(callEvent);
 }
 
 void downloadCallback(String id, DownloadTaskStatus status, int progress) {
   if (progress == 100) {
-    print('All assets downloaded for exercise: ${prefs.getString(id)}');
+    Logger.info('All assets downloaded for exercise: ${prefs.getString(id)}');
   }
 }
 
@@ -176,9 +175,9 @@ void _listenChat() {
       if (event.docChanges.length != event.docs.length) {
         for (var element in event.docChanges) {
           if (element.doc.metadata.hasPendingWrites) {
-            print("chat stream event new message");
+            Logger.info("chat stream event new message");
           } else {
-            print("chat stream event existing message");
+            Logger.info("chat stream event existing message");
           }
           // print("chat stream event data ${element.doc.data()}");
         }

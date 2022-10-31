@@ -9,7 +9,6 @@ import 'package:health_connector/models/exercise_meta.dart';
 import 'package:health_connector/models/nodes_comparator.dart';
 import 'package:health_connector/screens/components/rounded_input_field.dart';
 import 'package:health_connector/util/enum_utils.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:health_connector/util/utils.dart';
 import 'package:health_connector/util/view_utils.dart';
 import 'package:image_picker/image_picker.dart';
