@@ -24,14 +24,16 @@ class RoomsPage extends StatefulWidget {
   _RoomsPageState createState() => _RoomsPageState();
 }
 
-class _RoomsPageState extends State<RoomsPage> {
+class _RoomsPageState extends State<RoomsPage> with WidgetsBindingObserver {
   bool _error = false;
   bool _initialized = false;
   User? _user;
   late Size _size;
+  bool _hasUserOpenedPermissionSettings = false;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     initializeFlutterFire();
     checkReceivingCallinBackgroundPermission();
     super.initState();
@@ -39,12 +41,26 @@ class _RoomsPageState extends State<RoomsPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  // check permissions when app is resumed
+  // this is when permissions are changed in app settings outside of app
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      if (_hasUserOpenedPermissionSettings &&
+          await Constants.isSystemAlertWindowPermissionGranted()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
   }
 
   void checkReceivingCallinBackgroundPermission() async {
     if (!await Constants.isSystemAlertWindowPermissionGranted()) {
       //TODO(skandar) Show some Dialouge before opening settings and Guide user on what todo.
+
       ViewUtils.popup(
           Text(
             'Permission request',
@@ -69,8 +85,10 @@ class _RoomsPageState extends State<RoomsPage> {
           barrierDismissible: true,
           actions: [
             GestureDetector(
-              onTap: () =>
-                  Constants.openSettingsForSystemAlertWindowPermission(),
+              onTap: () {
+                _hasUserOpenedPermissionSettings = true;
+                Constants.openSettingsForSystemAlertWindowPermission();
+              },
               child: Padding(
                 padding: const EdgeInsets.only(right: 16, bottom: 8),
                 child: Text(

@@ -32,7 +32,7 @@ class NotificationHelper {
             .microsecondsSinceEpoch
             .toString(), //callerData.sessionToken,
         callType: callerData.inviteType.toLowerCase() == "audio".toLowerCase()
-            ? 1
+            ? 0
             : 1,
         callerId: 0,
         callerName: callerData.hostName,

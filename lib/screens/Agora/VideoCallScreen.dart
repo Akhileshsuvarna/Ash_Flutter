@@ -89,6 +89,27 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           Permission.camera,
           Permission.microphone,
         ],
+        agoraEventHandlers: AgoraRtcEventHandlers(
+          leaveChannel: (state) {
+            incomingCallEvent = null;
+            bloc.callServicesEventSink.add(null);
+            Navigator.of(context).pop();
+          },
+          joinChannelSuccess: (channel, uid, elapsed) {
+            Logger.info('joinChannel Success');
+          },
+          userJoined: (uid, elapsed) {
+            Logger.info("user joined");
+          },
+          userOffline: (uid, reason) {
+            Logger.info("user offline");
+            client.engine.leaveChannel();
+            Navigator.of(context).pop();
+          },
+          userInfoUpdated: (p0, p1) {
+            print('First $p0 || Second ${p1.uid}');
+          },
+        ),
       );
 
       FirebaseAuth.instance.currentUser?.photoURL;

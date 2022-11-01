@@ -66,6 +66,27 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         Permission.camera,
         Permission.microphone,
       ],
+      agoraEventHandlers: AgoraRtcEventHandlers(
+        leaveChannel: (state) {
+          incomingCallEvent = null;
+          bloc.callServicesEventSink.add(null);
+          Navigator.of(context).pop();
+        },
+        joinChannelSuccess: (channel, uid, elapsed) {
+          Logger.info('joinChannel Success');
+        },
+        userJoined: (uid, elapsed) {
+          Logger.info("user joined");
+        },
+        userOffline: (uid, reason) {
+          Logger.info("user offline");
+          client.engine.leaveChannel();
+          Navigator.of(context).pop();
+        },
+        userInfoUpdated: (p0, p1) {
+          print('First $p0 || Second ${p1.uid}');
+        },
+      ),
     );
 
     FirebaseAuth.instance.currentUser?.photoURL;
@@ -139,19 +160,24 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Column(
-                      children: [
-                        const Icon(
-                          Icons.call,
-                          size: 50,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        Text(
-                          CallStatus.Connecting.name,
-                          style: const TextStyle(color: Colors.black),
-                        ), // TODO(skandar) add call status, calling, ringing, connected and call duration
-                      ],
+                    const Icon(
+                      Icons.call,
+                      size: 50,
+                      color: Colors.deepPurpleAccent,
                     ),
+                    // Column(
+                    //   children: [
+                    //     const Icon(
+                    //       Icons.call,
+                    //       size: 50,
+                    //       color: Colors.deepPurpleAccent,
+                    //     ),
+                    //     Text(
+                    //       CallStatus.Connecting.name,
+                    //       style: const TextStyle(color: Colors.black),
+                    //     ), // TODO(skandar) add call status, calling, ringing, connected and call duration
+                    //   ],
+                    // ),
                     Positioned(
                       child: AgoraVideoButtons(
                         client: client,

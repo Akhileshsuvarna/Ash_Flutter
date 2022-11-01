@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,6 +17,7 @@ import 'log/logger.dart';
 import 'main.dart';
 import 'models/UserProfile.dart';
 import 'models/exercise_transactions.dart';
+import 'util/notification_helper.dart';
 
 class Globals {
   Globals._();
@@ -56,7 +58,26 @@ class Globals {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
       FirebaseMessaging.onMessageOpenedApp.listen((event) {
-        Logger.info("Gotcha $event");
+        try {
+          if (event.data.entries.isNotEmpty) {
+            for (var element in event.data.entries) {
+              if (element.key == "callInvite") {
+                if (NotificationHelper.isCallInvite(event.data)) {
+                  var callerData =
+                      NotificationHelper.parseNotificationDataToCallerData(
+                          event.data);
+                  ConnectycubeFlutterCallKit.setOnLockScreenVisibility(
+                      isVisible: false);
+
+                  NotificationHelper.showCallNotification(callerData);
+                }
+              }
+            }
+          }
+          Logger.info("Gotcha ${event.data.entries}");
+        } catch (e, stackTrace) {
+          Logger.error(e, stackTrace: stackTrace);
+        }
       });
 
       FirebaseMessaging.onMessage.listen(firebaseMessagingForegroundHandler);

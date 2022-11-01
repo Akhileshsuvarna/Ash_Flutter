@@ -219,7 +219,8 @@ Future onCallRejectedWhenTerminated(CallEvent event) async {
   // bloc.callServicesEventSink.add(event);
 }
 
-Future onCallAcceptedWhenTerminated(CallEvent event) async {
-  bloc.callServicesEventSink.add(event);
-  incomingCallEvent = event;
+Future onCallAcceptedWhenTerminated(CallEvent callEvent) async {
+  Logger.info("the call was accepted $callEvent");
+  bloc.callServicesEventSinkAdd = callEvent;
+  incomingCallEvent = callEvent;
 }
