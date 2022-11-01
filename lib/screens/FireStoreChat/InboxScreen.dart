@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,6 @@ import 'package:health_connector/util/converter.dart';
 import 'package:health_connector/util/view_utils.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../../constants.dart';
-import '../Agora/AudioCallScreen.dart';
-import '../Agora/VideoCallScreen.dart';
 import '../login_screen.dart';
 import 'chat.dart';
 import 'users.dart';
@@ -33,7 +33,9 @@ class _RoomsPageState extends State<RoomsPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addObserver(this);
+    }
     initializeFlutterFire();
     checkReceivingCallinBackgroundPermission();
     super.initState();
@@ -49,7 +51,7 @@ class _RoomsPageState extends State<RoomsPage> with WidgetsBindingObserver {
   // this is when permissions are changed in app settings outside of app
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
+    if (Platform.isAndroid && state == AppLifecycleState.resumed) {
       if (_hasUserOpenedPermissionSettings &&
           await Constants.isSystemAlertWindowPermissionGranted()) {
         Navigator.of(context, rootNavigator: true).pop();
