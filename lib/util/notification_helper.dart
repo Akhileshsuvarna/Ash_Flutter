@@ -1,6 +1,8 @@
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:health_connector/models/call_invite.dart';
 
+import '../main.dart';
+
 class NotificationHelper {
   NotificationHelper._();
 
@@ -27,10 +29,9 @@ class NotificationHelper {
       );
 
   static void showCallNotification(CallerData callerData) {
+    currentCallSessionId = DateTime.now().microsecondsSinceEpoch.toString();
     CallEvent callEvent = CallEvent(
-        sessionId: DateTime.now()
-            .microsecondsSinceEpoch
-            .toString(), //callerData.sessionToken,
+        sessionId: currentCallSessionId, //callerData.sessionToken,
         callType: callerData.inviteType.toLowerCase() == "audio".toLowerCase()
             ? 0
             : 1,

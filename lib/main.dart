@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
@@ -41,6 +42,7 @@ late String localPath;
 late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> chatStream;
 CallEvent? incomingCallEvent;
 final bloc = CallServices();
+String currentCallSessionId = "";
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Logger.debug("Handling a background message: ${message.messageId}");
@@ -93,11 +95,29 @@ Future<void> _onCallAccepted(CallEvent callEvent) async {
   Logger.info("the call was accepted $callEvent");
   bloc.callServicesEventSinkAdd = callEvent;
   incomingCallEvent = callEvent;
+  ConnectycubeFlutterCallKit.setCallState(
+      sessionId: currentCallSessionId, callState: CallState.ACCEPTED);
 }
 
 Future<void> _onCallRejected(CallEvent callEvent) async {
   Logger.info("the call was rejected");
   // bloc.callServicesEventSink.add(callEvent);
+  ConnectycubeFlutterCallKit.setCallState(
+      sessionId: currentCallSessionId, callState: CallState.REJECTED);
+}
+
+Future onCallRejectedWhenTerminated(CallEvent event) async {
+  // bloc.callServicesEventSink.add(event);
+  ConnectycubeFlutterCallKit.setCallState(
+      sessionId: currentCallSessionId, callState: CallState.REJECTED);
+}
+
+Future onCallAcceptedWhenTerminated(CallEvent callEvent) async {
+  Logger.info("the call was accepted $callEvent");
+  bloc.callServicesEventSinkAdd = callEvent;
+  incomingCallEvent = callEvent;
+  ConnectycubeFlutterCallKit.setCallState(
+      sessionId: currentCallSessionId, callState: CallState.ACCEPTED);
 }
 
 void downloadCallback(String id, DownloadTaskStatus status, int progress) {
@@ -213,14 +233,4 @@ class _HealthConnectorAppState extends State<HealthConnectorApp> {
       initialRoute: initialRoute,
     );
   }
-}
-
-Future onCallRejectedWhenTerminated(CallEvent event) async {
-  // bloc.callServicesEventSink.add(event);
-}
-
-Future onCallAcceptedWhenTerminated(CallEvent callEvent) async {
-  Logger.info("the call was accepted $callEvent");
-  bloc.callServicesEventSinkAdd = callEvent;
-  incomingCallEvent = callEvent;
 }

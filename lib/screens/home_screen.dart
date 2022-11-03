@@ -63,12 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
 
-              return Container();
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.connectionState == ConnectionState.active &&
                 snapshot.data != null) {
               return StreamBuilder(
                 stream: bloc.streamState,
-                initialData: CallServicesCallState.idle,
+                initialData: incomingCallEvent == null
+                    ? CallServicesCallState.idle
+                    : incomingCallEvent!.callType == 0
+                        ? CallServicesCallState.incomingAudioCall
+                        : CallServicesCallState.incomingVideoCall,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.idle) {
@@ -89,12 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-                    return const Center(
-                      child: Text(
-                        'Incoming video call',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.data as CallServicesCallState ==
                       CallServicesCallState.incomingAudioCall) {
                     if (incomingCallEvent != null) {
@@ -110,9 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-                    return const Center(
-                        child: Text('Incoming audio call',
-                            style: TextStyle(color: Colors.green)));
+                    return const Center(child: CircularProgressIndicator());
                   } else {
                     return _homeScreen(context);
                   }

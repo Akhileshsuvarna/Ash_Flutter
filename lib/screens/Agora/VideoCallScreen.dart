@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agora_uikit/agora_uikit.dart';
@@ -93,6 +94,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           leaveChannel: (state) {
             incomingCallEvent = null;
             bloc.callServicesEventSink.add(null);
+            ConnectycubeFlutterCallKit.reportCallEnded(
+                sessionId: currentCallSessionId);
             Navigator.of(context).pop();
           },
           joinChannelSuccess: (channel, uid, elapsed) {
@@ -104,6 +107,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           userOffline: (uid, reason) {
             Logger.info("user offline");
             client.engine.leaveChannel();
+            ConnectycubeFlutterCallKit.reportCallEnded(
+                sessionId: currentCallSessionId);
             Navigator.of(context).pop();
           },
           userInfoUpdated: (p0, p1) {
@@ -144,6 +149,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         leaveChannel: (state) {
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
         joinChannelSuccess: (channel, uid, elapsed) {
@@ -155,6 +162,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         userOffline: (uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
       ),

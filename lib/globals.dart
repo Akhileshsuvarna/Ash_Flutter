@@ -67,7 +67,7 @@ class Globals {
                       NotificationHelper.parseNotificationDataToCallerData(
                           event.data);
                   ConnectycubeFlutterCallKit.setOnLockScreenVisibility(
-                      isVisible: false);
+                      isVisible: true);
 
                   NotificationHelper.showCallNotification(callerData);
                 }

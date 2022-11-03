@@ -68,8 +68,13 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       ],
       agoraEventHandlers: AgoraRtcEventHandlers(
         leaveChannel: (state) {
+          Logger.info("user ended call");
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
+          ConnectycubeFlutterCallKit.clearCallData(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
         joinChannelSuccess: (channel, uid, elapsed) {
@@ -81,6 +86,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         userOffline: (uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
+          ConnectycubeFlutterCallKit.clearCallData(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
         userInfoUpdated: (p0, p1) {
@@ -111,8 +120,13 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
       ],
       agoraEventHandlers: AgoraRtcEventHandlers(
         leaveChannel: (state) {
+          Logger.info("user ended call");
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
+          ConnectycubeFlutterCallKit.clearCallData(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
         joinChannelSuccess: (channel, uid, elapsed) {
@@ -124,6 +138,10 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         userOffline: (uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
+          ConnectycubeFlutterCallKit.reportCallEnded(
+              sessionId: currentCallSessionId);
+          ConnectycubeFlutterCallKit.clearCallData(
+              sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
         userInfoUpdated: (p0, p1) {
