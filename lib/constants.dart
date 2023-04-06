@@ -137,24 +137,24 @@ class Constants {
       '/invite/:userid/:roomId/:inviteType/:agoraSessionToken';
 
   static String getAgoraInviteUrl(
-          {required String senderUid,
-          required String roomID,
-          required RtcCallType inviteType,
-          required String channelName,
-          required agoraSessionToken}) =>
+      {required String senderUid,
+        required String roomID,
+        required RtcCallType inviteType,
+        required String channelName,
+        required agoraSessionToken}) =>
       '/invite/$senderUid/$roomID/${inviteType == RtcCallType.audio ? 'audio' : 'video'}/$channelName/$agoraSessionToken';
 
   static String getPublisherVideoURLWithUid({int uid = 0}) =>
       tokenServerBaseUrl +
-      tokenServerVideoPublisherWithUid +
-      uid.toString() +
-      defaultVideoChannelExpiry;
+          tokenServerVideoPublisherWithUid +
+          uid.toString() +
+          defaultVideoChannelExpiry;
 
   static String getPublisherAudioURLWithUid({int uid = 0}) =>
       tokenServerBaseUrl +
-      tokenServerVideoPublisherWithUid +
-      uid.toString() +
-      defaultVideoChannelExpiry;
+          tokenServerVideoPublisherWithUid +
+          uid.toString() +
+          defaultVideoChannelExpiry;
 
   static void logout(BuildContext context) async {
     await prefs.clear();

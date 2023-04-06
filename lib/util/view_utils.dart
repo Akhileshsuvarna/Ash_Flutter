@@ -1,3 +1,4 @@
+
 import 'package:circular_progress_indicator/circular_progress_indicator.dart';
 import 'package:flutter/material.dart'
     show
@@ -25,7 +26,6 @@ import 'package:flutter/material.dart'
         VoidCallback,
         Widget,
         showDialog;
-import 'package:flutter/src/widgets/container.dart';
 
 import '../constants.dart';
 

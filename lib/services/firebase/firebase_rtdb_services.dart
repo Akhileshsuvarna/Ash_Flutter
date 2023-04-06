@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:health_connector/constants.dart';
 import 'package:health_connector/log/logger.dart';
 import 'package:health_connector/main.dart';
 

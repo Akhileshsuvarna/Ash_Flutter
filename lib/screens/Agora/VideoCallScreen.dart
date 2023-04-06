@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:agora_rtc_engine/rtc_engine.dart';
+// import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   @override
   void dispose() {
     super.dispose();
-    client.engine.destroy();
+    // client.engine.dest;
     bloc.setCallState(CallServicesCallState.idle);
     incomingCallEvent = null;
   }
@@ -91,27 +91,27 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           Permission.microphone,
         ],
         agoraEventHandlers: AgoraRtcEventHandlers(
-          leaveChannel: (state) {
+          onLeaveChannel: (channel,state) {
             incomingCallEvent = null;
             bloc.callServicesEventSink.add(null);
             ConnectycubeFlutterCallKit.reportCallEnded(
                 sessionId: currentCallSessionId);
             Navigator.of(context).pop();
           },
-          joinChannelSuccess: (channel, uid, elapsed) {
+          onJoinChannelSuccess: (channel, uid) {
             Logger.info('joinChannel Success');
           },
-          userJoined: (uid, elapsed) {
+          onUserJoined: (channel,uid, elapsed) {
             Logger.info("user joined");
           },
-          userOffline: (uid, reason) {
+          onUserOffline: (channel,uid, reason) {
             Logger.info("user offline");
             client.engine.leaveChannel();
             ConnectycubeFlutterCallKit.reportCallEnded(
                 sessionId: currentCallSessionId);
             Navigator.of(context).pop();
           },
-          userInfoUpdated: (p0, p1) {
+          onUserInfoUpdated: (p0, p1) {
             print('First $p0 || Second ${p1.uid}');
           },
         ),
@@ -146,20 +146,20 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         Permission.microphone,
       ],
       agoraEventHandlers: AgoraRtcEventHandlers(
-        leaveChannel: (state) {
+        onLeaveChannel: (channel,state) {
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
           ConnectycubeFlutterCallKit.reportCallEnded(
               sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
-        joinChannelSuccess: (channel, uid, elapsed) {
+        onJoinChannelSuccess: (uid, elapsed) {
           Logger.info('joinChannel Success');
         },
-        userJoined: (uid, elapsed) {
+        onUserJoined: (channel,uid, elapsed) {
           Logger.info("user joined");
         },
-        userOffline: (uid, reason) {
+        onUserOffline: (channel,uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
           ConnectycubeFlutterCallKit.reportCallEnded(

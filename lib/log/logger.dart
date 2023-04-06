@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+
 import '../constants.dart';
 
 /// The external [log] functions to map.
@@ -19,11 +21,11 @@ class Logger {
 
   static void consoleLog(Object o, {StackTrace? stackTrace}) {
     if (Constants.isDebug) {
-      print(o);
+      print(o.toString());
 
       if (stackTrace != null) {
         if (Constants.isDebug) {
-          print(stackTrace);
+          print(stackTrace.toString());
         }
       }
     }

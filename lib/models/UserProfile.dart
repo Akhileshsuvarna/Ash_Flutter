@@ -1,18 +1,27 @@
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+
 import '../main.dart';
 
 class UserProfile {
   Data? data = Data();
+  CubeUser? cubeUser = CubeUser();
 
-  UserProfile({this.data});
+  UserProfile({this.data, this.cubeUser});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? Data.fromJson(json['data']) : Data();
+    data = json['data'] != null
+        ? Data.fromJson(Map<String, dynamic>.from(json['data']))
+        : Data();
+    cubeUser = json['cubeUser'] != null
+        ? CubeUser.fromJson(Map<String, dynamic>.from(json['cubeUser']))
+        : CubeUser();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
 
     data['data'] = this.data!.toJson();
+    data['cubeUser'] = cubeUser != null ? cubeUser!.toJson() : {};
 
     return data;
   }

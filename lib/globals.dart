@@ -64,8 +64,8 @@ class Globals {
               if (element.key == "callInvite") {
                 if (NotificationHelper.isCallInvite(event.data)) {
                   var callerData =
-                      NotificationHelper.parseNotificationDataToCallerData(
-                          event.data);
+                  NotificationHelper.parseNotificationDataToCallerData(
+                      event.data);
                   ConnectycubeFlutterCallKit.setOnLockScreenVisibility(
                       isVisible: true);
 
@@ -160,8 +160,8 @@ class Globals {
           .set(ExerciseResult(eMeta, eScore).toJson());
       int currentProgresScore = await getCurrentProgressScore();
       int thisExerciseScore =
-          ((eScore.framesWithRequiredPose / eScore.framesProcessed) * 100)
-              .floor();
+      ((eScore.framesWithRequiredPose / eScore.framesProcessed) * 100)
+          .floor();
       await firebaseDatabase
           .ref()
           .child(Constants.dbRoot)
@@ -216,7 +216,7 @@ class Globals {
   }
 
   static Future<List<ExerciseTransactions>>
-      getLastExerciseTransactions() async {
+  getLastExerciseTransactions() async {
     List<ExerciseTransactions> result = [];
     var snapshot = await firebaseDatabase
         .ref()
@@ -257,7 +257,7 @@ class Globals {
 
       if (usersSnapshot.exists) {
         Map<dynamic, dynamic> usersMap =
-            usersSnapshot.value as Map<dynamic, dynamic>;
+        usersSnapshot.value as Map<dynamic, dynamic>;
         for (var element in usersMap.entries) {
           if (element.value['progressScore'] != null) {
             result.add(UserScore(

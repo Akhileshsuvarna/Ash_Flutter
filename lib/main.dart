@@ -49,7 +49,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   if (NotificationHelper.isCallInvite(message.data)) {
     var callerData =
-        NotificationHelper.parseNotificationDataToCallerData(message.data);
+    NotificationHelper.parseNotificationDataToCallerData(message.data);
     ConnectycubeFlutterCallKit.setOnLockScreenVisibility(isVisible: true);
 
     NotificationHelper.showCallNotification(callerData);
@@ -61,7 +61,7 @@ Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
 
   if (NotificationHelper.isCallInvite(message.data)) {
     var callerData =
-        NotificationHelper.parseNotificationDataToCallerData(message.data);
+    NotificationHelper.parseNotificationDataToCallerData(message.data);
     ConnectycubeFlutterCallKit.setOnLockScreenVisibility(isVisible: false);
 
     NotificationHelper.showCallNotification(callerData);
@@ -175,7 +175,7 @@ _initMain() {
 
 void _listenOrientation() {
   NativeDeviceOrientationCommunicator obj =
-      NativeDeviceOrientationCommunicator();
+  NativeDeviceOrientationCommunicator();
   obj.onOrientationChanged(useSensor: true).listen((event) {
     currentDeviceOrientation = event;
     Logger.info("Device orientation $event");

@@ -28,7 +28,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
   Future<String> _getAppId() async {
     DocumentSnapshot queryDocumentSnapshot =
-        await FirebaseFirestore.instance.collection("/agora").doc("app").get();
+    await FirebaseFirestore.instance.collection("/agora").doc("app").get();
     return queryDocumentSnapshot.get("appID");
   }
 
@@ -41,7 +41,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     } else {
       return await Provider.of<AgoraTokenServices>(context, listen: false)
           .generateRTCToken(
-              RtcCallType.audio, RtcRole.publisher, RtcTokenType.uid);
+          RtcCallType.audio, RtcRole.publisher, RtcTokenType.uid);
     }
   }
 
@@ -67,7 +67,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         Permission.microphone,
       ],
       agoraEventHandlers: AgoraRtcEventHandlers(
-        leaveChannel: (state) {
+        onLeaveChannel: (channel,state) {
           Logger.info("user ended call");
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
@@ -77,13 +77,13 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
-        joinChannelSuccess: (channel, uid, elapsed) {
+        onJoinChannelSuccess: ( uid, elapsed) {
           Logger.info('joinChannel Success');
         },
-        userJoined: (uid, elapsed) {
+        onUserJoined: (channel,uid, elapsed) {
           Logger.info("user joined");
         },
-        userOffline: (uid, reason) {
+        onUserOffline: (channel,uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
           ConnectycubeFlutterCallKit.reportCallEnded(
@@ -92,7 +92,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
-        userInfoUpdated: (p0, p1) {
+        onUserInfoUpdated: (p0, p1) {
           print('First $p0 || Second ${p1.uid}');
         },
       ),
@@ -119,7 +119,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
         Permission.microphone,
       ],
       agoraEventHandlers: AgoraRtcEventHandlers(
-        leaveChannel: (state) {
+        onLeaveChannel: (channel,state) {
           Logger.info("user ended call");
           incomingCallEvent = null;
           bloc.callServicesEventSink.add(null);
@@ -129,13 +129,13 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
-        joinChannelSuccess: (channel, uid, elapsed) {
+        onJoinChannelSuccess: (uid, elapsed) {
           Logger.info('joinChannel Success');
         },
-        userJoined: (uid, elapsed) {
+        onUserJoined: (channel,uid, elapsed) {
           Logger.info("user joined");
         },
-        userOffline: (uid, reason) {
+        onUserOffline: (channel,uid, reason) {
           Logger.info("user offline");
           client.engine.leaveChannel();
           ConnectycubeFlutterCallKit.reportCallEnded(
@@ -144,7 +144,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               sessionId: currentCallSessionId);
           Navigator.of(context).pop();
         },
-        userInfoUpdated: (p0, p1) {
+        onUserInfoUpdated: (p0, p1) {
           print('First $p0 || Second ${p1.uid}');
         },
       ),
@@ -159,7 +159,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   @override
   void dispose() {
     super.dispose();
-    client.engine.destroy();
+    // client.engine.destroy();
     bloc.setCallState(CallServicesCallState.idle);
     incomingCallEvent = null;
   }
