@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:health_connector/services/internet_connectivity.dart';
 import 'package:health_connector/services/token_services.dart';
@@ -69,9 +69,20 @@ Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
 }
 
 late Questionaire questionaireData;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+const AndroidInitializationSettings  initializationSettingsAndroid =
+const AndroidInitializationSettings('launch_background');
+
+const InitializationSettings initializationSettings = InitializationSettings(
+  android: initializationSettingsAndroid,
+);
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {});
 
   await FlutterDownloader.initialize();
   FlutterDownloader.registerCallback(downloadCallback);
@@ -120,7 +131,8 @@ Future onCallAcceptedWhenTerminated(CallEvent callEvent) async {
       sessionId: currentCallSessionId, callState: CallState.ACCEPTED);
 }
 
-void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+@pragma('vm:entry-point')
+ void downloadCallback(String id, int status, int progress) {
   if (progress == 100) {
     Logger.info('All assets downloaded for exercise: ${prefs.getString(id)}');
   }

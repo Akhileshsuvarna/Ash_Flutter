@@ -19,7 +19,7 @@ dependencies:
   firebase_database: ^10.1.0
   permission_handler: ^10.2.0
   flutter_tts: ^3.2.3
-  google_fonts: ^2.1.0
+  google_fonts: ^4.0.4
   firebase_auth: ^4.4.0
   animated_button: ^0.2.0
   cached_network_image: ^3.2.0
@@ -39,7 +39,7 @@ dependencies:
   google_mlkit_pose_detection: ^0.3.0
   google_mlkit_translation: ^0.3.0
   flutter_cache_manager: ^3.3.0
-  package_info_plus: ^1.0.5
+#  package_info_plus:
   agora_uikit: ^1.1.2
   age_calculator: ^1.0.0
   mailto: ^2.0.0
@@ -61,13 +61,21 @@ dependencies:
   native_ar_viewer: ^0.0.1
 #  connectycube_flutter_call_kit: ^2.2.3
   firebase_crashlytics: ^3.1.0
-  flutter_downloader: ^1.8.0+1
+  http: ^0.13.5
+  flutter_downloader: ^1.10.3
   connectycube_sdk: ^2.4.1
-#  agora_rtc_engine: ^6.1.0
   quick_look: ^0.0.4
   video_player: ^2.4.5
   awesome_notifications: ^0.6.21
   flutter_rating_bar: ^4.0.1
+  flutter_keyboard_visibility: ^5.4.0
+  speech_to_text: ^6.1.1
+  highlight_text: ^1.6.0
+  avatar_glow: ^2.0.2
+  breathing_collection: ^1.0.0+3
+  neon_circular_timer: ^0.0.7
+  getwidget: ^3.1.1
+  audioplayers: ^4.1.0
   # native_screenshot: #^1.0.0
   #   path: ../native_screenshot
   native_screenshot:
@@ -107,6 +115,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/social/
+    - assets/sounds/
 
   # fonts:
   #   - family: Schyler

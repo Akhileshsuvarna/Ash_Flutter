@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "970460065596",
+    "firebase_url": "https://healthconnector-ai-default-rtdb.firebaseio.com",
+    "project_id": "healthconnector-ai",
+    "storage_bucket": "healthconnector-ai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970460065596:android:1984dd0307377f0b4e3839",
+        "android_client_info": {
+          "package_name": "com.livvinyl.healthconnector.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970460065596-ju62vslql8o0mnhgat08fs3u54roaern.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.livvinyl.healthconnector.app",
+            "certificate_hash": "49b62167a477c9f95f9540b8ba42e7460e826949"
+          }
+        },
+        {
+          "client_id": "970460065596-krverieb4pco3sitrsa0bh46nr62915v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEfgvGoZbbID94TL4xIA33kdPTlMUON6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970460065596-krverieb4pco3sitrsa0bh46nr62915v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

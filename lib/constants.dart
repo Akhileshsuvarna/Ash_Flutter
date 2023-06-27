@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:health_connector/chat_screen.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/home_screen.dart';
 import 'package:health_connector/screens/login_screen.dart';
@@ -59,7 +60,9 @@ class Constants {
           headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind')));
-
+  static const serverUrl =
+      'wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=16000&language=en-GB';
+  static const apiKey = '<your Deepgram API key>';
   static const String logIn = 'logIn';
   static const String signUp = 'signup';
   static const String pwReset = 'pwreset';
@@ -74,6 +77,7 @@ class Constants {
   static const String pinCodeScreen = "pincode_screen";
   static const String userProfileScreen = 'user_profile_screen';
   static const String userHomeScreen = 'home_screen';
+  static const String conversationPage = 'chat_screen';
   static const String questionScreen0 = 'QuestionScreen0';
   static const String questionScreen1 = 'QuestionScreen1';
   static const String videoCallScreen = "videoCallScreen";
@@ -82,6 +86,7 @@ class Constants {
     logIn: (BuildContext context) => const LoginPage(),
     // PW_RESET: (BuildContext context) => ResetPasswordScreen(),
     exerciseScreen: (BuildContext context) => const ExercisePage(),
+    // conversationPage: (BuildContext context) => const ConversationPage(),
     userProfileScreen: (BuildContext context) => const UserProfileScreen(),
     questionScreen0: (BuildContext context) => const QuestionScreen0(),
     questionScreen1: (BuildContext context) => const QuestionScreen1(),

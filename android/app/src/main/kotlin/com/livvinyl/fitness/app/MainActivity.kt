@@ -1,4 +1,4 @@
-package ai.healthconnector.mobileapp
+package com.livvinyl.healthconnector.app
 
 import io.flutter.embedding.android.FlutterActivity
 

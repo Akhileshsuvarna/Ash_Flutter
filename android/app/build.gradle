@@ -29,6 +29,7 @@ apply plugin: 'com.google.gms.google-services'
 def keystoreProperties = new Properties()
    def keystorePropertiesFile = rootProject.file('key.properties')
    if (keystorePropertiesFile.exists()) {
+       println keystorePropertiesFile
        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
    }
 
@@ -51,7 +52,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "ai.healthconnector.mobileapp"
+        applicationId "com.livvinyl.healthconnector.app"
         minSdkVersion 23
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
@@ -62,15 +63,17 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+
         }
    }
 
        buildTypes {
        release {
             signingConfig signingConfigs.release
-
+           shrinkResources true
+           minifyEnabled true
             applicationVariants.all { variant ->
                 variant.outputs.all {
                     def newName

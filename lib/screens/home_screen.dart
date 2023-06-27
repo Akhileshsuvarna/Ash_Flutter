@@ -6,6 +6,8 @@ import 'package:health_connector/screens/Agora/VideoCallScreen.dart';
 import 'package:health_connector/screens/exercises_screen.dart';
 import 'package:health_connector/screens/user_profile_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../breathing.dart';
+import '../chat_home.dart';
 import '../log/logger.dart';
 import '../main.dart';
 import '../services/call_services.dart';
@@ -179,8 +181,20 @@ class _HomeScreenState extends State<HomeScreen> {
         inactiveColorPrimary: Constants.unSelectedTab,
       ),
       PersistentBottomNavBarItem(
+        icon: const Icon(Icons.chat),
+        title: selectedIndex == 2 ? ("Chat") : null,
+        activeColorPrimary: Constants.selectedTab,
+        inactiveColorPrimary: Constants.unSelectedTab,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.self_improvement),
+        title: selectedIndex == 3 ? ("Meditate") : null,
+        activeColorPrimary: Constants.selectedTab,
+        inactiveColorPrimary: Constants.unSelectedTab,
+      ),
+      PersistentBottomNavBarItem(
         icon: const Icon(Icons.account_circle_sharp),
-        title: selectedIndex == 2 ? ("Profile") : null,
+        title: selectedIndex == 4 ? ("Profile") : null,
         activeColorPrimary: Constants.selectedTab,
         inactiveColorPrimary: Constants.unSelectedTab,
       ),
@@ -193,7 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
       // const VideoScreen(),
       const RoomsPage(),
       //RoomsPage is Inbox Screen
+      const ChatScreen(),
+      //ChatScreen
+      BreathingGame(),
+      //BreathingGame
       const UserProfileScreen()
+      //UserProfileScreen
     ];
   }
 

@@ -8,6 +8,10 @@
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>AshFlutter would like to save photos from the app to your gallery</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>*your app name* would like to access your photo gallery for uploading images to the app</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -16,6 +20,10 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>This application needs to access your microphone</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>This application needs the speech recognition permission</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
