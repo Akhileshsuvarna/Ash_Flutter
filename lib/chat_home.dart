@@ -29,11 +29,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: BorderRadius.vertical(
                     bottom: Radius.elliptical(500, 300.0)),
               ),
-              child: Align(
+              child: const Align(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                       child: Text(
